@@ -9,6 +9,6 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeScripts)
 #endif(!WIN32)
 
 add_subdirectory(cvBlob lib)
-#add_subdirectory(test bin)
+add_subdirectory(test test)
 
 #install(DIRECTORY dll DESTINATION dll)
