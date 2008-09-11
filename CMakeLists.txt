@@ -31,3 +31,34 @@ add_subdirectory(cvBlob lib)
 add_subdirectory(test test)
 
 #install(DIRECTORY dll DESTINATION dll)
+
+if(WIN32)
+  set(CPACK_GENERATOR "ZIP")
+  set(CPACK_SOURCE_GENERATOR "ZIP")
+else(WIN32)
+  set(CPACK_GENERATOR "TGZ")
+  set(CPACK_SOURCE_GENERATOR "TGZ")
+endif(WIN32)
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenCV blob library")
+set(CPACK_PACKAGE_VENDOR "Cristóbal Carnero Liñán <grendel.ccl@gmail.com>")
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${cvBlob_SOURCE_DIR}/README)
+set(CPACK_PACKAGE_VERSION_MAJOR 0)
+set(CPACK_PACKAGE_VERSION_MINOR 9)
+set(CPACK_PACKAGE_VERSION_PATCH 0)
+set(CPACK_PACKAGE_VERSION "0.9.0")
+set(CPACK_RESOURCE_FILE_LICENSE ${cvBlob_SOURCE_DIR}/COPYING.LESSER)
+set(CPACK_RESOURCE_FILE_README ${cvBlob_SOURCE_DIR}/README)
+
+#set(CPACK_RESOURCE_FILE_WELCOME "/usr/share/CMake/Templates/CPack.GenericWelcome.txt")
+#set(CPACK_PACKAGE_EXECUTABLES "${CMAKE_CURRENT_BINARY_DIR}/bin/cvBlob" "cvBlob")
+
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "cvBlob-src-${CPACK_PACKAGE_VERSION}")
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_IGNORE_FILES
+    "~$"
+    "/\\\\.svn/"
+#     "^${PROJECT_SOURCE_DIR}/old/"
+)
+
+include(CPack)
