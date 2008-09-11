@@ -1,0 +1,61 @@
+README for 0.9.0 cvBlob.
+
+
+DOWNLOAD LATEST SOURCE
+
+You need Subversion ( http://subversion.tigris.org ).
+
+Read only checkout:
+
+	svn checkout http://cvblob.googlecode.com/svn/trunk/ cvblob-read-only
+
+
+DEPENDENCIES
+
+In order to compile cvBlob you need the following:
+
+	* CMAKE ( http://www.cmake.org )
+	* OpenCV ( http://opencvlibrary.sourceforge.net )
+
+If you are in a Debian style distribution (Ubuntu, for example) you can do something
+like this:
+
+	sudo aptitude install cmake libcv1 libcv-dev libcvaux-dev libcvaux1
+
+
+COMPILING
+
+In Linux, if you have installed the source in $CVBLOB, enter in a console:
+
+	cd $CVBLOB
+	cmake ..
+	make
+
+In Windows it must be as easy as in Linux (changing "make" for the equivalent in your compiler).
+If problems, please read:
+	http://www.cmake.org/HTML/RunningCMake.html
+
+Latest information about compiling:
+	http://code.google.com/p/cvblob/wiki/HowToCompile
+
+
+INFORMATION
+
+The official home page of cvBlob is:
+	http://cvblob.googlecode.com
+
+Latest downloads:
+	http://code.google.com/p/cvblob/downloads/list 
+
+Documentation:
+	http://code.google.com/p/cvblob/w/list
+
+Bug reports:
+	http://code.google.com/p/cvblob/issues/list
+
+
+AUTHOR
+
+Comments, suggestions and, why not, donations (PayPal) to:
+
+	Cristóbal Carnero Liñán		E-mail: grendel.ccl@gmail.com
