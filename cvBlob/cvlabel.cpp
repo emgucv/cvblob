@@ -52,7 +52,7 @@ CvBlob *find(CvBlob *x)
   }
 }
 
-CvBlob *merge(CvBlob *x, CvBlob *y)
+void merge(CvBlob *x, CvBlob *y)
 {
   CvBlob *xRoot=find(x);
   CvBlob *yRoot=find(y);
