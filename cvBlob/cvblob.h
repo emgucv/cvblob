@@ -34,7 +34,7 @@ using namespace std;
 extern "C" {
 #endif
 
-#define IPL_DEPTH_LABEL IPL_DEPTH_32S
+#define IPL_DEPTH_LABEL IPL_DEPTH_32F
 //#define IPL_DEPTH_LABEL IPL_DEPTH_8U
 
   typedef unsigned int CvLabel;

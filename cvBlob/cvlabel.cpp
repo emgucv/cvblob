@@ -90,15 +90,137 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
   
   CvLabel label=0;
   blobs.clear();
-  
+
+
   char *lastRowIn=img->imageData;
   CvLabel *lastRowOut=(CvLabel *)imgOut->imageData;
-  char *imgDataIn=img->imageData+img->width;
-  CvLabel *imgDataOut=(CvLabel *)imgOut->imageData+imgOut->width;
+  char *imgDataIn=img->imageData;
+  CvLabel *imgDataOut=(CvLabel *)imgOut->imageData;
+
+  int stepIn = img->widthStep / (img->depth / 8);
+  int stepOut = imgOut->widthStep / (imgOut->depth / 8);
+
+  unsigned int c = 0;
+  unsigned int r = 0;
+
+  if (imgDataIn[c])
+  {
+    numPixels++;
+
+    label++;
+    
+    CvBlob *blob=new CvBlob;
+    makeSet(blob);
+    blob->label=label;
+    blob->area=1;
+    blob->minx=c; blob->maxx=c;
+    blob->miny=r; blob->maxy=r;
+    blob->m10=c; blob->m01=r;
+    blob->m11=c*r;
+    blob->m20=c*c; blob->m02=r*r;
+    blobs.insert(CvLabelBlob(label,blob));
+    
+    imgDataOut[c]=label;
+  }
+
+  lastRowIn=img->imageData;
+  lastRowOut=(CvLabel *)imgOut->imageData;
+  imgDataIn=img->imageData;
+  imgDataOut=(CvLabel *)imgOut->imageData;
+
+  r = 0;
+  for (c=1;c<img->width;c++)
+  {
+    if (imgDataIn[c])
+    {
+      numPixels++;
+      if (imgDataOut[c-1])
+      {
+        CvBlob *blob=blobs[imgDataOut[c-1]];
+        blob->area+=1;
+        blob->maxx=_MAX_(blob->maxx,c);
+        blob->m10+=c; blob->m01+=r;
+        blob->m11+=c*r;
+        blob->m20+=c*c; blob->m02+=r*r;
+        
+        imgDataOut[c]=imgDataOut[c-1];
+      }
+      else
+      {
+        label++;
+        
+        CvBlob *blob=new CvBlob;
+        makeSet(blob);
+        blob->label=label;
+        blob->area=1;
+        blob->minx=c; blob->maxx=c;
+        blob->miny=r; blob->maxy=r;
+        blob->m10=c; blob->m01=r;
+        blob->m11=c*r;
+        blob->m20=c*c; blob->m02=r*r;
+        blobs.insert(CvLabelBlob(label,blob));
+        
+        imgDataOut[c]=label;
+      }
+    }
+  }
+
+  lastRowIn=img->imageData;
+  lastRowOut=(CvLabel *)imgOut->imageData;
+  imgDataIn=img->imageData+stepIn;
+  imgDataOut=(CvLabel *)imgOut->imageData+stepOut;
   // Skip first line!
-  for (unsigned int r=1;r<img->height;r++,
-      lastRowIn+=img->width,lastRowOut+=imgOut->width,imgDataIn+=img->width,imgDataOut+=imgOut->width)
-    for (unsigned int c=1;c<img->width;c++)
+
+  c = 0;
+  for (r=1;r<img->height;r++)
+  {
+    if (imgDataIn[c])
+    {
+      numPixels++;
+      if (lastRowOut[c])
+      {
+        CvBlob *blob=blobs[lastRowOut[c]];
+        blob->area+=1;
+        blob->maxy=_MAX_(blob->maxy,r);
+        blob->m10+=c; blob->m01+=r;
+        blob->m11+=c*r;
+        blob->m20+=c*c; blob->m02+=r*r;
+        
+        imgDataOut[c]=lastRowOut[c];
+        
+      }
+      else
+      {
+        label++;
+        
+        CvBlob *blob=new CvBlob;
+        makeSet(blob);
+        blob->label=label;
+        blob->area=1;
+        blob->minx=c; blob->maxx=c;
+        blob->miny=r; blob->maxy=r;
+        blob->m10=c; blob->m01=r;
+        blob->m11=c*r;
+        blob->m20=c*c; blob->m02=r*r;
+        blobs.insert(CvLabelBlob(label,blob));
+        
+        imgDataOut[c]=label;
+      }
+    }
+    lastRowIn+=stepIn;
+    lastRowOut+=stepOut;
+    imgDataIn+=stepIn;
+    imgDataOut+=stepOut;
+  }
+  
+  lastRowIn=img->imageData;
+  lastRowOut=(CvLabel *)imgOut->imageData;
+  imgDataIn=img->imageData+stepIn;
+  imgDataOut=(CvLabel *)imgOut->imageData+stepOut;
+
+  for (r=1;r<img->height;r++)
+  {
+    for (c=1;c<img->width;c++)
     {
       if (imgDataIn[c])
       {
@@ -152,36 +274,69 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
         }
       }
     }
+    lastRowIn+=stepIn;
+    lastRowOut+=stepOut;
+    imgDataIn+=stepIn;
+    imgDataOut+=stepOut;
+  }
   
   unsigned int labelSize=blobs.size();
   CvLabel *luLabels=new CvLabel[labelSize+1];
   luLabels[0]=0;
   
-  for (CvBlobs::iterator it=blobs.begin();it!=blobs.end();++it)
+  CvBlobs::iterator itinit=blobs.begin();
+  //++itinit;
+  CvBlobs::iterator it;
+  for (it=itinit;it!=blobs.end();++it)
   {
     CvBlob *blob1=(*it).second;
     CvBlob *blob2=find(blob1);
+
+    if (blob1 != blob2)
+    {
     
-    blob2->area+=blob1->area;
-    blob2->minx=_MIN_(blob2->minx,blob1->minx); blob2->maxx=_MAX_(blob2->maxx,blob1->maxx);
-    blob2->miny=_MIN_(blob2->miny,blob1->miny); blob2->maxy=_MAX_(blob2->maxy,blob1->maxy);
-    blob2->m10+=blob1->m10; blob2->m01+=blob1->m01;
-    blob2->m11+=blob1->m11;
-    blob2->m20+=blob1->m20; blob2->m02+=blob1->m02;
-    
-    luLabels[(*it).first]=blob2->label;
+      blob2->area+=blob1->area;
+      blob2->minx=_MIN_(blob2->minx,blob1->minx); blob2->maxx=_MAX_(blob2->maxx,blob1->maxx);
+      blob2->miny=_MIN_(blob2->miny,blob1->miny); blob2->maxy=_MAX_(blob2->maxy,blob1->maxy);
+      blob2->m10+=blob1->m10; blob2->m01+=blob1->m01;
+      blob2->m11+=blob1->m11;
+      blob2->m20+=blob1->m20; blob2->m02+=blob1->m02;
+      
+      luLabels[(*it).first]=blob2->label;
+
+    }
   }
   
+
   imgDataOut=(CvLabel *)imgOut->imageData+imgOut->width;
   // Skip first line!
   for (int r=1;r<imgOut->height;r++,imgDataOut+=imgOut->width)
     for (int c=1;c<imgOut->width;c++)
       imgDataOut[c]=luLabels[imgDataOut[c]];
+
+   //int N=0;
   
+/*  for (int r=0;r<imgOut->height;r++,imgDataOut+=imgOut->width)
+    for (int c=0;c<imgOut->width;c++)
+    {
+      if (imgDataOut[c] == 30)
+        N++;
+
+
+ }
+ */
+
+    //N=0;
+    //for (int p = 0; p < imgOut->height*imgOut->width;p++)
+    //{
+    // if (imgDataOut[p] == 30)
+    //    N++;
+    //}
+
   delete luLabels;
   
   // Eliminar los blobs hijos:
-  CvBlobs::iterator it=blobs.begin();
+  it=blobs.begin();
   while (it!=blobs.end())
   {
     CvBlob *blob=(*it).second;
@@ -198,6 +353,8 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
       ++it;
     }
   }
+
+
   
   return numPixels;
 }

@@ -1,7 +1,7 @@
 README for 0.9.0 cvBlob.
 
 
-DOWNLOAD LATEST SOURCE
+1. DOWNLOAD LATEST SOURCE
 
 You need Subversion ( http://subversion.tigris.org ).
 
@@ -10,7 +10,7 @@ Read only checkout:
 	svn checkout http://cvblob.googlecode.com/svn/trunk/ cvblob-read-only
 
 
-DEPENDENCIES
+2. DEPENDENCIES
 
 In order to compile cvBlob you need the following:
 
@@ -23,7 +23,7 @@ like this:
 	sudo aptitude install cmake libcv1 libcv-dev libcvaux-dev libcvaux1
 
 
-COMPILING
+3. COMPILING
 
 In Linux, if you have installed the source in $CVBLOB, enter in a console:
 
@@ -39,7 +39,7 @@ Latest information about compiling:
 	http://code.google.com/p/cvblob/wiki/HowToCompile
 
 
-INFORMATION
+4. INFORMATION
 
 The official home page of cvBlob is:
 	http://cvblob.googlecode.com
@@ -54,8 +54,12 @@ Bug reports:
 	http://code.google.com/p/cvblob/issues/list
 
 
-AUTHOR
+5. MAIN AUTHOR
 
 Comments, suggestions and, why not, donations (PayPal) to:
 
 	Cristóbal Carnero Liñán		E-mail: grendel.ccl@gmail.com
+
+6. CONTRIBUTORS
+
+	Stefan Gachter			Web page: http://gachter.name
