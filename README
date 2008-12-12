@@ -28,7 +28,7 @@ like this:
 In Linux, if you have installed the source in $CVBLOB, enter in a console:
 
 	cd $CVBLOB
-	cmake ..
+	cmake
 	make
 
 In Windows it must be as easy as in Linux (changing "make" for the equivalent in your compiler).
@@ -59,6 +59,7 @@ Bug reports:
 Comments, suggestions and, why not, donations (PayPal) to:
 
 	Cristóbal Carnero Liñán		E-mail: grendel.ccl@gmail.com
+
 
 6. CONTRIBUTORS
 
