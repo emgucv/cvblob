@@ -17,6 +17,10 @@
 # along with cvBlob.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# XXX It's possible that this can work with a previous version of CMake.
+# TODO Check it.
+cmake_minimum_required(VERSION 2.0)
+
 project(cvBlob)
 
 set(PACKAGE cvBlob)
