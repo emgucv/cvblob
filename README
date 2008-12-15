@@ -17,11 +17,18 @@ In order to compile cvBlob you need the following:
 	* CMAKE ( http://www.cmake.org )
 	* OpenCV ( http://opencvlibrary.sourceforge.net )
 
+2.1 Instalation of dependencies in Debian type SO (Ubuntu,...) using apt:
+
 If you are in a Debian style distribution (Ubuntu, for example) you can do something
 like this:
 
-	sudo aptitude install cmake libcv1 libcv-dev libcvaux-dev libcvaux1
+	sudo apt-get install cmake libcv1 libcv-dev libcvaux-dev libcvaux1
 
+2.2 Instalation of dependencies in SuSE using Yast
+
+Type this:
+
+        su -c "yast -i libopencv1 opencv opencv-debuginfo opencv-debugsource opencv-devel opencv-python cmake cmake-gui"
 
 3. COMPILING
 
