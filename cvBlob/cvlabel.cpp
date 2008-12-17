@@ -94,6 +94,24 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
   char *imgDataIn=img->imageData;
   CvLabel *imgDataOut=(CvLabel *)imgOut->imageData;
 
+  if (imgDataIn[0])
+  {
+    label++;
+
+    CvBlob *blob=new CvBlob;
+    makeSet(blob);
+    blob->label=label;
+    blob->area=1;
+    blob->minx=0; blob->maxx=0;
+    blob->miny=0; blob->maxy=0;
+    blob->m10=0; blob->m01=0;
+    blob->m11=0*0;
+    blob->m20=0*0; blob->m02=0*0;
+    blobs.insert(CvLabelBlob(label,blob));
+
+    imgDataOut[0]=label;
+  }
+
   for (unsigned int c=1;c<img->width;c++)
   {
     if (imgDataIn[c])
