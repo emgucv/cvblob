@@ -1,3 +1,13 @@
+Version 0.9.2 (2008/12/17)
+
+  * cvlabel.cpp: rewritten changes of version 0.9.1.
+
+Version 0.9.2 (2008/12/15)
+
+  * README: updated instructions for instalation of dependencies.
+
+  * CMakeList: new version and line required by CMake 2.6.
+
 Version 0.9.1 (2008/12/12)
 
   * Fixed labeling: works with all the pixels of the binary image (even
