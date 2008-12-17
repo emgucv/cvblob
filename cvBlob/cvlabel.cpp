@@ -122,7 +122,7 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
         blob->miny=0; blob->maxy=0;
         blob->m10=c; blob->m01=0;
         blob->m11=c*0;
-        blob->m20=c*0; blob->m02=0*0;
+        blob->m20=c*c; blob->m02=0*0;
         blobs.insert(CvLabelBlob(label,blob));
 
         imgDataOut[c]=label;
@@ -151,14 +151,6 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
         blob->m20+=0*0; blob->m02+=r*r;
 
         imgDataOut[0]=lastRowOut[0];
-
-        /*if ((imgDataOut[c-1])&&(imgDataOut[c]!=imgDataOut[c-1]))
-        {
-          CvBlob *blob1=blobs[imgDataOut[c]];
-          CvBlob *blob2=blobs[imgDataOut[c-1]];
-
-          merge(blob1,blob2);
-        }*/
       }
       else
       {
