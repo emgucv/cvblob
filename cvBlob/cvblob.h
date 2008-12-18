@@ -34,11 +34,13 @@ using namespace std;
 extern "C" {
 #endif
 
-#define IPL_DEPTH_LABEL IPL_DEPTH_32F
-//#define IPL_DEPTH_LABEL IPL_DEPTH_8U
 
   typedef unsigned int CvLabel;
   //typedef unsigned char CvLabel;
+
+//#define IPL_DEPTH_LABEL IPL_DEPTH_32F
+//#define IPL_DEPTH_LABEL IPL_DEPTH_8U
+#define IPL_DEPTH_LABEL (sizeof(CvLabel)*8)
   
   ///
   /// Struct that contain information about one blob.
@@ -65,6 +67,7 @@ extern "C" {
     double m20; ///< Moment 20.
     double m02; ///< Moment 02.
     
+    bool centralMoments;
     double u11; ///< Central moment 11.
     double u20; ///< Central moment 20.
     double u02; ///< Central moment 02.
@@ -81,12 +84,18 @@ extern "C" {
   unsigned int cvLabel (IplImage *img, IplImage *imgOut,CvBlobs &blobs);
   //IplImage *cvFilterLabel(IplImage *imgIn, CvLabel label);
   void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs);
-  
+
   CvLabel cvGreaterBlob(CvBlobs blobs);
   void cvFilterByArea(CvBlobs &blobs,unsigned int minArea,unsigned int maxArea);
   CvPoint2D64f cvCentroid(CvBlob *blob);
-  void cvCentralMoments(CvBlob *blob,IplImage *img);
+  void cvCentralMoments(CvBlob *blob, const IplImage *img);
   double cvAngle(CvBlob *blob);
+  
+#define CV_BLOB_RENDER_COLOR            0x0001 // Render each blog with a different color.
+#define CV_BLOB_RENDER_CENTROID         0x0002 // Render bounding box.
+#define CV_BLOB_RENDER_BOUNDING_BOX     0x0004 // Render bounding box.
+#define CV_BLOB_RENDER_ANGLE            0x0008 // Render bounding box.
+  void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x00ff, double alpha=1.);
   
 #ifdef __cplusplus
 }

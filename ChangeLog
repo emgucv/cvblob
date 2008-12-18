@@ -1,3 +1,20 @@
+Version 0.9.4 (2008/12/18)
+
+  * cvblob.cpp:
+    + cvCentralMoments: checks if central moments was been calculate before.
+    + cvRenderBlobs: new function to render blobs.
+    + cvAngle: check if central moments have been caclulated.
+
+  * cvlabel.cpp: initialize "centralMoments".
+
+  * cvblob.h:
+    + IPL_DEPTH_LABEL: now is calculated.
+    + CvBlob: new member: "centralMoments".
+    + cvCentralMoments: image is keeping constant.
+    + cvRenderBlobs: head and "defines".
+
+  * test.cpp: now uses the new function "cvRenderBlobs".
+
 Version 0.9.3 (2008/12/17)
 
   * cvlabel.cpp: rewritten changes of version 0.9.1.
