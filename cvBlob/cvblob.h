@@ -22,7 +22,6 @@
 
 #include <iostream>
 #include <map>
-using namespace std;
 
 #ifdef WIN32
 #include <cv.h>
@@ -78,8 +77,8 @@ extern "C" {
     unsigned int _rank;
   };
   
-  typedef map<CvLabel,CvBlob *> CvBlobs;
-  typedef pair<CvLabel,CvBlob *> CvLabelBlob;
+  typedef std::map<CvLabel,CvBlob *> CvBlobs;
+  typedef std::pair<CvLabel,CvBlob *> CvLabelBlob;
   
   unsigned int cvLabel (IplImage *img, IplImage *imgOut,CvBlobs &blobs);
   //IplImage *cvFilterLabel(IplImage *imgIn, CvLabel label);
