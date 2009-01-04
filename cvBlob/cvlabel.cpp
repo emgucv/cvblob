@@ -94,6 +94,10 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
   char *imgDataIn=img->imageData;
   CvLabel *imgDataOut=(CvLabel *)imgOut->imageData;
 
+  int stepIn = img->widthStep / (img->depth / 8);
+  int stepOut = imgOut->widthStep / (imgOut->depth / 8);
+
+  // Check first pixel (0, 0)
   if (imgDataIn[0])
   {
     label++;
@@ -113,6 +117,7 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
     imgDataOut[0]=label;
   }
 
+  // Check first row (c, 0)
   for (unsigned int c=1;c<img->width;c++)
   {
     if (imgDataIn[c])
@@ -152,11 +157,11 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
 
   CvLabel *lastRowOut=(CvLabel *)imgOut->imageData;
 
-  imgDataIn+=img->width;
-  imgDataOut+=imgOut->width;
+  imgDataIn+=stepIn;
+  imgDataOut+=stepOut;
 
   for (unsigned int r=1;r<img->height;r++,
-      lastRowOut+=imgOut->width,imgDataIn+=img->width,imgDataOut+=imgOut->width)
+      lastRowOut+=stepOut,imgDataIn+=stepIn,imgDataOut+=stepOut)
   {
     if (imgDataIn[0])
     {
@@ -268,9 +273,8 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
     luLabels[(*it).first]=blob2->label;
   }
   
-  //imgDataOut=(CvLabel *)imgOut->imageData+imgOut->width;
   imgDataOut=(CvLabel *)imgOut->imageData;
-  for (int r=1;r<imgOut->height;r++,imgDataOut+=imgOut->width)
+  for (int r=1;r<imgOut->height;r++,imgDataOut+=stepOut)
     for (int c=1;c<imgOut->width;c++)
       imgDataOut[c]=luLabels[imgDataOut[c]];
   
@@ -327,10 +331,10 @@ void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs)
   if ((imgOut->depth!=IPL_DEPTH_8U)||(imgOut->nChannels!=1))
     throw logic_error("Input image format.");
   
-  char *imgDataOut=imgOut->imageData+imgOut->width;
-  CvLabel *imgDataIn=(CvLabel *)imgIn->imageData+imgIn->width;
+  char *imgDataOut=imgOut->imageData;
+  CvLabel *imgDataIn=(CvLabel *)imgIn->imageData;
   for (unsigned int r=1;r<imgIn->height;r++,
-       imgDataIn+=imgIn->width,imgDataOut+=imgOut->width)
+       imgDataIn+=imgIn->widthStep/(imgIn->depth/8),imgDataOut+=imgOut->widthStep/(imgOut->depth/8))
   {
     for (unsigned int c=1;c<imgIn->width;c++)
     {

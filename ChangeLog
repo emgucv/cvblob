@@ -1,3 +1,9 @@
+Version 0.9.5 (2009/01/04)
+
+  * cvlabel.cpp, cvblob.cpp: fixed bug that appears when images has an odd
+  number of columns. "widhtStep", "depth" and "nChannels" are used now. Thanks
+  again to Stefan Gachter for give me the solution.
+
 Version 0.9.4 (2008/12/18)
 
   * cvblob.cpp:

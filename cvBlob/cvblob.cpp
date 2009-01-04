@@ -86,10 +86,10 @@ void cvCentralMoments(CvBlob *blob, const IplImage *img)
     blob->u11=blob->u20=blob->u02=0.;
 
     // Only in the bounding box
-    CvLabel *imgData=(CvLabel *)img->imageData+img->width*blob->miny;
+    CvLabel *imgData=(CvLabel *)img->imageData+(img->widthStep/(img->depth/8))*blob->miny;
     for (int r=blob->miny;
         r<blob->maxy;
-        r++,imgData+=img->width)
+        r++,imgData+=img->widthStep/(img->depth/8))
       for (int c=blob->minx;c<blob->maxx;c++)
         if (imgData[c]==blob->label)
         {
@@ -179,16 +179,18 @@ void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource,
     unsigned char *source = (unsigned char *)imgSource->imageData;
     unsigned char *imgData = (unsigned char *)imgDest->imageData;
 
-    for (unsigned int r=0; r<imgLabel->height; r++)
-      for (unsigned int c=0; c<imgLabel->width; c++, labels++, source+=3, imgData+=3)
+    for (unsigned int r=0; r<imgLabel->height; r++,
+	 labels+=imgLabel->widthStep/(imgLabel->depth/8),
+	 source+=imgSource->widthStep/(imgSource->depth/8), imgData+=imgDest->widthStep/(imgDest->depth/8))
+      for (unsigned int c=0; c<imgLabel->width; c++)
       {
-        if (labels[0])
+        if (labels[c])
         {
-          Color color = pal[*labels];
+          Color color = pal[labels[c]];
 
-          imgData[0] = (unsigned char)((1.-alpha)*source[0]+alpha*color.b);
-          imgData[1] = (unsigned char)((1.-alpha)*source[1]+alpha*color.g);
-          imgData[2] = (unsigned char)((1.-alpha)*source[2]+alpha*color.r);
+          imgData[imgDest->nChannels*c+0] = (unsigned char)((1.-alpha)*source[imgSource->nChannels*c+0]+alpha*color.b);
+          imgData[imgDest->nChannels*c+1] = (unsigned char)((1.-alpha)*source[imgSource->nChannels*c+1]+alpha*color.g);
+          imgData[imgDest->nChannels*c+2] = (unsigned char)((1.-alpha)*source[imgSource->nChannels*c+2]+alpha*color.r);
         }
       }
   }
