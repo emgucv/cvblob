@@ -87,10 +87,10 @@ void cvCentralMoments(CvBlob *blob, const IplImage *img)
 
     // Only in the bounding box
     CvLabel *imgData=(CvLabel *)img->imageData+(img->widthStep/(img->depth/8))*blob->miny;
-    for (int r=blob->miny;
+    for (unsigned int r=blob->miny;
         r<blob->maxy;
         r++,imgData+=img->widthStep/(img->depth/8))
-      for (int c=blob->minx;c<blob->maxx;c++)
+      for (unsigned int c=blob->minx;c<blob->maxx;c++)
         if (imgData[c]==blob->label)
         {
           double tx=(c-blob->centroid.x);
@@ -120,22 +120,22 @@ void cvCentralMoments(CvBlob *blob, const IplImage *img)
   switch (_hi) \
   { \
     case 0: \
-      R = 255*V; G = 255*_t; B = 255*_p; \
+      R = 255.*V; G = 255.*_t; B = 255.*_p; \
       break; \
     case 1: \
-      R = 255*_q; G = 255*V; B = 255*_p; \
+      R = 255.*_q; G = 255.*V; B = 255.*_p; \
       break; \
     case 2: \
-      R = 255*_p; G = 255*V; B = 255*_t; \
+      R = 255.*_p; G = 255.*V; B = 255.*_t; \
       break; \
     case 3: \
-      R = 255*_p; G = 255*_q; B = 255*V; \
+      R = 255.*_p; G = 255.*_q; B = 255.*V; \
       break; \
     case 4: \
-      R = 255*_t; G = 255*_p; B = 255*V; \
+      R = 255.*_t; G = 255.*_p; B = 255.*V; \
       break; \
     case 5: \
-      R = 255*V; G = 255*_p; B = 255*_q; \
+      R = 255.*V; G = 255.*_p; B = 255.*_q; \
       break; \
   } \
 }
@@ -220,8 +220,8 @@ void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource,
 
       if (mode&CV_BLOB_RENDER_CENTROID)
       {
-      cvLine(imgDest,cvPoint(int(blob->centroid.x)-3,int(blob->centroid.y)),cvPoint(int(blob->centroid.x)+3,int(blob->centroid.y)),CV_RGB(0.,0.,255.));
-      cvLine(imgDest,cvPoint(int(blob->centroid.x),int(blob->centroid.y)-3),cvPoint(int(blob->centroid.x),int(blob->centroid.y)+3),CV_RGB(0.,0.,255.));
+	cvLine(imgDest,cvPoint(int(blob->centroid.x)-3,int(blob->centroid.y)),cvPoint(int(blob->centroid.x)+3,int(blob->centroid.y)),CV_RGB(0.,0.,255.));
+	cvLine(imgDest,cvPoint(int(blob->centroid.x),int(blob->centroid.y)-3),cvPoint(int(blob->centroid.x),int(blob->centroid.y)+3),CV_RGB(0.,0.,255.));
       }
     }
   }

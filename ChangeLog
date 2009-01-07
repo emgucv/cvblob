@@ -1,3 +1,7 @@
+Version 0.9.6 (2009/01/07)
+
+  * cvblob.cpp: fixed some warnings and indentation.
+
 Version 0.9.5 (2009/01/04)
 
   * cvlabel.cpp, cvblob.cpp: fixed bug that appears when images has an odd
