@@ -91,9 +91,11 @@ extern "C" {
   double cvAngle(CvBlob *blob);
   
 #define CV_BLOB_RENDER_COLOR            0x0001 // Render each blog with a different color.
-#define CV_BLOB_RENDER_CENTROID         0x0002 // Render bounding box.
+#define CV_BLOB_RENDER_CENTROID         0x0002 // Render centroid.
 #define CV_BLOB_RENDER_BOUNDING_BOX     0x0004 // Render bounding box.
-#define CV_BLOB_RENDER_ANGLE            0x0008 // Render bounding box.
+#define CV_BLOB_RENDER_ANGLE            0x0008 // Render angle.
+#define CV_BLOB_RENDER_TO_LOG           0x0010 // Print blob data to log out.
+#define CV_BLOB_RENDER_TO_STD           0x0020 // Print blob data to std out.
   void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x00ff, double alpha=1.);
   
 #ifdef __cplusplus

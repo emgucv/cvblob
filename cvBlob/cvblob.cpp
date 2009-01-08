@@ -201,6 +201,26 @@ void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource,
     {
       CvBlob *blob=(*it).second;
 
+      if (mode&CV_BLOB_RENDER_TO_LOG)
+      {
+	std::clog << "Blob " << blob->label << std::endl;
+	std::clog << " - Bounding box: (" << blob->minx << ", " << blob->miny << ") - (" << blob->maxx << ", " << blob->maxy << ")" << std::endl;
+	std::clog << " - Bounding box area: " << (blob->maxx - blob->minx) * (blob->maxy - blob->miny) << std::endl;
+	std::clog << " - Area: " << blob->area << std::endl;
+	std::clog << " - Centroid: (" << blob->centroid.x << ", " << blob->centroid.y << ")" << std::endl;
+	std::clog << std::endl;
+      }
+
+      if (mode&CV_BLOB_RENDER_TO_STD)
+      {
+	std::cout << "Blob " << blob->label << std::endl;
+	std::cout << " - Bounding box: (" << blob->minx << ", " << blob->miny << ") - (" << blob->maxx << ", " << blob->maxy << ")" << std::endl;
+	std::cout << " - Bounding box area: " << (blob->maxx - blob->minx) * (blob->maxy - blob->miny) << std::endl;
+	std::cout << " - Area: " << blob->area << std::endl;
+	std::cout << " - Centroid: (" << blob->centroid.x << ", " << blob->centroid.y << ")" << std::endl;
+	std::cout << std::endl;
+      }
+
       if (mode&CV_BLOB_RENDER_BOUNDING_BOX)
         cvRectangle(imgDest,cvPoint(blob->minx,blob->miny),cvPoint(blob->maxx,blob->maxy),CV_RGB(255.,0.,0.));
 

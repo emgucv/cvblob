@@ -1,6 +1,11 @@
 Version 0.9.6 (2009/01/07)
 
-  * cvblob.cpp: fixed some warnings and indentation.
+  * cvblob.cpp:
+    + Various: fixed some warnings and indentation.
+    + cvRenderBlobs: new features. Now print blob information to log and standard
+    out.
+
+  * cvblob.h: cvRenderBlobs new features.
 
 Version 0.9.5 (2009/01/04)
 
