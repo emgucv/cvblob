@@ -263,12 +263,15 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
     CvBlob *blob1=(*it).second;
     CvBlob *blob2=find(blob1);
     
-    blob2->area+=blob1->area;
-    blob2->minx=_MIN_(blob2->minx,blob1->minx); blob2->maxx=_MAX_(blob2->maxx,blob1->maxx);
-    blob2->miny=_MIN_(blob2->miny,blob1->miny); blob2->maxy=_MAX_(blob2->maxy,blob1->maxy);
-    blob2->m10+=blob1->m10; blob2->m01+=blob1->m01;
-    blob2->m11+=blob1->m11;
-    blob2->m20+=blob1->m20; blob2->m02+=blob1->m02;
+    if (blob1!=blob2)
+    {
+      blob2->area+=blob1->area;
+      blob2->minx=_MIN_(blob2->minx,blob1->minx); blob2->maxx=_MAX_(blob2->maxx,blob1->maxx);
+      blob2->miny=_MIN_(blob2->miny,blob1->miny); blob2->maxy=_MAX_(blob2->maxy,blob1->maxy);
+      blob2->m10+=blob1->m10; blob2->m01+=blob1->m01;
+      blob2->m11+=blob1->m11;
+      blob2->m20+=blob1->m20; blob2->m02+=blob1->m02;
+    }
     
     luLabels[(*it).first]=blob2->label;
   }

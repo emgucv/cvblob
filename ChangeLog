@@ -7,6 +7,8 @@ Version 0.9.6 (2009/01/07)
 
   * cvblob.h: cvRenderBlobs new features.
 
+  * cvlabel.h: fixed issue about the calculation of the blob area.
+
 Version 0.9.5 (2009/01/04)
 
   * cvlabel.cpp, cvblob.cpp: fixed bug that appears when images has an odd
