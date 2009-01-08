@@ -96,7 +96,7 @@ extern "C" {
 #define CV_BLOB_RENDER_ANGLE            0x0008 // Render angle.
 #define CV_BLOB_RENDER_TO_LOG           0x0010 // Print blob data to log out.
 #define CV_BLOB_RENDER_TO_STD           0x0020 // Print blob data to std out.
-  void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x00ff, double alpha=1.);
+  void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.);
   
 #ifdef __cplusplus
 }
