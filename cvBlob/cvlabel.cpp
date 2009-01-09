@@ -281,7 +281,7 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
     for (int c=1;c<imgOut->width;c++)
       imgDataOut[c]=luLabels[imgDataOut[c]];
   
-  delete luLabels;
+  delete [] luLabels;
   
   // Eliminar los blobs hijos:
   CvBlobs::iterator it=blobs.begin();
