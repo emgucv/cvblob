@@ -195,7 +195,7 @@ void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource,
       }
   }
 
-  if ((mode&CV_BLOB_RENDER_CENTROID)||(mode&CV_BLOB_RENDER_BOUNDING_BOX)||(mode&CV_BLOB_RENDER_ANGLE))
+  if (mode)
   {
     for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); ++it)
     {
