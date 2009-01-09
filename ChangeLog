@@ -1,3 +1,9 @@
+Version 0.9.7 (2009/01/09)
+
+  * cvblob.cpp: fixed little bug in cvRenderBlobs.
+
+  * cvlabel.cpp: fixed memory bug in cvLabel.
+
 Version 0.9.6 (2009/01/07)
 
   * cvblob.cpp:
