@@ -34,6 +34,8 @@ extern "C" {
 #endif
 
 
+  /// Type of label.
+  /// The size of this type is IPL_DEPTH_LABEL (in bits).
   typedef unsigned int CvLabel;
   //typedef unsigned char CvLabel;
 
@@ -41,16 +43,15 @@ extern "C" {
 //#define IPL_DEPTH_LABEL IPL_DEPTH_8U
 #define IPL_DEPTH_LABEL (sizeof(CvLabel)*8)
   
-  ///
   /// Struct that contain information about one blob.
   struct CvBlob
   {
-    CvLabel label; ///< Blob's label.
+    CvLabel label; ///< Label assigned to the blob.
     
     union
     {
-      unsigned int area; ///< Area.
-      unsigned int m00; ///< Moment 00.
+      unsigned int area; ///< Area (moment 00).
+      unsigned int m00; ///< Moment 00 (area).
     };
     
     unsigned int minx; ///< X min.
@@ -66,7 +67,7 @@ extern "C" {
     double m20; ///< Moment 20.
     double m02; ///< Moment 02.
     
-    bool centralMoments;
+    bool centralMoments; ///< True if central moments are being calculated.
     double u11; ///< Central moment 11.
     double u20; ///< Central moment 20.
     double u02; ///< Central moment 02.
@@ -80,6 +81,9 @@ extern "C" {
   typedef std::map<CvLabel,CvBlob *> CvBlobs;
   typedef std::pair<CvLabel,CvBlob *> CvLabelBlob;
   
+  /// Label the connected parts of a binary image.
+  /// @param img Input binary image (depth=IPL_DEPTH_8U and num. channels=1).
+  /// @param imgOut Output image (depth=IPL_DEPTH_LABEL and num. channels=1).
   unsigned int cvLabel (IplImage *img, IplImage *imgOut,CvBlobs &blobs);
   //IplImage *cvFilterLabel(IplImage *imgIn, CvLabel label);
   void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs);
