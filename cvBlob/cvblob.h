@@ -17,6 +17,9 @@
 // along with cvBlob.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+/// \file cvblob.h
+/// \brief OpenCV Blob header file.
+
 #ifndef CVBLOB_H
 #define CVBLOB_H
 
@@ -34,16 +37,17 @@ extern "C" {
 #endif
 
 
-  /// Type of label.
-  /// The size of this type is IPL_DEPTH_LABEL (in bits).
+  /// \brief Type of label.
+  /// \see IPL_DEPTH_LABEL
   typedef unsigned int CvLabel;
   //typedef unsigned char CvLabel;
 
-//#define IPL_DEPTH_LABEL IPL_DEPTH_32F
-//#define IPL_DEPTH_LABEL IPL_DEPTH_8U
+  /// \def IPL_DEPTH_LABEL
+  /// \brief Size of a label in bits.
+  /// \see CvLabel
 #define IPL_DEPTH_LABEL (sizeof(CvLabel)*8)
   
-  /// Struct that contain information about one blob.
+  /// \brief Struct that contain information about one blob.
   struct CvBlob
   {
     CvLabel label; ///< Label assigned to the blob.
@@ -78,28 +82,99 @@ extern "C" {
     unsigned int _rank;
   };
   
+  /// \var typedef std::map<CvLabel,CvBlob *> CvBlobs
+  /// \brief List of blobs.
+  /// A map is used to access each blob from its label number.
+  /// \see CvLabel
+  /// \see CvBlob
   typedef std::map<CvLabel,CvBlob *> CvBlobs;
+
+  /// \var typedef std::pair<CvLabel,CvBlob *> CvLabelBlob
+  /// \brief Pair (label, blob).
+  /// \see CvLabel
+  /// \see CvBlob
   typedef std::pair<CvLabel,CvBlob *> CvLabelBlob;
   
-  /// Label the connected parts of a binary image.
-  /// @param img Input binary image (depth=IPL_DEPTH_8U and num. channels=1).
-  /// @param imgOut Output image (depth=IPL_DEPTH_LABEL and num. channels=1).
-  unsigned int cvLabel (IplImage *img, IplImage *imgOut,CvBlobs &blobs);
+  /// \fn unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs);
+  /// \brief Label the connected parts of a binary image.
+  /// \param img Input binary image (depth=IPL_DEPTH_8U and num. channels=1).
+  /// \param imgOut Output image (depth=IPL_DEPTH_LABEL and num. channels=1).
+  /// \param blobs List of blobs.
+  /// \return Number of pixels that has been labeled.
+  unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs);
+
   //IplImage *cvFilterLabel(IplImage *imgIn, CvLabel label);
+
+  /// \fn void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs)
+  /// \brief Draw a binary image with the blobs that have been given.
+  /// \param imgIn Input image (depth=IPL_DEPTH_LABEL and num. channels=1).
+  /// \param imgOut Output binary image (depth=IPL_DEPTH_8U and num. channels=1).
+  /// \param blobs List of blobs to be drawn.
+  /// \see cvLabel
   void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs);
 
+  /// \fn CvLabel cvGreaterBlob(CvBlobs blobs)
+  /// \brief Find greater blob.
+  /// \param blobs List of blobs.
+  /// \return Label of greater blob.
+  /// \see cvLabel
   CvLabel cvGreaterBlob(CvBlobs blobs);
+
+  /// \fn void cvFilterByArea(CvBlobs &blobs,unsigned int minArea,unsigned int maxArea)
+  /// \brief Filter blobs by area.
+  /// Those blobs whose areas are not in range will be erased from the input list of blobs.
+  /// \param blobs List of blobs.
+  /// \param minArea Minimun area.
+  /// \param maxArea Maximun area.
   void cvFilterByArea(CvBlobs &blobs,unsigned int minArea,unsigned int maxArea);
+
+  /// \fn CvPoint2D64f cvCentroid(CvBlob *blob)
+  /// \brief Calculates centroid.
+  /// Centroid will be returned and stored in the blob structure.
+  /// \param blob Blob whose centroid will be calculated.
+  /// \return Centroid.
+  /// \see CvBlob
   CvPoint2D64f cvCentroid(CvBlob *blob);
+
+  /// \fn void cvCentralMoments(CvBlob *blob, const IplImage *img)
+  /// \brief Calculates central moment for a blob.
+  /// Central moments will be stored in blob structure.
+  /// \param blob Blob.
+  /// \param img Label image (depth=IPL_DEPTH_LABEL and num. channels=1).
+  /// \see CvBlob
+  /// \see cvLabel
   void cvCentralMoments(CvBlob *blob, const IplImage *img);
+
+  /// \fn double cvAngle(CvBlob *blob)
+  /// \brief Calculates angle orientation of a blob.
+  /// This function uses central moments so cvCentralMoments should have been called before for this blob.
+  /// \param blob Blob.
+  /// \return Angle orientation in radians.
+  /// \see cvCentralMoments
+  /// \see CvBlob
   double cvAngle(CvBlob *blob);
   
-#define CV_BLOB_RENDER_COLOR            0x0001 // Render each blog with a different color.
-#define CV_BLOB_RENDER_CENTROID         0x0002 // Render centroid.
-#define CV_BLOB_RENDER_BOUNDING_BOX     0x0004 // Render bounding box.
-#define CV_BLOB_RENDER_ANGLE            0x0008 // Render angle.
-#define CV_BLOB_RENDER_TO_LOG           0x0010 // Print blob data to log out.
-#define CV_BLOB_RENDER_TO_STD           0x0020 // Print blob data to std out.
+#define CV_BLOB_RENDER_COLOR            0x0001 ///< Render each blog with a different color. \see cvRenderBlobs
+#define CV_BLOB_RENDER_CENTROID         0x0002 ///< Render centroid. \see cvRenderBlobs
+#define CV_BLOB_RENDER_BOUNDING_BOX     0x0004 ///< Render bounding box. \see cvRenderBlobs
+#define CV_BLOB_RENDER_ANGLE            0x0008 ///< Render angle. \see cvRenderBlobs
+#define CV_BLOB_RENDER_TO_LOG           0x0010 ///< Print blob data to log out. \see cvRenderBlobs
+#define CV_BLOB_RENDER_TO_STD           0x0020 ///< Print blob data to std out. \see cvRenderBlobs
+
+  /// \fn void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.)
+  /// \brief Draws or prints information about blobs.
+  /// \param imgLabel Label image (depth=IPL_DEPTH_LABEL and num. channels=1).
+  /// \param blobs List of blobs.
+  /// \param imgSource Input image (depth=IPL_DEPTH_8U and num. channels=3).
+  /// \param imgDest Output image (depth=IPL_DEPTH_8U and num. channels=3).
+  /// \param mode Render mode. By default is CV_BLOB_RENDER_COLOR|CV_BLOB_RENDER_CENTROID|CV_BLOB_RENDER_BOUNDING_BOX|CV_BLOB_RENDER_ANGLE.
+  /// \param alpha If mode CV_BLOB_RENDER_COLOR is used. 1.0 indicates opaque and 0.0 translucent (1.0 by default).
+  /// \see CV_BLOB_RENDER_COLOR
+  /// \see CV_BLOB_RENDER_CENTROID
+  /// \see CV_BLOB_RENDER_BOUNDING_BOX
+  /// \see CV_BLOB_RENDER_ANGLE
+  /// \see CV_BLOB_RENDER_TO_LOG
+  /// \see CV_BLOB_RENDER_TO_STD
   void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.);
   
 #ifdef __cplusplus
