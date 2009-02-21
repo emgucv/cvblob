@@ -106,6 +106,9 @@ void cvCentralMoments(CvBlob *blob, const IplImage *img)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Based on http://en.wikipedia.org/wiki/HSL_and_HSV
+
+/// \def _HSV2RGB_(H, S, V, R, G, B)
+/// \brief Color translation between HSV and RGB.
 #define _HSV2RGB_(H, S, V, R, G, B) \
 { \
   double _h = H/60.; \
@@ -205,7 +208,7 @@ void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource,
       {
 	std::clog << "Blob " << blob->label << std::endl;
 	std::clog << " - Bounding box: (" << blob->minx << ", " << blob->miny << ") - (" << blob->maxx << ", " << blob->maxy << ")" << std::endl;
-	std::clog << " - Bounding box area: " << (blob->maxx - blob->minx) * (blob->maxy - blob->miny) << std::endl;
+	std::clog << " - Bounding box area: " << (1 + blob->maxx - blob->minx) * (1 + blob->maxy - blob->miny) << std::endl;
 	std::clog << " - Area: " << blob->area << std::endl;
 	std::clog << " - Centroid: (" << blob->centroid.x << ", " << blob->centroid.y << ")" << std::endl;
 	std::clog << std::endl;
@@ -215,7 +218,7 @@ void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource,
       {
 	std::cout << "Blob " << blob->label << std::endl;
 	std::cout << " - Bounding box: (" << blob->minx << ", " << blob->miny << ") - (" << blob->maxx << ", " << blob->maxy << ")" << std::endl;
-	std::cout << " - Bounding box area: " << (blob->maxx - blob->minx) * (blob->maxy - blob->miny) << std::endl;
+	std::cout << " - Bounding box area: " << (1 + blob->maxx - blob->minx) * (1 + blob->maxy - blob->miny) << std::endl;
 	std::cout << " - Area: " << blob->area << std::endl;
 	std::cout << " - Centroid: (" << blob->centroid.x << ", " << blob->centroid.y << ")" << std::endl;
 	std::cout << std::endl;
