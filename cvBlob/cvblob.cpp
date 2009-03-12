@@ -29,12 +29,12 @@ using namespace std;
 
 #include "cvblob.h"
 
-CvLabel cvGreaterBlob(CvBlobs blobs)
+CvLabel cvGreaterBlob(const CvBlobs &blobs)
 {
   CvLabel label=0;
   unsigned int maxArea=0;
   
-  for (CvBlobs::iterator it=blobs.begin();it!=blobs.end();++it)
+  for (CvBlobs::const_iterator it=blobs.begin();it!=blobs.end();++it)
   {
     CvBlob *blob=(*it).second;
     //if ((!blob->_parent)&&(blob->area>maxArea))
@@ -48,7 +48,7 @@ CvLabel cvGreaterBlob(CvBlobs blobs)
   return label;
 }
 
-void cvFilterByArea(CvBlobs &blobs,unsigned int minArea,unsigned int maxArea)
+void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea)
 {
   CvBlobs::iterator it=blobs.begin();
   while(it!=blobs.end())
@@ -64,11 +64,6 @@ void cvFilterByArea(CvBlobs &blobs,unsigned int minArea,unsigned int maxArea)
     else
       ++it;
   }
-}
-
-CvPoint2D64f cvCentroid(CvBlob *blob)
-{
-  return blob->centroid=cvPoint2D64f(blob->m10/blob->area,blob->m01/blob->area);
 }
 
 void cvCentralMoments(CvBlob *blob, const IplImage *img)
@@ -147,7 +142,7 @@ void cvCentralMoments(CvBlob *blob, const IplImage *img)
 struct Color { unsigned char r,g, b; };
 typedef std::map<CvLabel, Color> Palete;
 
-void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode, double alpha)
+void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode, double alpha)
 {
   if((imgLabel->depth!=IPL_DEPTH_LABEL)||(imgLabel->nChannels!=1))
   {
@@ -166,7 +161,7 @@ void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource,
     Palete pal;
 
     unsigned int colorCount = 0;
-    for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); ++it)
+    for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
     {
       CvLabel label = (*it).second->label;
 
@@ -200,7 +195,7 @@ void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource,
 
   if (mode)
   {
-    for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); ++it)
+    for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
     {
       CvBlob *blob=(*it).second;
 

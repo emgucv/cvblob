@@ -326,7 +326,7 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
 //   return imgOut;
 // }
 
-void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs)
+void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
 {
   if ((imgIn->depth!=IPL_DEPTH_LABEL)||(imgIn->nChannels!=1))
     throw logic_error("Input image format.");

@@ -111,7 +111,7 @@ extern "C" {
   /// \param imgOut Output binary image (depth=IPL_DEPTH_8U and num. channels=1).
   /// \param blobs List of blobs to be drawn.
   /// \see cvLabel
-  void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs);
+  void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs);
 
   /// \fn inline void cvReleaseBlobs(CvBlobs &blobs)
   /// \brief Clear blobs structure.
@@ -125,28 +125,31 @@ extern "C" {
     blobs.clear();
   }
 
-  /// \fn CvLabel cvGreaterBlob(CvBlobs blobs)
+  /// \fn CvLabel cvGreaterBlob(const CvBlobs &blobs)
   /// \brief Find greater blob.
   /// \param blobs List of blobs.
   /// \return Label of greater blob.
   /// \see cvLabel
-  CvLabel cvGreaterBlob(CvBlobs blobs);
+  CvLabel cvGreaterBlob(const CvBlobs &blobs);
 
-  /// \fn void cvFilterByArea(CvBlobs &blobs,unsigned int minArea,unsigned int maxArea)
+  /// \fn void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea)
   /// \brief Filter blobs by area.
   /// Those blobs whose areas are not in range will be erased from the input list of blobs.
   /// \param blobs List of blobs.
   /// \param minArea Minimun area.
   /// \param maxArea Maximun area.
-  void cvFilterByArea(CvBlobs &blobs,unsigned int minArea,unsigned int maxArea);
+  void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea);
 
-  /// \fn CvPoint2D64f cvCentroid(CvBlob *blob)
+  /// \fn inline CvPoint2D64f cvCentroid(CvBlob *blob)
   /// \brief Calculates centroid.
   /// Centroid will be returned and stored in the blob structure.
   /// \param blob Blob whose centroid will be calculated.
   /// \return Centroid.
   /// \see CvBlob
-  CvPoint2D64f cvCentroid(CvBlob *blob);
+  inline CvPoint2D64f cvCentroid(CvBlob *blob)
+  {
+    return blob->centroid=cvPoint2D64f(blob->m10/blob->area, blob->m01/blob->area);
+  }
 
   /// \fn void cvCentralMoments(CvBlob *blob, const IplImage *img)
   /// \brief Calculates central moment for a blob.
@@ -173,7 +176,7 @@ extern "C" {
 #define CV_BLOB_RENDER_TO_LOG           0x0010 ///< Print blob data to log out. \see cvRenderBlobs
 #define CV_BLOB_RENDER_TO_STD           0x0020 ///< Print blob data to std out. \see cvRenderBlobs
 
-  /// \fn void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.)
+  /// \fn void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.)
   /// \brief Draws or prints information about blobs.
   /// \param imgLabel Label image (depth=IPL_DEPTH_LABEL and num. channels=1).
   /// \param blobs List of blobs.
@@ -187,7 +190,7 @@ extern "C" {
   /// \see CV_BLOB_RENDER_ANGLE
   /// \see CV_BLOB_RENDER_TO_LOG
   /// \see CV_BLOB_RENDER_TO_STD
-  void cvRenderBlobs(const IplImage *imgLabel, CvBlobs blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.);
+  void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.);
   
 #ifdef __cplusplus
 }
