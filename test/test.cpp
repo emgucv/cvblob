@@ -55,5 +55,7 @@ int main()
   cvReleaseImage(&labelImg);
   cvReleaseImage(&img);
 
+  cvReleaseBlobs(blobs);
+
   return 0;
 }
