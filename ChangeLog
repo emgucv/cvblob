@@ -1,8 +1,16 @@
-Version 0.9.8 (2009/02/09)
+Version 0.9.8 (2009/03/13)
 
   * cvblob.h: Doxygen documentation added.
 
   * Doxyfile: new file. Doxygen configuration.
+
+  * cvlabel: fixed bounding box area calculation in cvRenderBlobs.
+
+  * cvblob.h, cvblob.cpp:
+    + cvReleaseBlobs: new function to release memory.
+    + Various: trying some optimization.
+
+  * test.cpp: releases blobs.
 
 Version 0.9.7 (2009/01/09)
 
