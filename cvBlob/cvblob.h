@@ -113,6 +113,18 @@ extern "C" {
   /// \see cvLabel
   void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs);
 
+  /// \fn inline void cvReleaseBlobs(CvBlobs &blobs)
+  /// \brief Clear blobs structure.
+  /// \param blobs List of blobs.
+  /// \see CvBlobs
+  inline void cvReleaseBlobs(CvBlobs &blobs)
+  {
+    for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); it++)
+      delete (*it).second;
+
+    blobs.clear();
+  }
+
   /// \fn CvLabel cvGreaterBlob(CvBlobs blobs)
   /// \brief Find greater blob.
   /// \param blobs List of blobs.
