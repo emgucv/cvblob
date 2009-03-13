@@ -89,7 +89,7 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
   cvSetZero(imgOut);
   
   CvLabel label=0;
-  blobs.clear();
+  cvReleaseBlobs(blobs);
   
   char *imgDataIn=img->imageData;
   CvLabel *imgDataOut=(CvLabel *)imgOut->imageData;
