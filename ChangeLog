@@ -4,7 +4,8 @@ Version 0.9.8 (2009/03/13)
 
   * Doxyfile: new file. Doxygen configuration.
 
-  * cvlabel: fixed bounding box area calculation in cvRenderBlobs.
+  * cvlabel: fixed bounding box area calculation in cvRenderBlobs, and blobs
+  structure release.
 
   * cvblob.h, cvblob.cpp:
     + cvReleaseBlobs: new function to release memory.
