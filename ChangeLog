@@ -1,3 +1,9 @@
+Version 0.9.9 (2009/09/11)
+
+  * cvblob.cpp, cvlabel.cpp: ImageROI support by Kouichi Nishino.
+
+  * README: updated contributors.
+
 Version 0.9.8 (2009/03/13)
 
   * cvblob.h: Doxygen documentation added.

@@ -91,11 +91,29 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
   CvLabel label=0;
   cvReleaseBlobs(blobs);
   
-  char *imgDataIn=img->imageData;
-  CvLabel *imgDataOut=(CvLabel *)imgOut->imageData;
-
   int stepIn = img->widthStep / (img->depth / 8);
   int stepOut = imgOut->widthStep / (imgOut->depth / 8);
+  int imgIn_width = img->width;
+  int imgIn_height = img->height;
+  int imgIn_offset = 0;
+  int imgOut_width = imgOut->width;
+  int imgOut_height = imgOut->height;
+  int imgOut_offset = 0;
+  if(img->roi)
+  {
+    imgIn_width = img->roi->width;
+    imgIn_height = img->roi->height;
+    imgIn_offset = img->roi->xOffset + (img->roi->yOffset * stepIn);
+  }
+  if(imgOut->roi)
+  {
+    imgOut_width = imgOut->roi->width;
+    imgOut_height = imgOut->roi->height;
+    imgOut_offset = imgOut->roi->xOffset + (imgOut->roi->yOffset * stepOut);
+  }
+
+  char *imgDataIn = img->imageData + imgIn_offset;
+  CvLabel *imgDataOut = (CvLabel *)imgOut->imageData + imgOut_offset;
 
   // Check first pixel (0, 0)
   if (imgDataIn[0])
@@ -118,7 +136,7 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
   }
 
   // Check first row (c, 0)
-  for (unsigned int c=1;c<img->width;c++)
+  for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
   {
     if (imgDataIn[c])
     {
@@ -155,12 +173,12 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
     }
   }
 
-  CvLabel *lastRowOut=(CvLabel *)imgOut->imageData;
+  CvLabel *lastRowOut=(CvLabel *)imgOut->imageData + imgOut_offset;
 
   imgDataIn+=stepIn;
   imgDataOut+=stepOut;
 
-  for (unsigned int r=1;r<img->height;r++,
+  for (unsigned int r=1;r<(unsigned int)imgIn_height;r++,
       lastRowOut+=stepOut,imgDataIn+=stepIn,imgDataOut+=stepOut)
   {
     if (imgDataIn[0])
@@ -197,7 +215,7 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
       }
     }
     
-    for (unsigned int c=1;c<img->width;c++)
+    for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
     {
       if (imgDataIn[c])
       {
@@ -276,9 +294,9 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
     luLabels[(*it).first]=blob2->label;
   }
   
-  imgDataOut=(CvLabel *)imgOut->imageData;
-  for (int r=1;r<imgOut->height;r++,imgDataOut+=stepOut)
-    for (int c=1;c<imgOut->width;c++)
+  imgDataOut=(CvLabel *)imgOut->imageData + imgOut_offset;
+  for (int r=1;r<imgOut_height;r++,imgDataOut+=stepOut)
+    for (int c=1;c<imgOut_width;c++)
       imgDataOut[c]=luLabels[imgDataOut[c]];
   
   delete [] luLabels;
@@ -334,17 +352,39 @@ void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
   if ((imgOut->depth!=IPL_DEPTH_8U)||(imgOut->nChannels!=1))
     throw logic_error("Input image format.");
   
-  char *imgDataOut=imgOut->imageData;
-  CvLabel *imgDataIn=(CvLabel *)imgIn->imageData;
-  for (unsigned int r=1;r<imgIn->height;r++,
-       imgDataIn+=imgIn->widthStep/(imgIn->depth/8),imgDataOut+=imgOut->widthStep/(imgOut->depth/8))
+  int stepIn = imgIn->widthStep / (imgIn->depth / 8);
+  int stepOut = imgOut->widthStep / (imgOut->depth / 8);
+  int imgIn_width = imgIn->width;
+  int imgIn_height = imgIn->height;
+  int imgIn_offset = 0;
+  int imgOut_width = imgOut->width;
+  int imgOut_height = imgOut->height;
+  int imgOut_offset = 0;
+  if(0 != imgIn->roi)
   {
-    for (unsigned int c=1;c<imgIn->width;c++)
+    imgIn_width = imgIn->roi->width;
+    imgIn_height = imgIn->roi->height;
+    imgIn_offset = imgIn->roi->xOffset + (imgIn->roi->yOffset * stepIn);
+  }
+  if(0 != imgOut->roi)
+  {
+    imgOut_width = imgOut->roi->width;
+    imgOut_height = imgOut->roi->height;
+    imgOut_offset = imgOut->roi->xOffset + (imgOut->roi->yOffset * stepOut);
+  }
+
+  char *imgDataOut=imgOut->imageData + imgOut_offset;
+  CvLabel *imgDataIn=(CvLabel *)imgIn->imageData + imgIn_offset;
+
+  for (unsigned int r=1;r<(unsigned int)imgIn_height;r++,
+      imgDataIn+=stepIn,imgDataOut+=stepOut)
+  {
+    for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
     {
       if (imgDataIn[c])
       {
-        if (blobs.find(imgDataIn[c])==blobs.end()) imgDataOut[c]=0x00;
-        else imgDataOut[c]=0xff;
+	if (blobs.find(imgDataIn[c])==blobs.end()) imgDataOut[c]=0x00;
+	else imgDataOut[c]=(char)0xff;
       }
     }
   }

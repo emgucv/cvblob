@@ -81,19 +81,30 @@ void cvCentralMoments(CvBlob *blob, const IplImage *img)
     blob->u11=blob->u20=blob->u02=0.;
 
     // Only in the bounding box
-    CvLabel *imgData=(CvLabel *)img->imageData+(img->widthStep/(img->depth/8))*blob->miny;
+    int stepIn = img->widthStep / (img->depth / 8);
+    int img_width = img->width;
+    int img_height = img->height;
+    int img_offset = 0;
+    if(0 != img->roi)
+    {
+      img_width = img->roi->width;
+      img_height = img->roi->height;
+      img_offset = img->roi->xOffset + (img->roi->yOffset * stepIn);
+    }
+
+    CvLabel *imgData=(CvLabel *)img->imageData + (blob->miny * stepIn) + img_offset;
     for (unsigned int r=blob->miny;
-        r<blob->maxy;
-        r++,imgData+=img->widthStep/(img->depth/8))
+	r<blob->maxy;
+	r++,imgData+=stepIn)
       for (unsigned int c=blob->minx;c<blob->maxx;c++)
-        if (imgData[c]==blob->label)
-        {
-          double tx=(c-blob->centroid.x);
-          double ty=(r-blob->centroid.y);
-          blob->u11+=tx*ty;
-          blob->u20+=tx*tx;
-          blob->u02+=ty*ty;
-        }
+	if (imgData[c]==blob->label)
+	{
+	  double tx=(c-blob->centroid.x);
+	  double ty=(r-blob->centroid.y);
+	  blob->u11+=tx*ty;
+	  blob->u20+=tx*tx;
+	  blob->u02+=ty*ty;
+	}
 
     blob->centralMoments = true;
   }
@@ -173,14 +184,43 @@ void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *img
       pal[label] = color;
     }
 
-    CvLabel *labels = (CvLabel *)imgLabel->imageData;
-    unsigned char *source = (unsigned char *)imgSource->imageData;
-    unsigned char *imgData = (unsigned char *)imgDest->imageData;
+    int stepLbl = imgLabel->widthStep/(imgLabel->depth/8);
+    int stepSrc = imgSource->widthStep/(imgSource->depth/8);
+    int stepDst = imgDest->widthStep/(imgDest->depth/8);
+    int imgLabel_width = imgLabel->width;
+    int imgLabel_height = imgLabel->height;
+    int imgLabel_offset = 0;
+    int imgSource_width = imgSource->width;
+    int imgSource_height = imgSource->height;
+    int imgSource_offset = 0;
+    int imgDest_width = imgDest->width;
+    int imgDest_height = imgDest->height;
+    int imgDest_offset = 0;
+    if(0 != imgLabel->roi)
+    {
+      imgLabel_width = imgLabel->roi->width;
+      imgLabel_height = imgLabel->roi->height;
+      imgLabel_offset = (imgLabel->nChannels * imgLabel->roi->xOffset) + (imgLabel->roi->yOffset * stepLbl);
+    }
+    if(0 != imgSource->roi)
+    {
+      imgSource_width = imgSource->roi->width;
+      imgSource_height = imgSource->roi->height;
+      imgSource_offset = (imgSource->nChannels * imgSource->roi->xOffset) + (imgSource->roi->yOffset * stepSrc);
+    }
+    if(0 != imgDest->roi)
+    {
+      imgDest_width = imgDest->roi->width;
+      imgDest_height = imgDest->roi->height;
+      imgDest_offset = (imgDest->nChannels * imgDest->roi->xOffset) + (imgDest->roi->yOffset * stepDst);
+    }
 
-    for (unsigned int r=0; r<imgLabel->height; r++,
-	 labels+=imgLabel->widthStep/(imgLabel->depth/8),
-	 source+=imgSource->widthStep/(imgSource->depth/8), imgData+=imgDest->widthStep/(imgDest->depth/8))
-      for (unsigned int c=0; c<imgLabel->width; c++)
+    CvLabel *labels = (CvLabel *)imgLabel->imageData + imgLabel_offset;
+    unsigned char *source = (unsigned char *)imgSource->imageData + imgSource_offset;
+    unsigned char *imgData = (unsigned char *)imgDest->imageData + imgDest_offset;
+
+    for (unsigned int r=0; r<(unsigned int)imgLabel_height; r++, labels+=stepLbl, source+=stepSrc, imgData+=stepDst)
+      for (unsigned int c=0; c<(unsigned int)imgLabel_width; c++)
       {
         if (labels[c])
         {
