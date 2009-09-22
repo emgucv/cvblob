@@ -25,6 +25,7 @@ link_directories(${caidas_SOURCE_DIR}/lib)
 
 set(FUENTES_CVBLOB cvblob.cpp
                    cvlabel.cpp
+		   cvtrack.cpp
 )
 
 set_source_files_properties(${FUENTES_SRC}

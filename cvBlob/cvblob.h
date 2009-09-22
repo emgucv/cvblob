@@ -47,6 +47,9 @@ extern "C" {
   /// \see CvLabel
 #define IPL_DEPTH_LABEL (sizeof(CvLabel)*8)
   
+  /// \brief Type of identification numbers.
+  typedef unsigned int CvID;
+
   /// \brief Struct that contain information about one blob.
   struct CvBlob
   {
@@ -105,7 +108,7 @@ extern "C" {
 
   //IplImage *cvFilterLabel(IplImage *imgIn, CvLabel label);
 
-  /// \fn void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, CvBlobs blobs)
+  /// \fn void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
   /// \brief Draw a binary image with the blobs that have been given.
   /// \param imgIn Input image (depth=IPL_DEPTH_LABEL and num. channels=1).
   /// \param imgOut Output binary image (depth=IPL_DEPTH_8U and num. channels=1).
@@ -192,6 +195,70 @@ extern "C" {
   /// \see CV_BLOB_RENDER_TO_STD
   void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.);
   
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Tracking
+
+  /// \brief Struct that contain information about one track.
+  /// \see CvID
+  /// \see CvLabel
+  struct CvTrack
+  {
+    CvID id; ///< Track identification number.
+
+    CvLabel label; ///< Label assigned to the blob related to this track.
+    
+    unsigned int minx; ///< X min.
+    unsigned int maxx; ///< X max.
+    unsigned int miny; ///< Y min.
+    unsigned int maxy; ///< y max.
+    
+    CvPoint2D64f centroid; ///< Centroid.
+
+    unsigned int inactive; ///< Indicates number of frames that has been missing.
+  };
+
+  /// \var typedef std:list<CvTrack *> CvTracks
+  /// \brief List of tracks.
+  /// \see CvID
+  /// \see CvTrack
+  typedef std::map<CvID, CvTrack *> CvTracks;
+
+  /// \var typedef std::pair<CvID, CvTrack *> CvIDTracks
+  /// \brief Pair (identification number, track).
+  /// \see CvID
+  /// \see CvTrack
+  typedef std::pair<CvID, CvTrack *> CvIDTracks;
+
+  /// \fn cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive)
+  /// \brief Update list of tracks based on current blobs.
+  /// Tracking based on:
+  /// A. Senior, A. Hampapur, Y-L Tian, L. Brown, S. Pankanti, R. Bolle. Appearance Models for
+  /// Occlusion Handling. Second International workshop on Performance Evaluation of Tracking and
+  /// Surveillance Systems & CVPR'01. December, 2001.
+  /// (http://www.research.ibm.com/peoplevision/PETS2001.pdf)
+  /// \param b List of blobs.
+  /// \param t List of tracks.
+  /// \param thDistance Max distance to determine when a track and a blob match.
+  /// \param thInactive Max number of frames a track can be inactive.
+  /// \see CvBlobs
+  /// \see Tracks
+  void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive);
+
+#define CV_TRACK_RENDER_ID            0x0001 ///< Print the ID of each track in the image. \see cvRenderTracks
+#define CV_TRACK_RENDER_TO_LOG        0x0011 ///< Print track info to log out. \see cvRenderTracks
+#define CV_TRACK_RENDER_TO_STD        0x0012 ///< Print track info to log out. \see cvRenderTracks
+
+  /// \fn void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x00ff, CvFont *font=NULL)
+  /// \brief Prints tracks information.
+  /// \param tracks List of tracks.
+  /// \param imgSource Input image (depth=IPL_DEPTH_8U and num. channels=3).
+  /// \param imgDest Output image (depth=IPL_DEPTH_8U and num. channels=3).
+  /// \param mode Render mode. By default is CV_TRACK_RENDER_ID.
+  /// \param font OpenCV font for print on the image.
+  /// \see CV_TRACK_RENDER_ID
+  /// \see CV_TRACK_RENDER_LOG
+  /// \see CV_TRACK_RENDER_STD
+  void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x00ff, CvFont *font=NULL);
 #ifdef __cplusplus
 }
 #endif

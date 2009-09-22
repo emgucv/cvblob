@@ -27,6 +27,9 @@ set(PACKAGE cvBlob)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeScripts)
 
+set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE Debug)
+
 #if(!WIN32)
 #  set(CMAKE_EXE_LINKER_FLAGS -Bstatic)
 #endif(!WIN32)

@@ -22,6 +22,7 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIR})
 include_directories(${cvBlob_SOURCE_DIR}/cvBlob)
 
+# TEST
 set(TEST_SRC test.cpp)
 
 set_source_files_properties(${TEST_SRC}
@@ -35,6 +36,25 @@ target_link_libraries(test cvblob)
 target_link_libraries(test ${OpenCV_LIBRARIES})
 
 install(TARGETS test
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+)
+
+# TEST TRACKING
+set(TEST_TRACKING_SRC test_tracking.cpp)
+
+set_source_files_properties(${TEST_TRACKING_SRC}
+                            PROPERTIES
+                            COMPILE_FLAGS "-O3"
+)
+
+add_executable(test_tracking ${TEST_TRACKING_SRC})
+
+target_link_libraries(test_tracking cvblob)
+target_link_libraries(test_tracking ${OpenCV_LIBRARIES})
+
+install(TARGETS test_tracking
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib/static
