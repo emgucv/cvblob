@@ -4,8 +4,11 @@ Version 0.9.9 (2009/09/11)
 
   * cvblob.h, cvtrack.cpp: new features. Tracking implementation.
 
-  * test_tracking.cpp: new test for tracking. It needs a blob image sequence
-  for running (not included).
+  * test_tracking.cpp: new test for tracking. 
+
+  * EnterExitCrossingPaths2front_blobs.mpeg,
+  EnterExitCrossingPaths2front_blobs.txt: new files. Video for tracking test
+  and info about the video.
 
   * CMakeLists.txt: various files. Updated. Also "Release/Debug" flag added to
   main "CMakeLists.txt".
