@@ -245,8 +245,8 @@ extern "C" {
   void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive);
 
 #define CV_TRACK_RENDER_ID            0x0001 ///< Print the ID of each track in the image. \see cvRenderTracks
-#define CV_TRACK_RENDER_TO_LOG        0x0011 ///< Print track info to log out. \see cvRenderTracks
-#define CV_TRACK_RENDER_TO_STD        0x0012 ///< Print track info to log out. \see cvRenderTracks
+#define CV_TRACK_RENDER_TO_LOG        0x0010 ///< Print track info to log out. \see cvRenderTracks
+#define CV_TRACK_RENDER_TO_STD        0x0020 ///< Print track info to log out. \see cvRenderTracks
 
   /// \fn void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x00ff, CvFont *font=NULL)
   /// \brief Prints tracks information.
@@ -258,7 +258,7 @@ extern "C" {
   /// \see CV_TRACK_RENDER_ID
   /// \see CV_TRACK_RENDER_LOG
   /// \see CV_TRACK_RENDER_STD
-  void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x00ff, CvFont *font=NULL);
+  void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, CvFont *font=NULL);
 #ifdef __cplusplus
 }
 #endif
