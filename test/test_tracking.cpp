@@ -35,20 +35,27 @@ int main()
 
   cvNamedWindow("test_tracking", CV_WINDOW_AUTOSIZE);
 
-  for (unsigned int frame=1; frame<=484; frame++)
+  CvCapture *capture=cvCreateFileCapture("EnterExitCrossingPaths2front_blobs.mpeg");
+
+  cvGrabFrame(capture);
+  IplImage *img = cvRetrieveFrame(capture);
+
+  IplImage *frame = cvCreateImage(cvGetSize(img), img->depth, img->nChannels);
+
+  while (cvGrabFrame(capture))
   {
-    char filename[200];
-    sprintf(filename, "/home/ccarnero/Proyectos/ComputerVision/videos/CAVIAR/JPEGS/EnterExitCrossingPaths2front_m%04d.png", frame);
-    IplImage *img = cvLoadImage(filename, 1);
+    IplImage *img = cvRetrieveFrame(capture);
 
-    cvSetImageROI(img, cvRect(0, 25, 383, 287));
+    cvResetImageROI(frame);
+    cvConvertScale(img, frame, 1, 0);
+    cvThreshold(frame, frame, 100, 200, CV_THRESH_BINARY);
 
-    cvThreshold(img, img, 100, 200, CV_THRESH_BINARY);
+    cvSetImageROI(frame, cvRect(0, 25, 383, 287));
 
-    IplImage *chB=cvCreateImage(cvGetSize(img),8,1);
-    cvSplit(img,chB,NULL,NULL,NULL);
+    IplImage *chB=cvCreateImage(cvGetSize(frame),8,1);
+    cvSplit(frame,chB,NULL,NULL,NULL);
 
-    IplImage *labelImg = cvCreateImage(cvGetSize(img), IPL_DEPTH_LABEL, 1);
+    IplImage *labelImg = cvCreateImage(cvGetSize(frame), IPL_DEPTH_LABEL, 1);
 
     CvBlobs blobs;
     unsigned int result = cvLabel(chB, labelImg, blobs);
@@ -58,21 +65,21 @@ int main()
     cvUpdateTracks(blobs, tracks, 5., 10);
     //cvUpdateTracks(blobs, tracks, 10., 5);
 
-    cvRenderBlobs(labelImg, blobs, img, img, CV_BLOB_RENDER_CENTROID|CV_BLOB_RENDER_BOUNDING_BOX);
-    cvRenderTracks(tracks, img, img, CV_TRACK_RENDER_ID|CV_TRACK_RENDER_TO_LOG);
+    cvRenderBlobs(labelImg, blobs, frame, frame, CV_BLOB_RENDER_CENTROID|CV_BLOB_RENDER_BOUNDING_BOX);
+    cvRenderTracks(tracks, frame, frame, CV_TRACK_RENDER_ID|CV_TRACK_RENDER_TO_LOG);
 
-    cvShowImage("test_tracking", img);
-    //cvShowImage("test_tracking", chB);
+    cvShowImage("test_tracking", frame);
 
     cvReleaseBlobs(blobs);
 
     cvReleaseImage(&chB);
     cvReleaseImage(&labelImg);
-    cvReleaseImage(&img);
 
-    if ((cvWaitKey(10)&0xff) == 27)
+    if ((cvWaitKey(10)&0xff)==27)
       break;
   }
+
+  cvReleaseImage(&frame);
 
   cvDestroyWindow("test_tracking");
 
