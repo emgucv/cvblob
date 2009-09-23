@@ -230,7 +230,7 @@ extern "C" {
   typedef std::pair<CvID, CvTrack *> CvIDTracks;
 
   /// \fn cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive)
-  /// \brief Update list of tracks based on current blobs.
+  /// \brief Updates list of tracks based on current blobs.
   /// Tracking based on:
   /// A. Senior, A. Hampapur, Y-L Tian, L. Brown, S. Pankanti, R. Bolle. Appearance Models for
   /// Occlusion Handling. Second International workshop on Performance Evaluation of Tracking and
@@ -256,8 +256,8 @@ extern "C" {
   /// \param mode Render mode. By default is CV_TRACK_RENDER_ID.
   /// \param font OpenCV font for print on the image.
   /// \see CV_TRACK_RENDER_ID
-  /// \see CV_TRACK_RENDER_LOG
-  /// \see CV_TRACK_RENDER_STD
+  /// \see CV_TRACK_RENDER_TO_LOG
+  /// \see CV_TRACK_RENDER_TO_STD
   void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, CvFont *font=NULL);
 #ifdef __cplusplus
 }
