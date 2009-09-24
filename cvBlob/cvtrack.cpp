@@ -252,9 +252,12 @@ void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDes
     {
       if (mode&CV_TRACK_RENDER_ID)
       {
-	stringstream buffer;
-	buffer << it->first;
-	cvPutText(imgDest, buffer.str().c_str(), cvPoint((int)it->second->centroid.x, (int)it->second->centroid.y), font, CV_RGB(0.,255.,0.));
+	if (!it->second->inactive)
+	{
+	  stringstream buffer;
+	  buffer << it->first;
+	  cvPutText(imgDest, buffer.str().c_str(), cvPoint((int)it->second->centroid.x, (int)it->second->centroid.y), font, CV_RGB(0.,255.,0.));
+	}
       }
 
       if (mode&CV_TRACK_RENDER_TO_LOG)
