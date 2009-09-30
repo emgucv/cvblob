@@ -36,7 +36,7 @@ int main()
 
   cvThreshold(img, img, 100, 200, CV_THRESH_BINARY);
 
-  cvSetImageROI(img, cvRect(100, 100, 1000, 500));
+  cvSetImageROI(img, cvRect(100, 100, 800, 500));
 
   IplImage *chB=cvCreateImage(cvGetSize(img),8,1);
 
@@ -55,7 +55,6 @@ int main()
     //cvRenderContourChainCode(contour, img);
 
     CvContourPolygon *polygon = cvConvertChainCodesToPolygon(contour);
-
     cvRenderContourPolygon(polygon, img);
 
     delete polygon;

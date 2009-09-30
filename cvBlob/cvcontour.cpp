@@ -65,43 +65,43 @@ CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
   contour->startingPoint = cvPoint(c, blob->miny);
 
   unsigned char direction=1;
-  unsigned char numAttempts=0;
   unsigned int x = contour->startingPoint.x;
   unsigned int y = contour->startingPoint.y;
-  bool found;
 
   imgData=(CvLabel *)img->imageData + img_offset;
 
   do
   {
-    found = false;
-    for (unsigned char i=0; i<3; i++)
+    for (unsigned int numAttempts=0; numAttempts<3; numAttempts++)
     {
-      int nx = x+moves[direction][i][0];
-      int ny = y+moves[direction][i][1];
-      if (((nx>=blob->minx)&&(nx<=blob->maxx)&&(ny>=blob->miny)&&(ny<=blob->maxy))&&
-          (imgData[nx+ny*stepIn]==blob->label))
+      bool found = false;
+
+      for (unsigned char i=0; i<3; i++)
       {
-	found = true;
-	numAttempts=0;
+	int nx = x+moves[direction][i][0];
+	int ny = y+moves[direction][i][1];
+	if (((nx>=blob->minx)&&(nx<=blob->maxx)&&(ny>=blob->miny)&&(ny<=blob->maxy))&&
+	    (imgData[nx+ny*stepIn]==blob->label))
+	{
+	  found = true;
 
-	contour->chainCode.push_back(moves[direction][i][3]);
+	  contour->chainCode.push_back(moves[direction][i][3]);
 
-	x=nx;
-	y=ny;
+	  x=nx;
+	  y=ny;
 
-	direction=moves[direction][i][2];
-	break;
+	  direction=moves[direction][i][2];
+	  break;
+	}
       }
-    }
 
-    if (!found)
-    {
-      direction=(direction+1)%4;
-      numAttempts++;
+      if (!found)
+	direction=(direction+1)%4;
+      else
+	break;
     }
   }
-  while ((numAttempts<3)&&(!(x==contour->startingPoint.x && y==contour->startingPoint.y)));
+  while (!(x==contour->startingPoint.x && y==contour->startingPoint.y));
 
   return contour;
 }
