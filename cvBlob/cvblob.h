@@ -260,8 +260,8 @@ extern "C" {
   /// /see CvChainCodes
   struct CvContourChainCode
   {
-    CvPoint startingPoint;
-    CvChainCodes chainCode;
+    CvPoint startingPoint; ///< Point where contour begin.
+    CvChainCodes chainCode; ///< Polygon description based on chain codes.
   };
 
   /// /brief Polygon based contour.
