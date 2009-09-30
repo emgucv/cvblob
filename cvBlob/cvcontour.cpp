@@ -154,7 +154,6 @@ CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
   {
     if (lastCode!=*it)
     {
-      cout << "x = " << x << ", y = " << y << endl;
       contour->push_back(cvPoint(x, y));
       lastCode=*it;
     }
