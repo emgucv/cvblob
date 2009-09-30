@@ -196,19 +196,19 @@ void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *img
     int imgDest_width = imgDest->width;
     int imgDest_height = imgDest->height;
     int imgDest_offset = 0;
-    if(0 != imgLabel->roi)
+    if(imgLabel->roi)
     {
       imgLabel_width = imgLabel->roi->width;
       imgLabel_height = imgLabel->roi->height;
       imgLabel_offset = (imgLabel->nChannels * imgLabel->roi->xOffset) + (imgLabel->roi->yOffset * stepLbl);
     }
-    if(0 != imgSource->roi)
+    if(imgSource->roi)
     {
       imgSource_width = imgSource->roi->width;
       imgSource_height = imgSource->roi->height;
       imgSource_offset = (imgSource->nChannels * imgSource->roi->xOffset) + (imgSource->roi->yOffset * stepSrc);
     }
-    if(0 != imgDest->roi)
+    if(imgDest->roi)
     {
       imgDest_width = imgDest->roi->width;
       imgDest_height = imgDest->roi->height;
