@@ -285,6 +285,22 @@ extern "C" {
   /// /see CvContourChainCode
   void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255));
   
+  /// /var CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
+  /// /brief Convert a chain code contour to a polygon.
+  /// /param cc Chain code contour.
+  /// /return A polygon.
+  /// /see CvContourChainCode
+  /// /see CvContourPolygon
+  CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc);
+
+  /// /var void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255))
+  /// /brief Draw a polygon.
+  /// /param contour Polygon contour.
+  /// /param img Image to draw on.
+  /// /param color Color to draw (default, white).
+  /// /see CvContourPolygon
+  void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255));
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Tracking
 

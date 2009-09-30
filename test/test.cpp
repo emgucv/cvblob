@@ -52,7 +52,13 @@ int main()
   for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
   {
     CvContourChainCode *contour = cvGetContour(it->second, labelImg);
-    cvRenderContourChainCode(contour, img);
+    //cvRenderContourChainCode(contour, img);
+
+    CvContourPolygon *polygon = cvConvertChainCodesToPolygon(contour);
+
+    cvRenderContourPolygon(polygon, img);
+
+    delete polygon;
     delete contour;
   }
 

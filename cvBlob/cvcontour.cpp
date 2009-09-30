@@ -17,6 +17,9 @@
 // along with cvBlob.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <iostream>
+using namespace std;
+
 #ifdef WIN32
 #include <cv.h>
 #else
@@ -136,5 +139,56 @@ void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const 
 
     x += cvChainCodeMoves[*it][0];
     y += cvChainCodeMoves[*it][1];
+  }
+}
+
+CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
+{
+  CvContourPolygon *contour = new CvContourPolygon;
+
+  unsigned int x = cc->startingPoint.x;
+  unsigned int y = cc->startingPoint.y;
+  CvChainCode lastCode = 0xff;
+
+  for (CvChainCodes::const_iterator it=cc->chainCode.begin(); it!=cc->chainCode.end(); ++it)
+  {
+    if (lastCode!=*it)
+    {
+      cout << "x = " << x << ", y = " << y << endl;
+      contour->push_back(cvPoint(x, y));
+      lastCode=*it;
+    }
+
+    x += cvChainCodeMoves[*it][0];
+    y += cvChainCodeMoves[*it][1];
+  }
+
+  return contour;
+}
+
+void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color)
+{
+  if((img->depth!=IPL_DEPTH_8U)||(img->nChannels!=3))
+  {
+    cerr<<"Error: Output image format."<<endl;
+    return; /// TODO: Errores.
+  }
+
+  CvContourPolygon::const_iterator it=contour->begin();
+
+  if (it!=contour->end())
+  {
+    unsigned int fx, x, fy, y;
+    fx = x = it->x;
+    fy = y = it->y;
+
+    for (; it!=contour->end(); ++it)
+    {
+      cvLine(img, cvPoint(x, y), cvPoint(it->x, it->y), color, 1);
+      x = it->x;
+      y = it->y;
+    }
+
+    cvLine(img, cvPoint(x, y), cvPoint(fx, fy), color, 1);
   }
 }
