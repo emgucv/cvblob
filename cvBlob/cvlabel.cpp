@@ -295,8 +295,8 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
   }
   
   imgDataOut=(CvLabel *)imgOut->imageData + imgOut_offset;
-  for (int r=1;r<imgOut_height;r++,imgDataOut+=stepOut)
-    for (int c=1;c<imgOut_width;c++)
+  for (int r=0;r<imgOut_height;r++,imgDataOut+=stepOut)
+    for (int c=0;c<imgOut_width;c++)
       imgDataOut[c]=luLabels[imgDataOut[c]];
   
   delete [] luLabels;
