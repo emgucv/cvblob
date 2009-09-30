@@ -18,6 +18,7 @@
 //
 
 #include <iostream>
+using namespace std;
 
 #ifdef WIN32
 #include <cv.h>
@@ -35,16 +36,25 @@ int main()
 
   cvThreshold(img, img, 100, 200, CV_THRESH_BINARY);
 
+  cvSetImageROI(img, cvRect(100, 100, 1000, 500));
+
   IplImage *chB=cvCreateImage(cvGetSize(img),8,1);
 
   cvSplit(img,chB,NULL,NULL,NULL);
 
-  IplImage *labelImg = cvCreateImage(cvGetSize(img),IPL_DEPTH_LABEL,1);
+  IplImage *labelImg = cvCreateImage(cvGetSize(chB),IPL_DEPTH_LABEL,1);
 
   CvBlobs blobs;
   unsigned int result = cvLabel(chB, labelImg, blobs);
 
   cvRenderBlobs(labelImg, blobs, img, img);
+
+  for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
+  {
+    CvContourChainCode *contour = cvGetContour(it->second, labelImg);
+    cvRenderContourChainCode(contour, img);
+    delete contour;
+  }
 
   cvNamedWindow("test", 1);
   cvShowImage("test", img);

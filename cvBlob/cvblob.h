@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <map>
+#include <list>
 
 #ifdef WIN32
 #include <cv.h>
@@ -194,6 +195,95 @@ extern "C" {
   /// \see CV_BLOB_RENDER_TO_LOG
   /// \see CV_BLOB_RENDER_TO_STD
   void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.);
+
+  /// \fn void cvSetImageROItoBlob(IplImage *img, CvBlob const *blob)
+  /// \brief Set the ROI of an image to the bounding box of a blob.
+  /// \param img Image.
+  /// \param blob Blob.
+  /// \see CvBlob
+  inline void cvSetImageROItoBlob(IplImage *img, CvBlob const *blob)
+  {
+    cvSetImageROI(img, cvRect(blob->minx, blob->miny, blob->maxx-blob->minx, blob->maxy-blob->miny));
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Contours
+  
+  // Chain code:
+  //        7 0 1
+  //        6   2
+  //        5 4 3
+#define CV_CHAINCODE_UP		0 ///< Up.
+#define CV_CHAINCODE_UP_RIGHT	1 ///< Up and right.
+#define CV_CHAINCODE_RIGHT	2 ///< Right.
+#define CV_CHAINCODE_DOWN_RIGHT	3 ///< Down and right.
+#define CV_CHAINCODE_DOWN	4 ///< Down.
+#define CV_CHAINCODE_DOWN_LEFT	5 ///< Down and left.
+#define CV_CHAINCODE_LEFT	6 ///< Left.
+#define CV_CHAINCODE_UP_LEFT	7 ///< Up and left.
+
+  /// /brief Move vectors of chain codes.
+  /// /see CV_CHAINCODE_UP
+  /// /see CV_CHAINCODE_UP_LEFT
+  /// /see CV_CHAINCODE_LEFT
+  /// /see CV_CHAINCODE_DOWN_LEFT
+  /// /see CV_CHAINCODE_DOWN
+  /// /see CV_CHAINCODE_DOWN_RIGHT
+  /// /see CV_CHAINCODE_RIGHT
+  /// /see CV_CHAINCODE_UP_RIGHT
+  const char cvChainCodeMoves[8][2] = { { 0, -1},
+                                        { 1, -1},
+					{ 1,  0},
+					{ 1,  1},
+					{ 0,  1},
+					{-1,  1},
+					{-1,  0},
+					{-1, -1}
+                                      };
+
+  /// /brief Direction.
+  /// /see CV_CHAINCODE_UP
+  /// /see CV_CHAINCODE_UP_LEFT
+  /// /see CV_CHAINCODE_LEFT
+  /// /see CV_CHAINCODE_DOWN_LEFT
+  /// /see CV_CHAINCODE_DOWN
+  /// /see CV_CHAINCODE_DOWN_RIGHT
+  /// /see CV_CHAINCODE_RIGHT
+  /// /see CV_CHAINCODE_UP_RIGHT
+  typedef unsigned char CvChainCode;
+
+  /// /brief Chain code.
+  /// /see CvChainCode
+  typedef std::list<CvChainCode> CvChainCodes;
+
+  /// /brief Chain code contour.
+  /// /see CvChainCodes
+  struct CvContourChainCode
+  {
+    CvPoint startingPoint;
+    CvChainCodes chainCode;
+  };
+
+  /// /brief Polygon based contour.
+  typedef std::list<CvPoint> CvContourPolygon;
+
+  /// /var CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
+  /// /brief Get the contour of a blob.
+  /// Uses Theo Pavlidis' algorithm (see http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/theo.html ).
+  /// /param blob Blob.
+  /// /param img Label image.
+  /// /return Chain code contour.
+  /// /see CvContourChainCode
+  /// /see CvBlob
+  CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img);
+
+  /// /var void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255))
+  /// /brief Draw a contour.
+  /// /param contour Chain code contour.
+  /// /param img Image to draw on.
+  /// /param color Color to draw (default, white).
+  /// /see CvContourChainCode
+  void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255));
   
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Tracking
