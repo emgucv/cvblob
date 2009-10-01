@@ -268,11 +268,12 @@ void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *img
         double angle = cvAngle(blob);
 
         double x1,y1,x2,y2;
+	double lengthLine = MAX(blob->maxx-blob->minx, blob->maxy-blob->miny)/2.;
 
-        x1=blob->centroid.x-.005*blob->area*cos(angle);
-        y1=blob->centroid.y-.005*blob->area*sin(angle);
-        x2=blob->centroid.x+.005*blob->area*cos(angle);
-        y2=blob->centroid.y+.005*blob->area*sin(angle);
+        x1=blob->centroid.x-lengthLine*cos(angle);
+        y1=blob->centroid.y-lengthLine*sin(angle);
+        x2=blob->centroid.x+lengthLine*cos(angle);
+        y2=blob->centroid.y+lengthLine*sin(angle);
         cvLine(imgDest,cvPoint(int(x1),int(y1)),cvPoint(int(x2),int(y2)),CV_RGB(0.,255.,0.));
       }
 
