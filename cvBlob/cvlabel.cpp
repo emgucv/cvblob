@@ -336,13 +336,13 @@ void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
     int imgOut_width = imgOut->width;
     int imgOut_height = imgOut->height;
     int imgOut_offset = 0;
-    if(0 != imgIn->roi)
+    if(imgIn->roi)
     {
       imgIn_width = imgIn->roi->width;
       imgIn_height = imgIn->roi->height;
       imgIn_offset = imgIn->roi->xOffset + (imgIn->roi->yOffset * stepIn);
     }
-    if(0 != imgOut->roi)
+    if(imgOut->roi)
     {
       imgOut_width = imgOut->roi->width;
       imgOut_height = imgOut->roi->height;
@@ -352,10 +352,10 @@ void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
     char *imgDataOut=imgOut->imageData + imgOut_offset;
     CvLabel *imgDataIn=(CvLabel *)imgIn->imageData + imgIn_offset;
 
-    for (unsigned int r=1;r<(unsigned int)imgIn_height;r++,
+    for (unsigned int r=0;r<(unsigned int)imgIn_height;r++,
 	imgDataIn+=stepIn,imgDataOut+=stepOut)
     {
-      for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
+      for (unsigned int c=0;c<(unsigned int)imgIn_width;c++)
       {
 	if (imgDataIn[c])
 	{
