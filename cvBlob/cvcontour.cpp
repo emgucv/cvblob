@@ -36,158 +36,169 @@ const char moves[4][3][4] = { { {-1, -1, 3, CV_CHAINCODE_UP_LEFT   }, { 0, -1, 0
 
 CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
 {
-  if((img->depth!=IPL_DEPTH_LABEL)||(img->nChannels!=1))
+  CV_FUNCNAME("cvGetContour");
+  __BEGIN__;
   {
-    cerr<<"Error: Image format."<<endl;
-    return NULL; /// TODO: Errores.
-  }
+    CV_ASSERT(img&&(img->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
 
-  CvContourChainCode *contour = new CvContourChainCode;
+    CvContourChainCode *contour = new CvContourChainCode;
 
-  // Only in the bounding box
-  int stepIn = img->widthStep / (img->depth / 8);
-  int img_width = img->width;
-  int img_height = img->height;
-  int img_offset = 0;
-  if(img->roi)
-  {
-    img_width = img->roi->width;
-    img_height = img->roi->height;
-    img_offset = img->roi->xOffset + (img->roi->yOffset * stepIn);
-  }
-
-  CvLabel *imgData=(CvLabel *)img->imageData + (blob->miny * stepIn) + img_offset;
-
-  // The starting point will be the first pixel of the first row
-  unsigned int c = blob->minx;
-  while (imgData[c]!=blob->label)
-    c++;
-  contour->startingPoint = cvPoint(c, blob->miny);
-
-  unsigned char direction=1;
-  unsigned int x = contour->startingPoint.x;
-  unsigned int y = contour->startingPoint.y;
-
-  imgData=(CvLabel *)img->imageData + img_offset;
-
-  do
-  {
-    for (unsigned int numAttempts=0; numAttempts<3; numAttempts++)
+    // Only in the bounding box
+    int stepIn = img->widthStep / (img->depth / 8);
+    int img_width = img->width;
+    int img_height = img->height;
+    int img_offset = 0;
+    if(img->roi)
     {
-      bool found = false;
-
-      for (unsigned char i=0; i<3; i++)
-      {
-	int nx = x+moves[direction][i][0];
-	int ny = y+moves[direction][i][1];
-	if (((nx>=blob->minx)&&(nx<=blob->maxx)&&(ny>=blob->miny)&&(ny<=blob->maxy))&&
-	    (imgData[nx+ny*stepIn]==blob->label))
-	{
-	  found = true;
-
-	  contour->chainCode.push_back(moves[direction][i][3]);
-
-	  x=nx;
-	  y=ny;
-
-	  direction=moves[direction][i][2];
-	  break;
-	}
-      }
-
-      if (!found)
-	direction=(direction+1)%4;
-      else
-	break;
+      img_width = img->roi->width;
+      img_height = img->roi->height;
+      img_offset = img->roi->xOffset + (img->roi->yOffset * stepIn);
     }
-  }
-  while (!(x==contour->startingPoint.x && y==contour->startingPoint.y));
 
-  return contour;
+    CvLabel *imgData=(CvLabel *)img->imageData + (blob->miny * stepIn) + img_offset;
+
+    // The starting point will be the first pixel of the first row
+    unsigned int c = blob->minx;
+    while (imgData[c]!=blob->label)
+      c++;
+    contour->startingPoint = cvPoint(c, blob->miny);
+
+    unsigned char direction=1;
+    unsigned int x = contour->startingPoint.x;
+    unsigned int y = contour->startingPoint.y;
+
+    imgData=(CvLabel *)img->imageData + img_offset;
+
+    do
+    {
+      for (unsigned int numAttempts=0; numAttempts<3; numAttempts++)
+      {
+	bool found = false;
+
+	for (unsigned char i=0; i<3; i++)
+	{
+	  int nx = x+moves[direction][i][0];
+	  int ny = y+moves[direction][i][1];
+	  if (((nx>=blob->minx)&&(nx<=blob->maxx)&&(ny>=blob->miny)&&(ny<=blob->maxy))&&
+	      (imgData[nx+ny*stepIn]==blob->label))
+	  {
+	    found = true;
+
+	    contour->chainCode.push_back(moves[direction][i][3]);
+
+	    x=nx;
+	    y=ny;
+
+	    direction=moves[direction][i][2];
+	    break;
+	  }
+	}
+
+	if (!found)
+	  direction=(direction+1)%4;
+	else
+	  break;
+      }
+    }
+    while (!(x==contour->startingPoint.x && y==contour->startingPoint.y));
+
+    return contour;
+
+  }
+  __END__;
 }
 
 void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color)
 {
-  if((img->depth!=IPL_DEPTH_8U)||(img->nChannels!=3))
+  CV_FUNCNAME("cvRenderContourChainCode");
+  __BEGIN__;
   {
-    cerr<<"Error: Output image format."<<endl;
-    return; /// TODO: Errores.
+    CV_ASSERT(img&&(img->depth==IPL_DEPTH_8U)&&(img->nChannels==3));
+
+    int stepDst = img->widthStep/(img->depth/8);
+    int img_width = img->width;
+    int img_height = img->height;
+    int img_offset = 0;
+
+    if(img->roi)
+    {
+      img_width = img->roi->width;
+      img_height = img->roi->height;
+      img_offset = (img->nChannels * img->roi->xOffset) + (img->roi->yOffset * stepDst);
+    }
+
+    unsigned char *imgData = (unsigned char *)img->imageData + img_offset;
+
+    unsigned int x = contour->startingPoint.x;
+    unsigned int y = contour->startingPoint.y;
+
+    for (CvChainCodes::const_iterator it=contour->chainCode.begin(); it!=contour->chainCode.end(); ++it)
+    {
+      imgData[img->nChannels*x+img->widthStep*y+0] = (unsigned char)(color.val[0]); // Blue
+      imgData[img->nChannels*x+img->widthStep*y+1] = (unsigned char)(color.val[1]); // Green
+      imgData[img->nChannels*x+img->widthStep*y+2] = (unsigned char)(color.val[2]); // Red
+
+      x += cvChainCodeMoves[*it][0];
+      y += cvChainCodeMoves[*it][1];
+    }
   }
-
-  int stepDst = img->widthStep/(img->depth/8);
-  int img_width = img->width;
-  int img_height = img->height;
-  int img_offset = 0;
-
-  if(img->roi)
-  {
-    img_width = img->roi->width;
-    img_height = img->roi->height;
-    img_offset = (img->nChannels * img->roi->xOffset) + (img->roi->yOffset * stepDst);
-  }
-
-  unsigned char *imgData = (unsigned char *)img->imageData + img_offset;
-
-  unsigned int x = contour->startingPoint.x;
-  unsigned int y = contour->startingPoint.y;
-
-  for (CvChainCodes::const_iterator it=contour->chainCode.begin(); it!=contour->chainCode.end(); ++it)
-  {
-    imgData[img->nChannels*x+img->widthStep*y+0] = (unsigned char)(color.val[0]); // Blue
-    imgData[img->nChannels*x+img->widthStep*y+1] = (unsigned char)(color.val[1]); // Green
-    imgData[img->nChannels*x+img->widthStep*y+2] = (unsigned char)(color.val[2]); // Red
-
-    x += cvChainCodeMoves[*it][0];
-    y += cvChainCodeMoves[*it][1];
-  }
+  __END__;
 }
 
 CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
 {
-  CvContourPolygon *contour = new CvContourPolygon;
-
-  unsigned int x = cc->startingPoint.x;
-  unsigned int y = cc->startingPoint.y;
-  CvChainCode lastCode = 0xff;
-
-  for (CvChainCodes::const_iterator it=cc->chainCode.begin(); it!=cc->chainCode.end(); ++it)
+  CV_FUNCNAME("cvConvertChainCodesToPolygon");
+  __BEGIN__;
   {
-    if (lastCode!=*it)
+    CV_ASSERT(cc);
+
+    CvContourPolygon *contour = new CvContourPolygon;
+
+    unsigned int x = cc->startingPoint.x;
+    unsigned int y = cc->startingPoint.y;
+    CvChainCode lastCode = 0xff;
+
+    for (CvChainCodes::const_iterator it=cc->chainCode.begin(); it!=cc->chainCode.end(); ++it)
     {
-      contour->push_back(cvPoint(x, y));
-      lastCode=*it;
+      if (lastCode!=*it)
+      {
+	contour->push_back(cvPoint(x, y));
+	lastCode=*it;
+      }
+
+      x += cvChainCodeMoves[*it][0];
+      y += cvChainCodeMoves[*it][1];
     }
 
-    x += cvChainCodeMoves[*it][0];
-    y += cvChainCodeMoves[*it][1];
+    return contour;
   }
-
-  return contour;
+  __END__;
 }
 
 void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color)
 {
-  if((img->depth!=IPL_DEPTH_8U)||(img->nChannels!=3))
+  CV_FUNCNAME("cvRenderContourPolygon");
+  __BEGIN__;
   {
-    cerr<<"Error: Output image format."<<endl;
-    return; /// TODO: Errores.
-  }
+    CV_ASSERT(img&&(img->depth==IPL_DEPTH_8U)&&(img->nChannels==3));
 
-  CvContourPolygon::const_iterator it=contour->begin();
+    CvContourPolygon::const_iterator it=contour->begin();
 
-  if (it!=contour->end())
-  {
-    unsigned int fx, x, fy, y;
-    fx = x = it->x;
-    fy = y = it->y;
-
-    for (; it!=contour->end(); ++it)
+    if (it!=contour->end())
     {
-      cvLine(img, cvPoint(x, y), cvPoint(it->x, it->y), color, 1);
-      x = it->x;
-      y = it->y;
-    }
+      unsigned int fx, x, fy, y;
+      fx = x = it->x;
+      fy = y = it->y;
 
-    cvLine(img, cvPoint(x, y), cvPoint(fx, fy), color, 1);
+      for (; it!=contour->end(); ++it)
+      {
+	cvLine(img, cvPoint(x, y), cvPoint(it->x, it->y), color, 1);
+	x = it->x;
+	y = it->y;
+      }
+
+      cvLine(img, cvPoint(x, y), cvPoint(fx, fy), color, 1);
+    }
   }
+  __END__;
 }

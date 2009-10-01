@@ -71,321 +71,299 @@ void merge(CvBlob *x, CvBlob *y)
 
 unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
 {
-  int numPixels=0;
-  
-  if((img->depth!=IPL_DEPTH_8U)||(img->nChannels!=1))
+  CV_FUNCNAME("cvLabel");
+  __BEGIN__;
   {
-    cerr<<"Error: Input image format."<<endl;
-    return 0; /// TODO: Errores.
-  }
-  
-  if((imgOut->depth!=IPL_DEPTH_LABEL)||(img->nChannels!=1))
-  {
-    cerr<<"Error: Output image format."<<endl;
-    return 0; /// TODO: Errores.
-  }
+    CV_ASSERT(img&&(img->depth==IPL_DEPTH_8U)&&(img->nChannels==1));
+    CV_ASSERT(imgOut&&(imgOut->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
 
-  //IplImage *imgOut=cvCreateImage (cvGetSize(img),IPL_DEPTH_LABEL,1);
-  cvSetZero(imgOut);
-  
-  CvLabel label=0;
-  cvReleaseBlobs(blobs);
-  
-  int stepIn = img->widthStep / (img->depth / 8);
-  int stepOut = imgOut->widthStep / (imgOut->depth / 8);
-  int imgIn_width = img->width;
-  int imgIn_height = img->height;
-  int imgIn_offset = 0;
-  int imgOut_width = imgOut->width;
-  int imgOut_height = imgOut->height;
-  int imgOut_offset = 0;
-  if(img->roi)
-  {
-    imgIn_width = img->roi->width;
-    imgIn_height = img->roi->height;
-    imgIn_offset = img->roi->xOffset + (img->roi->yOffset * stepIn);
-  }
-  if(imgOut->roi)
-  {
-    imgOut_width = imgOut->roi->width;
-    imgOut_height = imgOut->roi->height;
-    imgOut_offset = imgOut->roi->xOffset + (imgOut->roi->yOffset * stepOut);
-  }
+    int numPixels=0;
 
-  char *imgDataIn = img->imageData + imgIn_offset;
-  CvLabel *imgDataOut = (CvLabel *)imgOut->imageData + imgOut_offset;
+    //IplImage *imgOut=cvCreateImage (cvGetSize(img),IPL_DEPTH_LABEL,1);
+    cvSetZero(imgOut);
 
-  // Check first pixel (0, 0)
-  if (imgDataIn[0])
-  {
-    label++;
+    CvLabel label=0;
+    cvReleaseBlobs(blobs);
 
-    CvBlob *blob=new CvBlob;
-    makeSet(blob);
-    blob->label=label;
-    blob->area=1;
-    blob->minx=0; blob->maxx=0;
-    blob->miny=0; blob->maxy=0;
-    blob->m10=0; blob->m01=0;
-    blob->m11=0*0;
-    blob->m20=0*0; blob->m02=0*0;
-    blob->centralMoments=false;
-    blobs.insert(CvLabelBlob(label,blob));
-
-    imgDataOut[0]=label;
-  }
-
-  // Check first row (c, 0)
-  for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
-  {
-    if (imgDataIn[c])
+    int stepIn = img->widthStep / (img->depth / 8);
+    int stepOut = imgOut->widthStep / (imgOut->depth / 8);
+    int imgIn_width = img->width;
+    int imgIn_height = img->height;
+    int imgIn_offset = 0;
+    int imgOut_width = imgOut->width;
+    int imgOut_height = imgOut->height;
+    int imgOut_offset = 0;
+    if(img->roi)
     {
-      numPixels++;
-      if (imgDataOut[c-1])
-      {
-        CvBlob *blob=blobs[imgDataOut[c-1]];
-        blob->area+=1;
-        blob->maxx=_MAX_(blob->maxx,c);
-        blob->m10+=c; blob->m01+=0;
-        blob->m11+=c*0;
-        blob->m20+=c*c; blob->m02+=0*0;
-
-        imgDataOut[c]=imgDataOut[c-1];
-      }
-      else
-      {
-        label++;
-
-        CvBlob *blob=new CvBlob;
-        makeSet(blob);
-        blob->label=label;
-        blob->area=1;
-        blob->minx=c; blob->maxx=c;
-        blob->miny=0; blob->maxy=0;
-        blob->m10=c; blob->m01=0;
-        blob->m11=c*0;
-        blob->m20=c*c; blob->m02=0*0;
-        blob->centralMoments=false;
-        blobs.insert(CvLabelBlob(label,blob));
-
-        imgDataOut[c]=label;
-      }
+      imgIn_width = img->roi->width;
+      imgIn_height = img->roi->height;
+      imgIn_offset = img->roi->xOffset + (img->roi->yOffset * stepIn);
     }
-  }
+    if(imgOut->roi)
+    {
+      imgOut_width = imgOut->roi->width;
+      imgOut_height = imgOut->roi->height;
+      imgOut_offset = imgOut->roi->xOffset + (imgOut->roi->yOffset * stepOut);
+    }
 
-  CvLabel *lastRowOut=(CvLabel *)imgOut->imageData + imgOut_offset;
+    char *imgDataIn = img->imageData + imgIn_offset;
+    CvLabel *imgDataOut = (CvLabel *)imgOut->imageData + imgOut_offset;
 
-  imgDataIn+=stepIn;
-  imgDataOut+=stepOut;
-
-  for (unsigned int r=1;r<(unsigned int)imgIn_height;r++,
-      lastRowOut+=stepOut,imgDataIn+=stepIn,imgDataOut+=stepOut)
-  {
+    // Check first pixel (0, 0)
     if (imgDataIn[0])
     {
-      numPixels++;
-      if (lastRowOut[0])
-      {
-        CvBlob *blob=blobs[lastRowOut[0]];
-        blob->area+=1;
-        blob->maxy=_MAX_(blob->maxy,r);
-        blob->m10+=0; blob->m01+=r;
-        blob->m11+=0*r;
-        blob->m20+=0*0; blob->m02+=r*r;
+      label++;
 
-        imgDataOut[0]=lastRowOut[0];
-      }
-      else
-      {
-        label++;
+      CvBlob *blob=new CvBlob;
+      makeSet(blob);
+      blob->label=label;
+      blob->area=1;
+      blob->minx=0; blob->maxx=0;
+      blob->miny=0; blob->maxy=0;
+      blob->m10=0; blob->m01=0;
+      blob->m11=0*0;
+      blob->m20=0*0; blob->m02=0*0;
+      blob->centralMoments=false;
+      blobs.insert(CvLabelBlob(label,blob));
 
-        CvBlob *blob=new CvBlob;
-        makeSet(blob);
-        blob->label=label;
-        blob->area=1;
-        blob->minx=0; blob->maxx=0;
-        blob->miny=r; blob->maxy=r;
-        blob->m10=0; blob->m01=r;
-        blob->m11=0*r;
-        blob->m20=0*0; blob->m02=r*r;
-        blob->centralMoments=false;
-        blobs.insert(CvLabelBlob(label,blob));
-
-        imgDataOut[0]=label;
-      }
+      imgDataOut[0]=label;
     }
-    
+
+    // Check first row (c, 0)
     for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
     {
       if (imgDataIn[c])
       {
-        numPixels++;
-        if (lastRowOut[c])
-        {
-          CvBlob *blob=blobs[lastRowOut[c]];
-          blob->area+=1;
-          blob->maxy=_MAX_(blob->maxy,r);
-          blob->m10+=c; blob->m01+=r;
-          blob->m11+=c*r;
-          blob->m20+=c*c; blob->m02+=r*r;
-          
-          imgDataOut[c]=lastRowOut[c];
-          
-          if ((imgDataOut[c-1])&&(imgDataOut[c]!=imgDataOut[c-1]))
-          {
-            CvBlob *blob1=blobs[imgDataOut[c]];
-            CvBlob *blob2=blobs[imgDataOut[c-1]];
-            
-            merge(blob1,blob2);
-          }
-        }
-        else if (imgDataOut[c-1])
-        {
-          CvBlob *blob=blobs[imgDataOut[c-1]];
-          blob->area+=1;
-          blob->maxx=_MAX_(blob->maxx,c);
-          blob->m10+=c; blob->m01+=r;
-          blob->m11+=c*r;
-          blob->m20+=c*c; blob->m02+=r*r;
-          
-          imgDataOut[c]=imgDataOut[c-1];
-        }
-        else
-        {
-          label++;
-          
-          CvBlob *blob=new CvBlob;
-          makeSet(blob);
-          blob->label=label;
-          blob->area=1;
-          blob->minx=c; blob->maxx=c;
-          blob->miny=r; blob->maxy=r;
-          blob->m10=c; blob->m01=r;
-          blob->m11=c*r;
-          blob->m20=c*c; blob->m02=r*r;
-          blob->centralMoments=false;
-          blobs.insert(CvLabelBlob(label,blob));
-          
-          imgDataOut[c]=label;
-        }
+	numPixels++;
+	if (imgDataOut[c-1])
+	{
+	  CvBlob *blob=blobs[imgDataOut[c-1]];
+	  blob->area+=1;
+	  blob->maxx=_MAX_(blob->maxx,c);
+	  blob->m10+=c; blob->m01+=0;
+	  blob->m11+=c*0;
+	  blob->m20+=c*c; blob->m02+=0*0;
+
+	  imgDataOut[c]=imgDataOut[c-1];
+	}
+	else
+	{
+	  label++;
+
+	  CvBlob *blob=new CvBlob;
+	  makeSet(blob);
+	  blob->label=label;
+	  blob->area=1;
+	  blob->minx=c; blob->maxx=c;
+	  blob->miny=0; blob->maxy=0;
+	  blob->m10=c; blob->m01=0;
+	  blob->m11=c*0;
+	  blob->m20=c*c; blob->m02=0*0;
+	  blob->centralMoments=false;
+	  blobs.insert(CvLabelBlob(label,blob));
+
+	  imgDataOut[c]=label;
+	}
       }
     }
-  }
-  
-  unsigned int labelSize=blobs.size();
-  CvLabel *luLabels=new CvLabel[labelSize+1];
-  luLabels[0]=0;
-  
-  for (CvBlobs::iterator it=blobs.begin();it!=blobs.end();++it)
-  {
-    CvBlob *blob1=(*it).second;
-    CvBlob *blob2=find(blob1);
-    
-    if (blob1!=blob2)
-    {
-      blob2->area+=blob1->area;
-      blob2->minx=_MIN_(blob2->minx,blob1->minx); blob2->maxx=_MAX_(blob2->maxx,blob1->maxx);
-      blob2->miny=_MIN_(blob2->miny,blob1->miny); blob2->maxy=_MAX_(blob2->maxy,blob1->maxy);
-      blob2->m10+=blob1->m10; blob2->m01+=blob1->m01;
-      blob2->m11+=blob1->m11;
-      blob2->m20+=blob1->m20; blob2->m02+=blob1->m02;
-    }
-    
-    luLabels[(*it).first]=blob2->label;
-  }
-  
-  imgDataOut=(CvLabel *)imgOut->imageData + imgOut_offset;
-  for (int r=0;r<imgOut_height;r++,imgDataOut+=stepOut)
-    for (int c=0;c<imgOut_width;c++)
-      imgDataOut[c]=luLabels[imgDataOut[c]];
-  
-  delete [] luLabels;
-  
-  // Eliminar los blobs hijos:
-  CvBlobs::iterator it=blobs.begin();
-  while (it!=blobs.end())
-  {
-    CvBlob *blob=(*it).second;
-    if (blob->_parent)
-    {
-      delete blob;
-      CvBlobs::iterator tmp=it;
-      ++it;
-      blobs.erase(tmp);
-    }
-    else
-    {
-      cvCentroid((*it).second); // Here?
-      ++it;
-    }
-  }
-  
-  return numPixels;
-}
 
-// IplImage *cvFilterLabel(IplImage *imgIn, CvLabel label)
-// {
-//   if ((imgIn->depth!=IPL_DEPTH_LABEL)||(imgIn->nChannels!=1))
-//   {
-//     cerr<<"Error: Image format."<<endl;
-//     return 0L; /// TODO: Errores.
-//   }
-//   
-//   IplImage *imgOut=cvCreateImage (cvGetSize(imgIn),IPL_DEPTH_8U,1);
-//   cvSetZero(imgOut);
-//   
-//   char *imgDataOut=imgOut->imageData+imgOut->width;
-//   CvLabel *imgDataIn=(CvLabel *)imgIn->imageData+imgIn->width;
-//   for (unsigned int r=1;r<imgIn->height;r++,
-//        imgDataIn+=imgIn->width,imgDataOut+=imgOut->width)
-//     for (unsigned int c=1;c<imgIn->width;c++)
-//       if (imgDataIn[c]==label) imgDataOut[c]=0xff;
-//   
-//   return imgOut;
-// }
+    CvLabel *lastRowOut=(CvLabel *)imgOut->imageData + imgOut_offset;
+
+    imgDataIn+=stepIn;
+    imgDataOut+=stepOut;
+
+    for (unsigned int r=1;r<(unsigned int)imgIn_height;r++,
+	lastRowOut+=stepOut,imgDataIn+=stepIn,imgDataOut+=stepOut)
+    {
+      if (imgDataIn[0])
+      {
+	numPixels++;
+	if (lastRowOut[0])
+	{
+	  CvBlob *blob=blobs[lastRowOut[0]];
+	  blob->area+=1;
+	  blob->maxy=_MAX_(blob->maxy,r);
+	  blob->m10+=0; blob->m01+=r;
+	  blob->m11+=0*r;
+	  blob->m20+=0*0; blob->m02+=r*r;
+
+	  imgDataOut[0]=lastRowOut[0];
+	}
+	else
+	{
+	  label++;
+
+	  CvBlob *blob=new CvBlob;
+	  makeSet(blob);
+	  blob->label=label;
+	  blob->area=1;
+	  blob->minx=0; blob->maxx=0;
+	  blob->miny=r; blob->maxy=r;
+	  blob->m10=0; blob->m01=r;
+	  blob->m11=0*r;
+	  blob->m20=0*0; blob->m02=r*r;
+	  blob->centralMoments=false;
+	  blobs.insert(CvLabelBlob(label,blob));
+
+	  imgDataOut[0]=label;
+	}
+      }
+
+      for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
+      {
+	if (imgDataIn[c])
+	{
+	  numPixels++;
+	  if (lastRowOut[c])
+	  {
+	    CvBlob *blob=blobs[lastRowOut[c]];
+	    blob->area+=1;
+	    blob->maxy=_MAX_(blob->maxy,r);
+	    blob->m10+=c; blob->m01+=r;
+	    blob->m11+=c*r;
+	    blob->m20+=c*c; blob->m02+=r*r;
+
+	    imgDataOut[c]=lastRowOut[c];
+
+	    if ((imgDataOut[c-1])&&(imgDataOut[c]!=imgDataOut[c-1]))
+	    {
+	      CvBlob *blob1=blobs[imgDataOut[c]];
+	      CvBlob *blob2=blobs[imgDataOut[c-1]];
+
+	      merge(blob1,blob2);
+	    }
+	  }
+	  else if (imgDataOut[c-1])
+	  {
+	    CvBlob *blob=blobs[imgDataOut[c-1]];
+	    blob->area+=1;
+	    blob->maxx=_MAX_(blob->maxx,c);
+	    blob->m10+=c; blob->m01+=r;
+	    blob->m11+=c*r;
+	    blob->m20+=c*c; blob->m02+=r*r;
+
+	    imgDataOut[c]=imgDataOut[c-1];
+	  }
+	  else
+	  {
+	    label++;
+
+	    CvBlob *blob=new CvBlob;
+	    makeSet(blob);
+	    blob->label=label;
+	    blob->area=1;
+	    blob->minx=c; blob->maxx=c;
+	    blob->miny=r; blob->maxy=r;
+	    blob->m10=c; blob->m01=r;
+	    blob->m11=c*r;
+	    blob->m20=c*c; blob->m02=r*r;
+	    blob->centralMoments=false;
+	    blobs.insert(CvLabelBlob(label,blob));
+
+	    imgDataOut[c]=label;
+	  }
+	}
+      }
+    }
+
+    unsigned int labelSize=blobs.size();
+    CvLabel *luLabels=new CvLabel[labelSize+1];
+    luLabels[0]=0;
+
+    for (CvBlobs::iterator it=blobs.begin();it!=blobs.end();++it)
+    {
+      CvBlob *blob1=(*it).second;
+      CvBlob *blob2=find(blob1);
+
+      if (blob1!=blob2)
+      {
+	blob2->area+=blob1->area;
+	blob2->minx=_MIN_(blob2->minx,blob1->minx); blob2->maxx=_MAX_(blob2->maxx,blob1->maxx);
+	blob2->miny=_MIN_(blob2->miny,blob1->miny); blob2->maxy=_MAX_(blob2->maxy,blob1->maxy);
+	blob2->m10+=blob1->m10; blob2->m01+=blob1->m01;
+	blob2->m11+=blob1->m11;
+	blob2->m20+=blob1->m20; blob2->m02+=blob1->m02;
+      }
+
+      luLabels[(*it).first]=blob2->label;
+    }
+
+    imgDataOut=(CvLabel *)imgOut->imageData + imgOut_offset;
+    for (int r=0;r<imgOut_height;r++,imgDataOut+=stepOut)
+      for (int c=0;c<imgOut_width;c++)
+	imgDataOut[c]=luLabels[imgDataOut[c]];
+
+    delete [] luLabels;
+
+    // Eliminar los blobs hijos:
+    CvBlobs::iterator it=blobs.begin();
+    while (it!=blobs.end())
+    {
+      CvBlob *blob=(*it).second;
+      if (blob->_parent)
+      {
+	delete blob;
+	CvBlobs::iterator tmp=it;
+	++it;
+	blobs.erase(tmp);
+      }
+      else
+      {
+	cvCentroid((*it).second); // Here?
+	++it;
+      }
+    }
+
+    return numPixels;
+
+  }
+  __END__;
+}
 
 void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
 {
-  if ((imgIn->depth!=IPL_DEPTH_LABEL)||(imgIn->nChannels!=1))
-    throw logic_error("Input image format.");
-  
-  if ((imgOut->depth!=IPL_DEPTH_8U)||(imgOut->nChannels!=1))
-    throw logic_error("Input image format.");
-  
-  int stepIn = imgIn->widthStep / (imgIn->depth / 8);
-  int stepOut = imgOut->widthStep / (imgOut->depth / 8);
-  int imgIn_width = imgIn->width;
-  int imgIn_height = imgIn->height;
-  int imgIn_offset = 0;
-  int imgOut_width = imgOut->width;
-  int imgOut_height = imgOut->height;
-  int imgOut_offset = 0;
-  if(0 != imgIn->roi)
+  CV_FUNCNAME("cvFilterLabels");
+  __BEGIN__;
   {
-    imgIn_width = imgIn->roi->width;
-    imgIn_height = imgIn->roi->height;
-    imgIn_offset = imgIn->roi->xOffset + (imgIn->roi->yOffset * stepIn);
-  }
-  if(0 != imgOut->roi)
-  {
-    imgOut_width = imgOut->roi->width;
-    imgOut_height = imgOut->roi->height;
-    imgOut_offset = imgOut->roi->xOffset + (imgOut->roi->yOffset * stepOut);
-  }
+    CV_ASSERT(imgIn&&(imgIn->depth==IPL_DEPTH_LABEL)&&(imgIn->nChannels==1));
+    CV_ASSERT(imgOut&&(imgOut->depth==IPL_DEPTH_8U)&&(imgOut->nChannels==1));
 
-  char *imgDataOut=imgOut->imageData + imgOut_offset;
-  CvLabel *imgDataIn=(CvLabel *)imgIn->imageData + imgIn_offset;
-
-  for (unsigned int r=1;r<(unsigned int)imgIn_height;r++,
-      imgDataIn+=stepIn,imgDataOut+=stepOut)
-  {
-    for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
+    int stepIn = imgIn->widthStep / (imgIn->depth / 8);
+    int stepOut = imgOut->widthStep / (imgOut->depth / 8);
+    int imgIn_width = imgIn->width;
+    int imgIn_height = imgIn->height;
+    int imgIn_offset = 0;
+    int imgOut_width = imgOut->width;
+    int imgOut_height = imgOut->height;
+    int imgOut_offset = 0;
+    if(0 != imgIn->roi)
     {
-      if (imgDataIn[c])
+      imgIn_width = imgIn->roi->width;
+      imgIn_height = imgIn->roi->height;
+      imgIn_offset = imgIn->roi->xOffset + (imgIn->roi->yOffset * stepIn);
+    }
+    if(0 != imgOut->roi)
+    {
+      imgOut_width = imgOut->roi->width;
+      imgOut_height = imgOut->roi->height;
+      imgOut_offset = imgOut->roi->xOffset + (imgOut->roi->yOffset * stepOut);
+    }
+
+    char *imgDataOut=imgOut->imageData + imgOut_offset;
+    CvLabel *imgDataIn=(CvLabel *)imgIn->imageData + imgIn_offset;
+
+    for (unsigned int r=1;r<(unsigned int)imgIn_height;r++,
+	imgDataIn+=stepIn,imgDataOut+=stepOut)
+    {
+      for (unsigned int c=1;c<(unsigned int)imgIn_width;c++)
       {
-	if (blobs.find(imgDataIn[c])==blobs.end()) imgDataOut[c]=0x00;
-	else imgDataOut[c]=(char)0xff;
+	if (imgDataIn[c])
+	{
+	  if (blobs.find(imgDataIn[c])==blobs.end()) imgDataOut[c]=0x00;
+	  else imgDataOut[c]=(char)0xff;
+	}
       }
     }
   }
+  __END__;
 }

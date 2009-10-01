@@ -68,13 +68,11 @@ void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea)
 
 void cvCentralMoments(CvBlob *blob, const IplImage *img)
 {
+  CV_FUNCNAME("cvCentralMoments");
+  __BEGIN__;
   if (!blob->centralMoments)
   {
-    if((img->depth!=IPL_DEPTH_LABEL)||(img->nChannels!=1))
-    {
-      cerr<<"Error: Image format."<<endl;
-      return; /// TODO: Errores.
-    }
+    CV_ASSERT(img&&(img->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
 
     //cvCentroid(blob); // Here?
 
@@ -108,6 +106,7 @@ void cvCentralMoments(CvBlob *blob, const IplImage *img)
 
     blob->centralMoments = true;
   }
+  __END__;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,17 +154,11 @@ typedef std::map<CvLabel, Color> Palete;
 
 void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode, double alpha)
 {
-  if((imgLabel->depth!=IPL_DEPTH_LABEL)||(imgLabel->nChannels!=1))
-  {
-    cerr<<"Error: Label image format."<<endl;
-    return; /// TODO: Errores.
-  }
+  CV_FUNCNAME("cvRenderBlobs");
+  __BEGIN__;
 
-  if((imgDest->depth!=IPL_DEPTH_8U)||(imgDest->nChannels!=3))
-  {
-    cerr<<"Error: Output image format."<<endl;
-    return; /// TODO: Errores.
-  }
+  CV_ASSERT(imgLabel&&(imgLabel->depth==IPL_DEPTH_LABEL)&&(imgLabel->nChannels==1));
+  CV_ASSERT(imgDest&&(imgDest->depth==IPL_DEPTH_8U)&&(imgDest->nChannels==3));
 
   if (mode&CV_BLOB_RENDER_COLOR)
   {
@@ -284,16 +277,19 @@ void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *img
       }
     }
   }
+
+  __END__;
 }
 
 // Returns radians
 double cvAngle(CvBlob *blob)
 {
-  if (blob->centralMoments)
-    return .5*atan2(2.*blob->u11,(blob->u20-blob->u02));
-  else
-  {
-    cerr<<"Error: Central moments aren't calculated."<<endl;
-    return 0.; /// TODO: Errors.
-  }
+  CV_FUNCNAME("cvAngle");
+  __BEGIN__;
+
+  CV_ASSERT(blob->centralMoments);
+
+  return .5*atan2(2.*blob->u11,(blob->u20-blob->u02));
+
+  __END__;
 }
