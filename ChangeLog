@@ -1,3 +1,10 @@
+Version 0.9.11 (2009/10/01)
+
+  * cvblob.cpp, cvlabel.cpp, cvtracker.cpp, cvcontour.cpp: error handling
+  OpenCV's style.
+
+  * cvlabel.ccp: Fixed another bug about ranges.
+
 Version 0.9.10 (2009/09/30)
 
   * cvlabel.cpp: Fixed a mistake in the labeling algorithm.
