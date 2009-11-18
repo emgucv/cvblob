@@ -20,6 +20,13 @@
 /// \file cvblob.h
 /// \brief OpenCV Blob header file.
 
+#ifdef SWIG
+%module cvblob
+%{
+#include "cvblob.h"
+%}
+#endif
+
 #ifndef CVBLOB_H
 #define CVBLOB_H
 
