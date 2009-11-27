@@ -232,6 +232,8 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
   __END__;
 }
 
+CvFont *defaultFont = NULL;
+
 void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode, CvFont *font)
 {
   CV_FUNCNAME("cvRenderTracks");
@@ -241,13 +243,18 @@ void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDes
 
   if ((mode&CV_TRACK_RENDER_ID)&&(!font))
   {
-    font = new CvFont;
-    cvInitFont(font, CV_FONT_HERSHEY_DUPLEX, 0.5, 0.5, 0, 1);
-    // Other fonts:
-    //   CV_FONT_HERSHEY_SIMPLEX, CV_FONT_HERSHEY_PLAIN,
-    //   CV_FONT_HERSHEY_DUPLEX, CV_FONT_HERSHEY_COMPLEX,
-    //   CV_FONT_HERSHEY_TRIPLEX, CV_FONT_HERSHEY_COMPLEX_SMALL,
-    //   CV_FONT_HERSHEY_SCRIPT_SIMPLEX, CV_FONT_HERSHEY_SCRIPT_COMPLEX
+    if (!defaultFont)
+    {
+      font = defaultFont = new CvFont;
+      cvInitFont(font, CV_FONT_HERSHEY_DUPLEX, 0.5, 0.5, 0, 1);
+      // Other fonts:
+      //   CV_FONT_HERSHEY_SIMPLEX, CV_FONT_HERSHEY_PLAIN,
+      //   CV_FONT_HERSHEY_DUPLEX, CV_FONT_HERSHEY_COMPLEX,
+      //   CV_FONT_HERSHEY_TRIPLEX, CV_FONT_HERSHEY_COMPLEX_SMALL,
+      //   CV_FONT_HERSHEY_SCRIPT_SIMPLEX, CV_FONT_HERSHEY_SCRIPT_COMPLEX
+    }
+    else
+      font = defaultFont;
   }
 
   if (mode)
