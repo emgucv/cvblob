@@ -156,9 +156,17 @@ CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
 
     unsigned int x = cc->startingPoint.x;
     unsigned int y = cc->startingPoint.y;
-    CvChainCode lastCode = 0xff;
+    contour->push_back(cvPoint(x, y));
 
-    for (CvChainCodes::const_iterator it=cc->chainCode.begin(); it!=cc->chainCode.end(); ++it)
+    CvChainCodes::const_iterator it=cc->chainCode.begin();
+    CvChainCode lastCode = *it;
+
+    x += cvChainCodeMoves[*it][0];
+    y += cvChainCodeMoves[*it][1];
+
+    ++it;
+
+    for (; it!=cc->chainCode.end(); ++it)
     {
       if (lastCode!=*it)
       {
