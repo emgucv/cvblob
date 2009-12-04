@@ -17,6 +17,7 @@
 // along with cvBlob.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <deque>
 #include <iostream>
 using namespace std;
 
@@ -207,6 +208,220 @@ void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvSc
 
       cvLine(img, cvPoint(x, y), cvPoint(fx, fy), color, 1);
     }
+  }
+  __END__;
+}
+
+double cvContourPolygonArea(CvContourPolygon const *p)
+{
+  CV_FUNCNAME("cvContourPolygonArea");
+  __BEGIN__;
+  {
+    CV_ASSERT(p!=NULL);
+    CV_ASSERT(p->size()>2);
+
+    CvContourPolygon::const_iterator it=p->begin();
+    CvPoint lastPoint = p->back();
+
+    double a = 0.;
+
+    for (; it!=p->end(); ++it)
+    {
+      a += lastPoint.x*it->y - lastPoint.y*it->x;
+      lastPoint = *it;
+    }
+
+    return a*0.5;
+  }
+  __END__;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// http://www.topcoder.com/tc?module=Static&d1=tutorials&d2=geometry1
+
+double dot(CvPoint a, CvPoint b, CvPoint c)
+{
+  double abx = b.x-a.x;
+  double aby = b.y-a.y;
+  double bcx = c.x-b.x;
+  double bcy = c.y-b.y;
+
+  return abx*bcx + aby*bcy;
+}
+
+double cross(CvPoint a, CvPoint b, CvPoint c)
+{
+  double abx = b.x-a.x;
+  double aby = b.y-a.y;
+  double acx = c.x-a.x;
+  double acy = c.y-a.y;
+
+  return abx*acy - aby*acx;
+}
+
+double distancePointPoint(CvPoint a, CvPoint b)
+{
+  double abx = a.x-b.x;
+  double aby = a.y-b.y;
+
+  return sqrt(abx*abx + aby*aby);
+}
+
+double distanceLinePoint(CvPoint a, CvPoint b, CvPoint c, bool isSegment=true)
+{
+  if (isSegment)
+  {
+    double dot1 = dot(a, b, c);
+    if (dot1>0) return distancePointPoint(b, c);
+
+    double dot2 = dot(b, a, c);
+    if(dot2>0) return distancePointPoint(a, c);
+  }
+
+  return abs(cross(a,b,c)/distancePointPoint(a,b));
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void simplifyPolygonRecursive(CvContourPolygon const *p, int const i1, int const i2, bool *pnUseFlag, double const delta)
+{
+  CV_FUNCNAME("cvSimplifyPolygonRecursive");
+  __BEGIN__;
+  {
+    int endIndex = (i2<0)?p->size():i2;
+
+    if (abs(i1-endIndex)<=1)
+      return;
+
+    CvPoint firstPoint = (*p)[i1];
+    CvPoint lastPoint = (i2<0)?p->front():(*p)[i2];
+
+    double furtherDistance=0.;
+    int furtherIndex=0;
+
+    for (int i=i1+1; i<endIndex; i++)
+    {
+      double d = distanceLinePoint(firstPoint, lastPoint, (*p)[i]);
+
+      if ((d>=delta)&&(d>furtherDistance))
+      {
+	furtherDistance=d;
+	furtherIndex=i;
+      }
+    }
+
+    if (furtherIndex)
+    {
+      pnUseFlag[furtherIndex]=true;
+
+      simplifyPolygonRecursive(p, i1, furtherIndex, pnUseFlag, delta);
+      simplifyPolygonRecursive(p, furtherIndex, i2, pnUseFlag, delta);
+    }
+  }
+  __END__;
+}
+
+CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta)
+{
+  CV_FUNCNAME("cvSimplifyPolygon");
+  __BEGIN__;
+  {
+    CV_ASSERT(p!=NULL);
+    CV_ASSERT(p->size()>2);
+
+    double furtherDistance=0.;
+    unsigned int furtherIndex=0;
+
+    CvContourPolygon::const_iterator it=p->begin();
+    ++it;
+    for (unsigned int i=1; it!=p->end(); ++it, i++)
+    {
+      double d = distancePointPoint(*it, p->front());
+
+      if (d>furtherDistance)
+      {
+	furtherDistance = d;
+	furtherIndex = i;
+      }
+    }
+
+    if (furtherDistance<delta)
+    {
+      CvContourPolygon *result = new CvContourPolygon;
+      result->push_back(p->front());
+      return result;
+    }
+
+    bool *pnUseFlag = new bool[p->size()];
+    for (int i=1; i<p->size(); i++) pnUseFlag[i] = false;
+
+    pnUseFlag[0] = pnUseFlag[furtherIndex] = true;
+
+    simplifyPolygonRecursive(p, 0, furtherIndex, pnUseFlag, delta);
+    simplifyPolygonRecursive(p, furtherIndex, -1, pnUseFlag, delta);
+
+    CvContourPolygon *result = new CvContourPolygon;
+
+    for (int i=0; i<p->size(); i++)
+      if (pnUseFlag[i])
+	result->push_back((*p)[i]);
+
+    delete[] pnUseFlag;
+
+    return result;
+  }
+  __END__;
+}
+
+CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
+{
+  CV_FUNCNAME("cvPolygonContourConvexHull");
+  __BEGIN__;
+  {
+    CV_ASSERT(p!=NULL);
+    CV_ASSERT(p->size()>2);
+
+    deque<CvPoint> dq;
+
+    if (cross((*p)[0], (*p)[1], (*p)[2])>0)
+    {
+      dq.push_back((*p)[0]);
+      dq.push_back((*p)[1]);
+    }
+    else
+    {
+      dq.push_back((*p)[1]);
+      dq.push_back((*p)[0]);
+    }
+
+    dq.push_back((*p)[2]);
+    dq.push_front((*p)[2]);
+
+    for (int i=3; i<p->size()-1; i++)
+    {
+      int s = dq.size();
+
+      while (cross((*p)[i], dq.at(0), dq.at(1))>=0 && cross(dq.at(s-2), dq.at(s-1), (*p)[i])>=0)
+      {
+	i++;
+	if (i>=p->size())
+	  return new CvContourPolygon;
+      }
+
+      while (cross(dq.at(s-2), dq.at(s-1), (*p)[i])<0)
+      {
+	dq.pop_back();
+	s = dq.size();
+      }
+
+      dq.push_back((*p)[i]);
+
+      while (cross((*p)[i], dq.at(0), dq.at(1))<0)
+	dq.pop_front();
+
+      dq.push_front((*p)[i]);
+    }
+
+    return new CvContourPolygon;
   }
   __END__;
 }

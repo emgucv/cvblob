@@ -25,6 +25,10 @@
 %{
 #include "cvblob.h"
 %}
+%include "std_pair.i"
+%include "std_map.i"
+%include "typemaps.i"
+%include "cvtypemaps.i"
 #endif
 
 #ifndef CVBLOB_H
@@ -272,7 +276,7 @@ extern "C" {
   };
 
   /// /brief Polygon based contour.
-  typedef std::list<CvPoint> CvContourPolygon;
+  typedef std::vector<CvPoint> CvContourPolygon;
 
   /// /var CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
   /// /brief Get the contour of a blob.
@@ -307,6 +311,27 @@ extern "C" {
   /// /param color Color to draw (default, white).
   /// /see CvContourPolygon
   void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255));
+
+  // /var double cvContourArea(CvContourPolygon const *p)
+  // /brief Calculates area of a polygonal contour.
+  // /param p Contour (polygon type).
+  // /return Area of the contour.
+  double cvContourPolygonArea(CvContourPolygon const *p);
+
+  // /var CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
+  // /brief Simplify a polygon reducing the number of vertex according the distance "delta".
+  // Uses a version of the Ramer-Douglas-Peucker algorithm (http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm).
+  // /param p Contour (polygon type).
+  // /param delta Minimun distance.
+  // /return A simplify version of the original polygon.
+  CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.);
+
+  // /var CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
+  // /brief Calculates convex hull of a contour.
+  // Uses the Melkman Algorithm. Code based on the version in http://w3.impa.br/~rdcastan/Cgeometry/.
+  // /param p Contour (polygon type).
+  // /return Convex hull.
+  CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p);
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Tracking
