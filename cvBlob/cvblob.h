@@ -352,17 +352,17 @@ extern "C" {
     unsigned int inactive; ///< Indicates number of frames that has been missing.
   };
 
-  /// \var typedef std:list<CvTrack *> CvTracks
+  /// \var typedef std::map<CvID, CvTrack *> CvTracks
   /// \brief List of tracks.
   /// \see CvID
   /// \see CvTrack
   typedef std::map<CvID, CvTrack *> CvTracks;
 
-  /// \var typedef std::pair<CvID, CvTrack *> CvIDTracks
+  /// \var typedef std::pair<CvID, CvTrack *> CvIDTrack
   /// \brief Pair (identification number, track).
   /// \see CvID
   /// \see CvTrack
-  typedef std::pair<CvID, CvTrack *> CvIDTracks;
+  typedef std::pair<CvID, CvTrack *> CvIDTrack;
 
   /// \fn cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive)
   /// \brief Updates list of tracks based on current blobs.

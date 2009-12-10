@@ -90,13 +90,13 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
       IB(i) = it->second->label;
     }
 
-    CvID maxTrackID= 0;
+    CvID maxTrackID = 0;
 
     unsigned int j=0;
     for (CvTracks::const_iterator jt = t.begin(); jt!=t.end(); ++jt, j++)
     {
       AT(j) = 0;
-      IT(j)= jt->second->id;
+      IT(j) = jt->second->id;
       if (jt->second->id > maxTrackID)
 	maxTrackID = jt->second->id;
     }
@@ -146,9 +146,10 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 	{
 	  if (C(i, j))
 	  {
-	    CvTrack *temp;
+	    CvTrack *temp=NULL;
 	    maxTrackID++;
-	    t[maxTrackID] = temp =  new CvTrack;
+	    //t[maxTrackID] = temp =  new CvTrack;
+	    t.insert(CvIDTrack(maxTrackID, temp = new CvTrack));
 	    temp->id = maxTrackID;
 	    temp->label = B(i)->label;
 	    temp->minx = B(i)->minx;
@@ -177,9 +178,12 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
       if (c == 0)
       {
 	// New track
-	CvTrack *temp;
+	CvTrack *temp=NULL;
 	maxTrackID++;
-	t[maxTrackID] = temp = new CvTrack;
+	CvTracks::iterator itor;
+	//if ((itor=t.find(maxTrackID))!=t.end())
+	  //cout << maxTrackID << ", " << itor->second->id << " ------------------------------------------------------------------------------------------------------" << endl;
+	t.insert(CvIDTrack(maxTrackID, temp = new CvTrack));
 	temp->id = maxTrackID;
 	temp->label = B(i)->label;
 	temp->minx = B(i)->minx;
@@ -194,9 +198,12 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 	// Tracks joins
 	
 	// New track
-	CvTrack *temp;
+	CvTrack *temp=NULL;
 	maxTrackID++;
-	t[maxTrackID] = temp = new CvTrack;
+	CvTracks::iterator itor;
+	//if ((itor=t.find(maxTrackID))!=t.end())
+	  //cout << maxTrackID << ", " << itor->second->id << " ------------------------------------------------------------------------------------------------------" << endl;
+	t.insert(CvIDTrack(maxTrackID, temp = new CvTrack));
 	temp->id = maxTrackID;
 	temp->label = B(i)->label;
 	temp->minx = B(i)->minx;
