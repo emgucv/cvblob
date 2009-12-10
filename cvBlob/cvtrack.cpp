@@ -180,7 +180,7 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 	// New track
 	CvTrack *temp=NULL;
 	maxTrackID++;
-	CvTracks::iterator itor;
+	//CvTracks::iterator itor;
 	//if ((itor=t.find(maxTrackID))!=t.end())
 	  //cout << maxTrackID << ", " << itor->second->id << " ------------------------------------------------------------------------------------------------------" << endl;
 	t.insert(CvIDTrack(maxTrackID, temp = new CvTrack));
@@ -200,7 +200,7 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 	// New track
 	CvTrack *temp=NULL;
 	maxTrackID++;
-	CvTracks::iterator itor;
+	//CvTracks::iterator itor;
 	//if ((itor=t.find(maxTrackID))!=t.end())
 	  //cout << maxTrackID << ", " << itor->second->id << " ------------------------------------------------------------------------------------------------------" << endl;
 	t.insert(CvIDTrack(maxTrackID, temp = new CvTrack));
