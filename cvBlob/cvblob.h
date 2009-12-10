@@ -25,10 +25,6 @@
 %{
 #include "cvblob.h"
 %}
-%include "std_pair.i"
-%include "std_map.i"
-%include "typemaps.i"
-%include "cvtypemaps.i"
 #endif
 
 #ifndef CVBLOB_H
@@ -37,6 +33,7 @@
 #include <iostream>
 #include <map>
 #include <list>
+#include <vector>
 
 #ifdef WIN32
 #include <cv.h>
