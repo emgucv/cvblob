@@ -217,7 +217,10 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 
     for (CvTracks::iterator jt=t.begin(); jt!=t.end();)
       if (jt->second->inactive>=thInactive)
+      {
+	delete jt->second;
 	t.erase(jt++);
+      }
       else
 	++jt;
   }
