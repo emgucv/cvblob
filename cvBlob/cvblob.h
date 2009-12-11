@@ -215,6 +215,14 @@ extern "C" {
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Aux
+  
+  double cvDotProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c);
+  double cvCrossProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c);
+  double cvDistancePointPoint(CvPoint const &a, CvPoint const &b);
+  double cvDistanceLinePoint(CvPoint const &a, CvPoint const &b, CvPoint const &c, bool isSegment=true);
+  
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Contours
   
   // Chain code:
