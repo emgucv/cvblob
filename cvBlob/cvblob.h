@@ -217,9 +217,36 @@ extern "C" {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Aux
   
+  // \fn double cvDotProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c)
+  // \brief Dot product of the vectors ab and bc.
+  // \param a First point.
+  // \param b Middle point.
+  // \param c Last point.
+  // \return Dot product of ab and bc.
   double cvDotProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c);
+  
+  // \fn double cvCrossProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c)
+  // \brief Cross product of the vectors ab and bc.
+  // \param a Point.
+  // \param b Point.
+  // \param c Point.
+  // \return Cross product of ab and bc.
   double cvCrossProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c);
+
+  // \fn double cvDistancePointPoint(CvPoint const &a, CvPoint const &b)
+  // \brief Distance between two points.
+  // \param a Point.
+  // \param b Point.
+  // \return Distance.
   double cvDistancePointPoint(CvPoint const &a, CvPoint const &b);
+
+  // \fn double cvDistanceLinePoint(CvPoint const &a, CvPoint const &b, CvPoint const &c, bool isSegment=true)
+  // \brief Distance between line ab and point c.
+  // \param a First point of the segment.
+  // \param b Second point of the segment.
+  // \param c Point.
+  // \param isSegment If false then the distance will be calculated from the line defined by the points a and b, to the point c.
+  // \return Distance between ab and c.
   double cvDistanceLinePoint(CvPoint const &a, CvPoint const &b, CvPoint const &c, bool isSegment=true);
   
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -371,6 +398,18 @@ extern "C" {
   /// \see CvID
   /// \see CvTrack
   typedef std::pair<CvID, CvTrack *> CvIDTrack;
+
+  /// \fn inline void cvReleaseTracks(CvTracks &tracks)
+  /// \brief Clear tracks structure.
+  /// \param tracks List of tracks.
+  /// \see CvTracks
+  inline void cvReleaseTracks(CvTracks &tracks)
+  {
+    for (CvTracks::iterator it=tracks.begin(); it!=tracks.end(); it++)
+      delete (*it).second;
+
+    tracks.clear();
+  }
 
   /// \fn cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive)
   /// \brief Updates list of tracks based on current blobs.
