@@ -358,7 +358,7 @@ CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
       {
 	i++;
 	if (i>=p->size())
-	  return new CvContourPolygon;
+	  return new CvContourPolygon(dq.begin(), dq.end());
       }
 
       while (cvCrossProductPoints(dq.at(s-2), dq.at(s-1), (*p)[i])<0)
@@ -375,7 +375,7 @@ CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
       dq.push_front((*p)[i]);
     }
 
-    return new CvContourPolygon;
+    return new CvContourPolygon(dq.begin(), dq.end());
   }
   __END__;
 }
