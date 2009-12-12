@@ -350,7 +350,7 @@ CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
     dq.push_back((*p)[2]);
     dq.push_front((*p)[2]);
 
-    for (int i=3; i<p->size()-1; i++)
+    for (int i=3; i<p->size(); i++)
     {
       int s = dq.size();
 
