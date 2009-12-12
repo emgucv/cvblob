@@ -132,7 +132,10 @@ extern "C" {
   inline void cvReleaseBlobs(CvBlobs &blobs)
   {
     for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); it++)
-      delete (*it).second;
+    {
+      CvBlob *blob = (*it).second;
+      if (blob) delete blob;
+    }
 
     blobs.clear();
   }
@@ -217,36 +220,36 @@ extern "C" {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Aux
   
-  // \fn double cvDotProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c)
-  // \brief Dot product of the vectors ab and bc.
-  // \param a First point.
-  // \param b Middle point.
-  // \param c Last point.
-  // \return Dot product of ab and bc.
+  /// \fn double cvDotProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c)
+  /// \brief Dot product of the vectors ab and bc.
+  /// \param a First point.
+  /// \param b Middle point.
+  /// \param c Last point.
+  /// \return Dot product of ab and bc.
   double cvDotProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c);
   
-  // \fn double cvCrossProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c)
-  // \brief Cross product of the vectors ab and bc.
-  // \param a Point.
-  // \param b Point.
-  // \param c Point.
-  // \return Cross product of ab and bc.
+  /// \fn double cvCrossProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c)
+  /// \brief Cross product of the vectors ab and bc.
+  /// \param a Point.
+  /// \param b Point.
+  /// \param c Point.
+  /// \return Cross product of ab and bc.
   double cvCrossProductPoints(CvPoint const &a, CvPoint const &b, CvPoint const &c);
 
-  // \fn double cvDistancePointPoint(CvPoint const &a, CvPoint const &b)
-  // \brief Distance between two points.
-  // \param a Point.
-  // \param b Point.
-  // \return Distance.
+  /// \fn double cvDistancePointPoint(CvPoint const &a, CvPoint const &b)
+  /// \brief Distance between two points.
+  /// \param a Point.
+  /// \param b Point.
+  /// \return Distance.
   double cvDistancePointPoint(CvPoint const &a, CvPoint const &b);
 
-  // \fn double cvDistanceLinePoint(CvPoint const &a, CvPoint const &b, CvPoint const &c, bool isSegment=true)
-  // \brief Distance between line ab and point c.
-  // \param a First point of the segment.
-  // \param b Second point of the segment.
-  // \param c Point.
-  // \param isSegment If false then the distance will be calculated from the line defined by the points a and b, to the point c.
-  // \return Distance between ab and c.
+  /// \fn double cvDistanceLinePoint(CvPoint const &a, CvPoint const &b, CvPoint const &c, bool isSegment=true)
+  /// \brief Distance between line ab and point c.
+  /// \param a First point of the segment.
+  /// \param b Second point of the segment.
+  /// \param c Point.
+  /// \param isSegment If false then the distance will be calculated from the line defined by the points a and b, to the point c.
+  /// \return Distance between ab and c.
   double cvDistanceLinePoint(CvPoint const &a, CvPoint const &b, CvPoint const &c, bool isSegment=true);
   
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,15 +268,15 @@ extern "C" {
 #define CV_CHAINCODE_LEFT	6 ///< Left.
 #define CV_CHAINCODE_UP_LEFT	7 ///< Up and left.
 
-  /// /brief Move vectors of chain codes.
-  /// /see CV_CHAINCODE_UP
-  /// /see CV_CHAINCODE_UP_LEFT
-  /// /see CV_CHAINCODE_LEFT
-  /// /see CV_CHAINCODE_DOWN_LEFT
-  /// /see CV_CHAINCODE_DOWN
-  /// /see CV_CHAINCODE_DOWN_RIGHT
-  /// /see CV_CHAINCODE_RIGHT
-  /// /see CV_CHAINCODE_UP_RIGHT
+  /// \brief Move vectors of chain codes.
+  /// \see CV_CHAINCODE_UP
+  /// \see CV_CHAINCODE_UP_LEFT
+  /// \see CV_CHAINCODE_LEFT
+  /// \see CV_CHAINCODE_DOWN_LEFT
+  /// \see CV_CHAINCODE_DOWN
+  /// \see CV_CHAINCODE_DOWN_RIGHT
+  /// \see CV_CHAINCODE_RIGHT
+  /// \see CV_CHAINCODE_UP_RIGHT
   const char cvChainCodeMoves[8][2] = { { 0, -1},
                                         { 1, -1},
 					{ 1,  0},
@@ -284,85 +287,85 @@ extern "C" {
 					{-1, -1}
                                       };
 
-  /// /brief Direction.
-  /// /see CV_CHAINCODE_UP
-  /// /see CV_CHAINCODE_UP_LEFT
-  /// /see CV_CHAINCODE_LEFT
-  /// /see CV_CHAINCODE_DOWN_LEFT
-  /// /see CV_CHAINCODE_DOWN
-  /// /see CV_CHAINCODE_DOWN_RIGHT
-  /// /see CV_CHAINCODE_RIGHT
-  /// /see CV_CHAINCODE_UP_RIGHT
+  /// \brief Direction.
+  /// \see CV_CHAINCODE_UP
+  /// \see CV_CHAINCODE_UP_LEFT
+  /// \see CV_CHAINCODE_LEFT
+  /// \see CV_CHAINCODE_DOWN_LEFT
+  /// \see CV_CHAINCODE_DOWN
+  /// \see CV_CHAINCODE_DOWN_RIGHT
+  /// \see CV_CHAINCODE_RIGHT
+  /// \see CV_CHAINCODE_UP_RIGHT
   typedef unsigned char CvChainCode;
 
-  /// /brief Chain code.
-  /// /see CvChainCode
+  /// \brief Chain code.
+  /// \see CvChainCode
   typedef std::list<CvChainCode> CvChainCodes;
 
-  /// /brief Chain code contour.
-  /// /see CvChainCodes
+  /// \brief Chain code contour.
+  /// \see CvChainCodes
   struct CvContourChainCode
   {
     CvPoint startingPoint; ///< Point where contour begin.
     CvChainCodes chainCode; ///< Polygon description based on chain codes.
   };
 
-  /// /brief Polygon based contour.
+  /// \brief Polygon based contour.
   typedef std::vector<CvPoint> CvContourPolygon;
 
-  /// /var CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
-  /// /brief Get the contour of a blob.
-  /// Uses Theo Pavlidis' algorithm (see http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/theo.html ).
-  /// /param blob Blob.
-  /// /param img Label image.
-  /// /return Chain code contour.
-  /// /see CvContourChainCode
-  /// /see CvBlob
+  /// \var CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
+  /// \brief Get the contour of a blob.
+  /// Uses Theo Pavlidis' algorithm (see http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/theo.html).
+  /// \param blob Blob.
+  /// \param img Label image.
+  /// \return Chain code contour.
+  /// \see CvContourChainCode
+  /// \see CvBlob
   CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img);
 
-  /// /var void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255))
-  /// /brief Draw a contour.
-  /// /param contour Chain code contour.
-  /// /param img Image to draw on.
-  /// /param color Color to draw (default, white).
-  /// /see CvContourChainCode
+  /// \var void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255))
+  /// \brief Draw a contour.
+  /// \param contour Chain code contour.
+  /// \param img Image to draw on.
+  /// \param color Color to draw (default, white).
+  /// \see CvContourChainCode
   void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255));
   
-  /// /var CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
-  /// /brief Convert a chain code contour to a polygon.
-  /// /param cc Chain code contour.
-  /// /return A polygon.
-  /// /see CvContourChainCode
-  /// /see CvContourPolygon
+  /// \var CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
+  /// \brief Convert a chain code contour to a polygon.
+  /// \param cc Chain code contour.
+  /// \return A polygon.
+  /// \see CvContourChainCode
+  /// \see CvContourPolygon
   CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc);
 
-  /// /var void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255))
-  /// /brief Draw a polygon.
-  /// /param contour Polygon contour.
-  /// /param img Image to draw on.
-  /// /param color Color to draw (default, white).
-  /// /see CvContourPolygon
+  /// \var void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255))
+  /// \brief Draw a polygon.
+  /// \param contour Polygon contour.
+  /// \param img Image to draw on.
+  /// \param color Color to draw (default, white).
+  /// \see CvContourPolygon
   void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255));
 
-  // /var double cvContourArea(CvContourPolygon const *p)
-  // /brief Calculates area of a polygonal contour.
-  // /param p Contour (polygon type).
-  // /return Area of the contour.
+  /// \var double cvContourPolygonArea(CvContourPolygon const *p)
+  /// \brief Calculates area of a polygonal contour.
+  /// \param p Contour (polygon type).
+  /// \return Area of the contour.
   double cvContourPolygonArea(CvContourPolygon const *p);
 
-  // /var CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
-  // /brief Simplify a polygon reducing the number of vertex according the distance "delta".
-  // Uses a version of the Ramer-Douglas-Peucker algorithm (http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm).
-  // /param p Contour (polygon type).
-  // /param delta Minimun distance.
-  // /return A simplify version of the original polygon.
+  /// \var CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
+  /// \brief Simplify a polygon reducing the number of vertex according the distance "delta".
+  /// Uses a version of the Ramer-Douglas-Peucker algorithm (http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm).
+  /// \param p Contour (polygon type).
+  /// \param delta Minimun distance.
+  /// \return A simplify version of the original polygon.
   CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.);
 
-  // /var CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
-  // /brief Calculates convex hull of a contour.
-  // Uses the Melkman Algorithm. Code based on the version in http://w3.impa.br/~rdcastan/Cgeometry/.
-  // /param p Contour (polygon type).
-  // /return Convex hull.
+  /// \var CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
+  /// \brief Calculates convex hull of a contour.
+  /// Uses the Melkman Algorithm. Code based on the version in http://w3.impa.br/~rdcastan/Cgeometry/.
+  /// \param p Contour (polygon type).
+  /// \return Convex hull.
   CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p);
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -406,7 +409,10 @@ extern "C" {
   inline void cvReleaseTracks(CvTracks &tracks)
   {
     for (CvTracks::iterator it=tracks.begin(); it!=tracks.end(); it++)
-      delete (*it).second;
+    {
+      CvTrack *track = (*it).second;
+      if (track) delete track;
+    }
 
     tracks.clear();
   }
