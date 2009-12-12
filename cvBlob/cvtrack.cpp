@@ -123,23 +123,25 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 	// Match track-blob
 	
 	// Search for the blob
-	CvLabel blob = 0;
 	for (i=0; (i<nBlobs)&&(!C(i, j)); i++) {}
 
 	// Update track
-	T(j)->label = B(i)->label;
-	T(j)->centroid = B(i)->centroid;
-	T(j)->minx = B(i)->minx;
-	T(j)->miny = B(i)->miny;
-	T(j)->maxx = B(i)->maxx;
-	T(j)->maxy = B(i)->maxy;
-	T(j)->inactive = 0;
+	CvBlob *blob = B(i);
+	CvTrack *track = T(j);
+	track->label = blob->label;
+	track->centroid = blob->centroid;
+	track->minx = blob->minx;
+	track->miny = blob->miny;
+	track->maxx = blob->maxx;
+	track->maxy = blob->maxy;
+	track->inactive = 0;
       }
       else if (c > 1)
       {
 	// Track divides
-	T(j)->inactive++;
-	T(j)->label=0;
+	CvTrack *track = T(j);
+	track->inactive++;
+	track->label=0;
 
 	// Create new tracks
 	for (i=0; i<nBlobs; i++)
@@ -147,24 +149,26 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 	  if (C(i, j))
 	  {
 	    maxTrackID++;
-	    CvTrack *temp = new CvTrack;
-	    temp->id = maxTrackID;
-	    temp->label = B(i)->label;
-	    temp->minx = B(i)->minx;
-	    temp->miny = B(i)->miny;
-	    temp->maxx = B(i)->maxx;
-	    temp->maxy = B(i)->maxy;
-	    temp->centroid = B(i)->centroid;
-	    temp->inactive = 0;
-	    t.insert(CvIDTrack(maxTrackID, temp));
+	    CvBlob *blob = B(i);
+	    CvTrack *track = new CvTrack;
+	    track->id = maxTrackID;
+	    track->label = blob->label;
+	    track->minx = blob->minx;
+	    track->miny = blob->miny;
+	    track->maxx = blob->maxx;
+	    track->maxy = blob->maxy;
+	    track->centroid = blob->centroid;
+	    track->inactive = 0;
+	    t.insert(CvIDTrack(maxTrackID, track));
 	  }
 	}
       }
       else // if (c == 0)
       {
 	// Inactive track
-	T(j)->inactive++;
-	T(j)->label = 0;
+	CvTrack *track = T(j);
+	track->inactive++;
+	track->label = 0;
       }
     }
 
@@ -178,16 +182,17 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
       {
 	// New track
 	maxTrackID++;
-	CvTrack *temp = new CvTrack;
-	temp->id = maxTrackID;
-	temp->label = B(i)->label;
-	temp->minx = B(i)->minx;
-	temp->miny = B(i)->miny;
-	temp->maxx = B(i)->maxx;
-	temp->maxy = B(i)->maxy;
-	temp->centroid = B(i)->centroid;
-	temp->inactive = 0;
-	t.insert(CvIDTrack(maxTrackID, temp));
+	CvBlob *blob = B(i);
+	CvTrack *track = new CvTrack;
+	track->id = maxTrackID;
+	track->label = blob->label;
+	track->minx = blob->minx;
+	track->miny = blob->miny;
+	track->maxx = blob->maxx;
+	track->maxy = blob->maxy;
+	track->centroid = blob->centroid;
+	track->inactive = 0;
+	t.insert(CvIDTrack(maxTrackID, track));
       }
       else if (c > 1)
       {
@@ -195,16 +200,17 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 	
 	// New track
 	maxTrackID++;
-	CvTrack *temp = new CvTrack;
-	temp->id = maxTrackID;
-	temp->label = B(i)->label;
-	temp->minx = B(i)->minx;
-	temp->miny = B(i)->miny;
-	temp->maxx = B(i)->maxx;
-	temp->maxy = B(i)->maxy;
-	temp->centroid = B(i)->centroid;
-	temp->inactive = 0;
-	t.insert(CvIDTrack(maxTrackID, temp));
+	CvBlob *blob = B(i);
+	CvTrack *track = new CvTrack;
+	track->id = maxTrackID;
+	track->label = blob->label;
+	track->minx = blob->minx;
+	track->miny = blob->miny;
+	track->maxx = blob->maxx;
+	track->maxy = blob->maxy;
+	track->centroid = blob->centroid;
+	track->inactive = 0;
+	t.insert(CvIDTrack(maxTrackID, track));
 	
 	// Others tracks inactives
 	for (j=0; j<nTracks; j++)
