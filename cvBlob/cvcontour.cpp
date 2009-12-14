@@ -236,6 +236,24 @@ double cvContourPolygonArea(CvContourPolygon const *p)
   __END__;
 }
 
+double cvContourPolygonPerimeter(CvContourPolygon const *p)
+{
+  CV_FUNCNAME("cvContourPolygonPerimeter");
+  __BEGIN__;
+  {
+    CV_ASSERT(p!=NULL);
+    CV_ASSERT(p->size()>2);
+
+    double perimeter = cvDistancePointPoint((*p)[p->size()-1], (*p)[0]);
+
+    for (int i=0; i<p->size()-1; i++)
+      perimeter+=cvDistancePointPoint((*p)[i], (*p)[i+1]);
+
+    return perimeter;
+  }
+  __END__;
+}
+
 void simplifyPolygonRecursive(CvContourPolygon const *p, int const i1, int const i2, bool *pnUseFlag, double const delta)
 {
   CV_FUNCNAME("cvSimplifyPolygonRecursive");

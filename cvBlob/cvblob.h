@@ -353,6 +353,12 @@ extern "C" {
   /// \return Area of the contour.
   double cvContourPolygonArea(CvContourPolygon const *p);
 
+  /// \var double cvContourPolygonPerimeter(CvContourPolygon const *p)
+  /// \brief Calculates perimeter of a polygonal contour.
+  /// \param p Contour (polygon type).
+  /// \return Perimeter of the contour.
+  double cvContourPolygonPerimeter(CvContourPolygon const *p);
+
   /// \var CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
   /// \brief Simplify a polygon reducing the number of vertex according the distance "delta".
   /// Uses a version of the Ramer-Douglas-Peucker algorithm (http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm).
