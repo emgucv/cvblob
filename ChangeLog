@@ -1,3 +1,14 @@
+Version 0.9.12 (2009/12/01)
+
+  * cvaux.cpp: new file. Auxiliar functions.
+
+  * cvcontour.cpp: bug fixed in cvConvertChainCodesToPolygon. Problem with
+  blobs of one pixel. New functions.
+
+  * cvtrack.cpp: memory leak fixed in cvRenderTracks.
+
+  * cvblob.h: doxygen documentation. New functions.
+
 Version 0.9.11 (2009/10/01)
 
   * cvblob.cpp, cvlabel.cpp, cvtracker.cpp, cvcontour.cpp: error handling

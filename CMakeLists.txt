@@ -35,6 +35,7 @@ set(CMAKE_BUILD_TYPE Release)
 #endif(!WIN32)
 
 add_subdirectory(cvBlob lib)
+add_subdirectory(pyCvBlob pyCvBlob)
 add_subdirectory(test test)
 
 #install(DIRECTORY dll DESTINATION dll)
@@ -56,8 +57,8 @@ set(CPACK_PACKAGE_VENDOR "Cristóbal Carnero Liñán <grendel.ccl@gmail.com>")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${cvBlob_SOURCE_DIR}/README)
 set(CPACK_PACKAGE_VERSION_MAJOR 0)
 set(CPACK_PACKAGE_VERSION_MINOR 9)
-set(CPACK_PACKAGE_VERSION_PATCH 11)
-set(CPACK_PACKAGE_VERSION "0.9.11")
+set(CPACK_PACKAGE_VERSION_PATCH 12)
+set(CPACK_PACKAGE_VERSION "0.9.12")
 set(CPACK_RESOURCE_FILE_LICENSE ${cvBlob_SOURCE_DIR}/COPYING.LESSER)
 set(CPACK_RESOURCE_FILE_README ${cvBlob_SOURCE_DIR}/README)
 
