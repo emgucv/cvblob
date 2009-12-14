@@ -52,11 +52,18 @@ int main()
   for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
   {
     CvContourChainCode *contour = cvGetContour(it->second, labelImg);
-    //cvRenderContourChainCode(contour, img);
+    cvRenderContourChainCode(contour, img);
 
     CvContourPolygon *polygon = cvConvertChainCodesToPolygon(contour);
-    cvRenderContourPolygon(polygon, img);
 
+    CvContourPolygon *sPolygon = cvSimplifyPolygon(polygon, 10.);
+    CvContourPolygon *cPolygon = cvPolygonContourConvexHull(sPolygon);
+
+    cvRenderContourPolygon(sPolygon, img, CV_RGB(0, 0, 255));
+    cvRenderContourPolygon(cPolygon, img, CV_RGB(0, 255, 0));
+
+    delete cPolygon;
+    delete sPolygon;
     delete polygon;
     delete contour;
   }
