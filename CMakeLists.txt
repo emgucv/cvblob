@@ -35,7 +35,7 @@ set(CMAKE_BUILD_TYPE Release)
 #endif(!WIN32)
 
 add_subdirectory(cvBlob lib)
-add_subdirectory(pyCvBlob pyCvBlob)
+#add_subdirectory(pyCvBlob pyCvBlob)
 add_subdirectory(test test)
 
 #install(DIRECTORY dll DESTINATION dll)
