@@ -38,7 +38,7 @@ const char moves[4][3][4] = { { {-1, -1, 3, CV_CHAINCODE_UP_LEFT   }, { 0, -1, 0
 CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
 {
   CV_FUNCNAME("cvGetContour");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(img&&(img->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
 
@@ -106,13 +106,13 @@ CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
     return contour;
 
   }
-  __END__;
+  __CV_END__;
 }
 
 void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color)
 {
   CV_FUNCNAME("cvRenderContourChainCode");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(img&&(img->depth==IPL_DEPTH_8U)&&(img->nChannels==3));
 
@@ -143,13 +143,13 @@ void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const 
       y += cvChainCodeMoves[*it][1];
     }
   }
-  __END__;
+  __CV_END__;
 }
 
 CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
 {
   CV_FUNCNAME("cvConvertChainCodesToPolygon");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(cc);
 
@@ -181,13 +181,13 @@ CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
 
     return contour;
   }
-  __END__;
+  __CV_END__;
 }
 
 void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color)
 {
   CV_FUNCNAME("cvRenderContourPolygon");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(img&&(img->depth==IPL_DEPTH_8U)&&(img->nChannels==3));
 
@@ -209,13 +209,13 @@ void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvSc
       cvLine(img, cvPoint(x, y), cvPoint(fx, fy), color, 1);
     }
   }
-  __END__;
+  __CV_END__;
 }
 
 double cvContourPolygonArea(CvContourPolygon const *p)
 {
   CV_FUNCNAME("cvContourPolygonArea");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(p!=NULL);
     CV_ASSERT(p->size()>2);
@@ -233,13 +233,13 @@ double cvContourPolygonArea(CvContourPolygon const *p)
 
     return a*0.5;
   }
-  __END__;
+  __CV_END__;
 }
 
 double cvContourPolygonPerimeter(CvContourPolygon const *p)
 {
   CV_FUNCNAME("cvContourPolygonPerimeter");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(p!=NULL);
     CV_ASSERT(p->size()>2);
@@ -251,13 +251,13 @@ double cvContourPolygonPerimeter(CvContourPolygon const *p)
 
     return perimeter;
   }
-  __END__;
+  __CV_END__;
 }
 
 void simplifyPolygonRecursive(CvContourPolygon const *p, int const i1, int const i2, bool *pnUseFlag, double const delta)
 {
   CV_FUNCNAME("cvSimplifyPolygonRecursive");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     int endIndex = (i2<0)?p->size():i2;
 
@@ -289,13 +289,13 @@ void simplifyPolygonRecursive(CvContourPolygon const *p, int const i1, int const
       simplifyPolygonRecursive(p, furtherIndex, i2, pnUseFlag, delta);
     }
   }
-  __END__;
+  __CV_END__;
 }
 
 CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta)
 {
   CV_FUNCNAME("cvSimplifyPolygon");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(p!=NULL);
     CV_ASSERT(p->size()>2);
@@ -341,16 +341,16 @@ CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delt
 
     return result;
   }
-  __END__;
+  __CV_END__;
 }
 
 CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
 {
   CV_FUNCNAME("cvPolygonContourConvexHull");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(p!=NULL);
-    CV_ASSERT(p->size()>2);
+    CV_ASSERT(p->size()>=2);
 
     deque<CvPoint> dq;
 
@@ -395,5 +395,5 @@ CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
 
     return new CvContourPolygon(dq.begin(), dq.end());
   }
-  __END__;
+  __CV_END__;
 }

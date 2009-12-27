@@ -72,7 +72,7 @@ void merge(CvBlob *x, CvBlob *y)
 unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
 {
   CV_FUNCNAME("cvLabel");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(img&&(img->depth==IPL_DEPTH_8U)&&(img->nChannels==1));
     CV_ASSERT(imgOut&&(imgOut->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
@@ -317,13 +317,13 @@ unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs)
     return numPixels;
 
   }
-  __END__;
+  __CV_END__;
 }
 
 void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
 {
   CV_FUNCNAME("cvFilterLabels");
-  __BEGIN__;
+  __CV_BEGIN__;
   {
     CV_ASSERT(imgIn&&(imgIn->depth==IPL_DEPTH_LABEL)&&(imgIn->nChannels==1));
     CV_ASSERT(imgOut&&(imgOut->depth==IPL_DEPTH_8U)&&(imgOut->nChannels==1));
@@ -365,5 +365,5 @@ void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
       }
     }
   }
-  __END__;
+  __CV_END__;
 }

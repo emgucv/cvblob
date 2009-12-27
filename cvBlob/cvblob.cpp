@@ -69,7 +69,7 @@ void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea)
 void cvCentralMoments(CvBlob *blob, const IplImage *img)
 {
   CV_FUNCNAME("cvCentralMoments");
-  __BEGIN__;
+  __CV_BEGIN__;
   if (!blob->centralMoments)
   {
     CV_ASSERT(img&&(img->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
@@ -106,7 +106,7 @@ void cvCentralMoments(CvBlob *blob, const IplImage *img)
 
     blob->centralMoments = true;
   }
-  __END__;
+  __CV_END__;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,7 +155,7 @@ typedef std::map<CvLabel, Color> Palete;
 void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode, double alpha)
 {
   CV_FUNCNAME("cvRenderBlobs");
-  __BEGIN__;
+  __CV_BEGIN__;
 
   CV_ASSERT(imgLabel&&(imgLabel->depth==IPL_DEPTH_LABEL)&&(imgLabel->nChannels==1));
   CV_ASSERT(imgDest&&(imgDest->depth==IPL_DEPTH_8U)&&(imgDest->nChannels==3));
@@ -278,18 +278,18 @@ void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *img
     }
   }
 
-  __END__;
+  __CV_END__;
 }
 
 // Returns radians
 double cvAngle(CvBlob *blob)
 {
   CV_FUNCNAME("cvAngle");
-  __BEGIN__;
+  __CV_BEGIN__;
 
   CV_ASSERT(blob->centralMoments);
 
   return .5*atan2(2.*blob->u11,(blob->u20-blob->u02));
 
-  __END__;
+  __CV_END__;
 }

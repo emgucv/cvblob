@@ -58,7 +58,7 @@ double distantBlobTrack(CvBlob const *b, CvTrack const *t)
 void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive)
 {
   CV_FUNCNAME("cvUpdateTracks");
-  __BEGIN__;
+  __CV_BEGIN__;
 
   unsigned int nBlobs = b.size();
   unsigned int nTracks = t.size();
@@ -238,7 +238,7 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 
   delete[] close;
 
-  __END__;
+  __CV_END__;
 }
 
 CvFont *defaultFont = NULL;
@@ -246,7 +246,7 @@ CvFont *defaultFont = NULL;
 void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode, CvFont *font)
 {
   CV_FUNCNAME("cvRenderTracks");
-  __BEGIN__;
+  __CV_BEGIN__;
 
   CV_ASSERT(imgDest&&(imgDest->depth==IPL_DEPTH_8U)&&(imgDest->nChannels==3));
 
@@ -306,5 +306,5 @@ void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDes
     }
   }
 
-  __END__;
+  __CV_END__;
 }
