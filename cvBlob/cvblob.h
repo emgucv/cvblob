@@ -41,6 +41,13 @@
 #include <opencv/cv.h>
 #endif
 
+#ifndef __CV_BEGIN__
+#define __CV_BEGIN__ __BEGIN__
+#endif
+#ifndef __CV_END__
+#define __CV_END__ __END__
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
