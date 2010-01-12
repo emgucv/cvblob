@@ -352,48 +352,60 @@ CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
     CV_ASSERT(p!=NULL);
     CV_ASSERT(p->size()>=2);
 
-    deque<CvPoint> dq;
+    deque<int> dq;
 
     if (cvCrossProductPoints((*p)[0], (*p)[1], (*p)[2])>0)
     {
-      dq.push_back((*p)[0]);
-      dq.push_back((*p)[1]);
+      dq.push_back(0);
+      dq.push_back(1);
     }
     else
     {
-      dq.push_back((*p)[1]);
-      dq.push_back((*p)[0]);
+      dq.push_back(1);
+      dq.push_back(0);
     }
 
-    dq.push_back((*p)[2]);
-    dq.push_front((*p)[2]);
+    dq.push_back(2);
+    dq.push_front(2);
 
     for (int i=3; i<p->size(); i++)
     {
       int s = dq.size();
 
-      while (cvCrossProductPoints((*p)[i], dq.at(0), dq.at(1))>=0 && cvCrossProductPoints(dq.at(s-2), dq.at(s-1), (*p)[i])>=0)
+      while (cvCrossProductPoints((*p)[i], (*p)[dq.at(0)], (*p)[dq.at(1)])>=0 && cvCrossProductPoints((*p)[dq.at(s-2)], (*p)[dq.at(s-1)], (*p)[i])>=0)
       {
 	i++;
 	if (i>=p->size())
-	  return new CvContourPolygon(dq.begin(), dq.end());
+	{
+	  CvContourPolygon *result = new CvContourPolygon;
+	  for (deque<int>::const_iterator it=dq.begin(); it!=dq.end(); ++it) result->push_back((*p)[*it]);
+	  return result;
+	}
       }
 
-      while (cvCrossProductPoints(dq.at(s-2), dq.at(s-1), (*p)[i])<0)
+      while (cvCrossProductPoints((*p)[dq.at(s-2)], (*p)[dq.at(s-1)], (*p)[i])<=0)
       {
 	dq.pop_back();
 	s = dq.size();
       }
 
-      dq.push_back((*p)[i]);
+      int aux = dq.front();
+      if (aux>dq.back())
+      {
+	dq.pop_front();
+	dq.push_back(aux);
+      }
+      dq.push_back(i);
 
-      while (cvCrossProductPoints((*p)[i], dq.at(0), dq.at(1))<0)
+      while (cvCrossProductPoints((*p)[i], (*p)[dq.at(0)], (*p)[dq.at(1)])<=0)
 	dq.pop_front();
 
-      dq.push_front((*p)[i]);
+      dq.push_front(i);
     }
 
-    return new CvContourPolygon(dq.begin(), dq.end());
+    CvContourPolygon *result = new CvContourPolygon;
+    for (deque<int>::const_iterator it=dq.begin(); it!=dq.end(); ++it) result->push_back((*p)[*it]);
+    return result;
   }
   __CV_END__;
 }
