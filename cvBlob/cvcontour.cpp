@@ -352,60 +352,44 @@ CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
     CV_ASSERT(p!=NULL);
     CV_ASSERT(p->size()>=2);
 
-    deque<int> dq;
+    deque<CvPoint> dq;
 
     if (cvCrossProductPoints((*p)[0], (*p)[1], (*p)[2])>0)
     {
-      dq.push_back(0);
-      dq.push_back(1);
+      dq.push_back((*p)[0]);
+      dq.push_back((*p)[1]);
     }
     else
     {
-      dq.push_back(1);
-      dq.push_back(0);
+      dq.push_back((*p)[1]);
+      dq.push_back((*p)[0]);
     }
 
-    dq.push_back(2);
-    dq.push_front(2);
+    dq.push_back((*p)[2]);
+    dq.push_front((*p)[2]);
 
     for (int i=3; i<p->size(); i++)
     {
       int s = dq.size();
 
-      while (cvCrossProductPoints((*p)[i], (*p)[dq.at(0)], (*p)[dq.at(1)])>=0 && cvCrossProductPoints((*p)[dq.at(s-2)], (*p)[dq.at(s-1)], (*p)[i])>=0)
-      {
-	i++;
-	if (i>=p->size())
-	{
-	  CvContourPolygon *result = new CvContourPolygon;
-	  for (deque<int>::const_iterator it=dq.begin(); it!=dq.end(); ++it) result->push_back((*p)[*it]);
-	  return result;
-	}
-      }
+      if ((cvCrossProductPoints((*p)[i], dq.at(0), dq.at(1))>=0) && (cvCrossProductPoints(dq.at(s-2), dq.at(s-1), (*p)[i])>=0))
+	continue; // TODO Optimize.
 
-      while (cvCrossProductPoints((*p)[dq.at(s-2)], (*p)[dq.at(s-1)], (*p)[i])<=0)
+      while (cvCrossProductPoints(dq.at(s-2), dq.at(s-1), (*p)[i])<0)
       {
 	dq.pop_back();
 	s = dq.size();
       }
 
-      int aux = dq.front();
-      if (aux>dq.back())
-      {
-	dq.pop_front();
-	dq.push_back(aux);
-      }
-      dq.push_back(i);
+      dq.push_back((*p)[i]);
 
-      while (cvCrossProductPoints((*p)[i], (*p)[dq.at(0)], (*p)[dq.at(1)])<=0)
+      while (cvCrossProductPoints((*p)[i], dq.at(0), dq.at(1))<0)
 	dq.pop_front();
 
-      dq.push_front(i);
+      dq.push_front((*p)[i]);
     }
 
-    CvContourPolygon *result = new CvContourPolygon;
-    for (deque<int>::const_iterator it=dq.begin(); it!=dq.end(); ++it) result->push_back((*p)[*it]);
-    return result;
+    return new CvContourPolygon(dq.begin(), dq.end());
   }
   __CV_END__;
 }
