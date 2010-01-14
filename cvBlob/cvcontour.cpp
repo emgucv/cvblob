@@ -393,3 +393,11 @@ CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
   }
   __CV_END__;
 }
+
+ostream& operator<< (ostream& output, const CvContourPolygon& p)
+{
+  for (CvContourPolygon::const_iterator it=p.begin(); it!=p.end(); ++it)
+    output << it->x << ", " << it->y << endl;
+
+  return output;
+}

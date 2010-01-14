@@ -320,6 +320,11 @@ extern "C" {
   /// \brief Polygon based contour.
   typedef std::vector<CvPoint> CvContourPolygon;
 
+  /// \var ostream& operator<<(ostream& output, const CvContourPolygon& p)
+  /// \brief Overload operator "<<" for printing polygons in CSV format.
+  /// \return Stream.
+  std::ostream& operator<< (std::ostream& output, const CvContourPolygon& p);
+
   /// \var CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
   /// \brief Get the contour of a blob.
   /// Uses Theo Pavlidis' algorithm (see http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/theo.html).
