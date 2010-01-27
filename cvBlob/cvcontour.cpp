@@ -417,12 +417,12 @@ void cvWriteContourPolygonSVG(const CvContourPolygon& p, const string& filename,
   {
     if (it->x>maxx)
       maxx = it->x;
-    else if (it->x<minx)
+    if (it->x<minx)
       minx = it->x;
 
     if (it->y>maxy)
       maxy = it->y;
-    else if (it->y<miny)
+    if (it->y<miny)
       miny = it->y;
 
     buffer << it->x << "," << it->y << " ";
