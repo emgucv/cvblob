@@ -17,8 +17,10 @@
 // along with cvBlob.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <climits>
 #include <deque>
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 #ifdef WIN32
@@ -400,4 +402,42 @@ ostream& operator<< (ostream& output, const CvContourPolygon& p)
     output << it->x << ", " << it->y << endl;
 
   return output;
+}
+
+void cvWriteContourPolygonSVG(const CvContourPolygon& p, const string& filename, const CvScalar& stroke, const CvScalar& fill)
+{
+  int minx=INT_MAX;
+  int miny=INT_MAX;
+  int maxx=INT_MIN;
+  int maxy=INT_MIN;
+
+  stringstream buffer("");
+
+  for (CvContourPolygon::const_iterator it=p.begin(); it!=p.end(); ++it)
+  {
+    if (it->x>maxx)
+      maxx = it->x;
+    else if (it->x<minx)
+      minx = it->x;
+
+    if (it->y>maxy)
+      maxy = it->y;
+    else if (it->y<miny)
+      miny = it->y;
+
+    buffer << it->x << "," << it->y << " ";
+  }
+
+  ofstream f;
+  f.open(filename.c_str());
+
+  f << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"no\"?>" << endl;
+  f << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">" << endl;
+  f << "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xml:space=\"preserve\" width=\"" << maxx-minx << "px\" height=\"" << maxy-miny << "px\" viewBox=\"" << minx << " " << miny << " " << maxx << " " << maxy << "\" zoomAndPan=\"disable\" >" << endl;
+
+  f << "<polygon fill=\"rgb(" << fill.val[0] << "," << fill.val[1] << "," << fill.val[2] << ")\" stroke=\"rgb(" << stroke.val[0] << "," << stroke.val[1] << "," << stroke.val[2] << ")\" stroke-width=\"1\" points=\"" << buffer << "\"/>" << endl;
+
+  f << "</svg>" << endl;
+
+  f.close();
 }

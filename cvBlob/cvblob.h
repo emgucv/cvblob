@@ -386,6 +386,14 @@ extern "C" {
   /// \return Convex hull.
   CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p);
 
+  /// \var void cvWriteContourPolygonSVG(const CvContourPolygon& p, const string& filename, const CvScalar& stroke, const CvScalar& fill)
+  /// \brief Write a contour to a SVG file (http://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
+  /// \param p Polygon contour.
+  /// \param filename File name.
+  /// \param stroke Stroke color (black by default).
+  /// \param fill Fill color (white by default).
+  void cvWriteContourPolygonSVG(const CvContourPolygon& p, const std::string& filename, const CvScalar& stroke=cvScalar(0,0,0), const CvScalar& fill=cvScalar(255,255,255));
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Tracking
 
