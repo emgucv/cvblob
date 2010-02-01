@@ -29,6 +29,7 @@ using namespace std;
 #endif
 
 #include <cvblob.h>
+using namespace cvb;
 
 int main()
 {

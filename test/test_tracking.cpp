@@ -28,6 +28,7 @@
 #endif
 
 #include <cvblob.h>
+using namespace cvb;
 
 int main()
 {

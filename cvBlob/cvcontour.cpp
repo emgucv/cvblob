@@ -31,6 +31,9 @@ using namespace std;
 
 #include "cvblob.h"
 
+namespace cvb
+{
+
 const char moves[4][3][4] = { { {-1, -1, 3, CV_CHAINCODE_UP_LEFT   }, { 0, -1, 0, CV_CHAINCODE_UP   }, { 1, -1, 0, CV_CHAINCODE_UP_RIGHT  } },
 			      { { 1, -1, 0, CV_CHAINCODE_UP_RIGHT  }, { 1,  0, 1, CV_CHAINCODE_RIGHT}, { 1,  1, 1, CV_CHAINCODE_DOWN_RIGHT} },
 			      { { 1,  1, 1, CV_CHAINCODE_DOWN_RIGHT}, { 0,  1, 2, CV_CHAINCODE_DOWN }, {-1,  1, 2, CV_CHAINCODE_DOWN_LEFT } },
@@ -440,4 +443,6 @@ void cvWriteContourPolygonSVG(const CvContourPolygon& p, const string& filename,
   f << "</svg>" << endl;
 
   f.close();
+}
+
 }

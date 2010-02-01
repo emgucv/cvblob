@@ -29,6 +29,9 @@ using namespace std;
 
 #include "cvblob.h"
 
+namespace cvb
+{
+
 CvLabel cvGreaterBlob(const CvBlobs &blobs)
 {
   CvLabel label=0;
@@ -257,7 +260,7 @@ void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *img
 
       if (mode&CV_BLOB_RENDER_ANGLE)
       {
-        cvCentralMoments(blob,imgLabel);
+	cvCentralMoments(blob,imgLabel);
         double angle = cvAngle(blob);
 
         double x1,y1,x2,y2;
@@ -292,4 +295,6 @@ double cvAngle(CvBlob *blob)
   return .5*atan2(2.*blob->u11,(blob->u20-blob->u02));
 
   __CV_END__;
+}
+
 }

@@ -52,6 +52,8 @@
 extern "C" {
 #endif
 
+  namespace cvb
+  {
 
   /// \brief Type of label.
   /// \see IPL_DEPTH_LABEL
@@ -473,6 +475,7 @@ extern "C" {
   /// \see CV_TRACK_RENDER_TO_LOG
   /// \see CV_TRACK_RENDER_TO_STD
   void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, CvFont *font=NULL);
+  }
 #ifdef __cplusplus
 }
 #endif

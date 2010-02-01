@@ -30,6 +30,9 @@ using namespace std;
 
 #include "cvblob.h"
 
+namespace cvb
+{
+
 #define D(Ax, Ay, Bx, By) (sqrt(((Ax)*(Ax) + (Bx)*(Bx)) + ((Ay)*(Ay) + (By)*(By))))
 
 #define MIN8(a,b,c,d,e,f,g,h) MIN((a),MIN((b),MIN((c),MIN((d),MIN((e),MIN((f),MIN((g),(h))))))))
@@ -307,4 +310,6 @@ void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDes
   }
 
   __CV_END__;
+}
+
 }

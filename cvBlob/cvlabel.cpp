@@ -29,6 +29,9 @@ using namespace std;
 
 #include "cvblob.h"
 
+namespace cvb
+{
+
 #define _MIN_(a,b) ((a)<(b)?(a):(b))
 #define _MAX_(a,b) ((a)>(b)?(a):(b))
 
@@ -639,4 +642,6 @@ void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs)
     }
   }
   __CV_END__;
+}
+
 }
