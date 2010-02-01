@@ -1,3 +1,8 @@
+Version 0.9.13 (2010/01/01)
+
+  * Namespace "cvb".
+  * cvblob.h, cvcontour.cpp: function to write contour to a SVG file.
+
 Version 0.9.12 (2009/12/01)
 
   * cvaux.cpp: new file. Auxiliar functions.
