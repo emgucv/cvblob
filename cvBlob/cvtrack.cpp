@@ -33,8 +33,7 @@ using namespace std;
 namespace cvb
 {
 
-#define D(Ax, Ay, Bx, By) (sqrt(((Ax)*(Ax) + (Bx)*(Bx)) + ((Ay)*(Ay) + (By)*(By))))
-
+#define D(x1,y1,x2,y2) sqrt(((x1)-(x2))*((x1)-(x2))+((y1)-(y2))*((y1)-(y2)))
 #define MIN8(a,b,c,d,e,f,g,h) MIN((a),MIN((b),MIN((c),MIN((d),MIN((e),MIN((f),MIN((g),(h))))))))
 
 double distantBlobTrack(CvBlob const *b, CvTrack const *t)
@@ -218,8 +217,11 @@ void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsi
 	// Others tracks inactives
 	for (j=0; j<nTracks; j++)
 	{
-	  T(j)->inactive++;
-	  T(j)->label = 0;
+	  if (C(i, j))
+	  {
+	    T(j)->inactive++;
+	    T(j)->label = 0;
+	  }
 	}
       }
     }
