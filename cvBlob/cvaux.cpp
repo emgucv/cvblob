@@ -17,6 +17,7 @@
 // along with cvBlob.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#include <cmath>
 
 #ifdef WIN32
 #include <cv.h>
