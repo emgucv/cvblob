@@ -322,11 +322,6 @@ extern "C" {
   /// \brief Polygon based contour.
   typedef std::vector<CvPoint> CvContourPolygon;
 
-  /// \var ostream& operator<<(ostream& output, const CvContourPolygon& p)
-  /// \brief Overload operator "<<" for printing polygons in CSV format.
-  /// \return Stream.
-  std::ostream& operator<< (std::ostream& output, const CvContourPolygon& p);
-
   /// \var CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
   /// \brief Get the contour of a blob.
   /// Uses Theo Pavlidis' algorithm (see http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/theo.html).
@@ -407,7 +402,7 @@ extern "C" {
     CvID id; ///< Track identification number.
 
     CvLabel label; ///< Label assigned to the blob related to this track.
-    
+
     unsigned int minx; ///< X min.
     unsigned int maxx; ///< X max.
     unsigned int miny; ///< Y min.
@@ -461,6 +456,7 @@ extern "C" {
   void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive);
 
 #define CV_TRACK_RENDER_ID            0x0001 ///< Print the ID of each track in the image. \see cvRenderTracks
+#define CV_TRACK_RENDER_BOUNDING_BOX  0x0002 ///< Draw bounding box of each track in the image. \see cvRenderTracks
 #define CV_TRACK_RENDER_TO_LOG        0x0010 ///< Print track info to log out. \see cvRenderTracks
 #define CV_TRACK_RENDER_TO_STD        0x0020 ///< Print track info to log out. \see cvRenderTracks
 
@@ -469,9 +465,10 @@ extern "C" {
   /// \param tracks List of tracks.
   /// \param imgSource Input image (depth=IPL_DEPTH_8U and num. channels=3).
   /// \param imgDest Output image (depth=IPL_DEPTH_8U and num. channels=3).
-  /// \param mode Render mode. By default is CV_TRACK_RENDER_ID.
+  /// \param mode Render mode. By default is CV_TRACK_RENDER_ID|CV_TRACK_RENDER_BOUNDING_BOX.
   /// \param font OpenCV font for print on the image.
   /// \see CV_TRACK_RENDER_ID
+  /// \see CV_TRACK_RENDER_BOUNDING_BOX
   /// \see CV_TRACK_RENDER_TO_LOG
   /// \see CV_TRACK_RENDER_TO_STD
   void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, CvFont *font=NULL);
@@ -480,4 +477,18 @@ extern "C" {
 }
 #endif
 
+/// \fn std::ostream& operator<< (std::ostream& output, const cvb::CvBlob& b)
+/// \brief Overload operator "<<" for printing blob structure.
+/// \return Stream.
+std::ostream& operator<< (std::ostream& output, const cvb::CvBlob& b);
+
+/// \fn std::ostream& operator<< (std::ostream& output, const cvb::CvContourPolygon& p)
+/// \brief Overload operator "<<" for printing polygons in CSV format.
+/// \return Stream.
+std::ostream& operator<< (std::ostream& output, const cvb::CvContourPolygon& p);
+
+/// \fn std::ostream& operator<< (std::ostream& output, const cvb::CvTrack& t)
+/// \brief Overload operator "<<" for printing track structure.
+/// \return Stream.
+std::ostream& operator<< (std::ostream& output, const cvb::CvTrack& t);
 #endif
