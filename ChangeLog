@@ -1,7 +1,11 @@
 Version 0.9.13 (2010/01/01)
 
-  * Namespace "cvb".
+  * several files: namespace "cvb".
+
   * cvblob.h, cvcontour.cpp: function to write contour to a SVG file.
+
+  * cvblob.h, cvtrack.cpp: tracking algorithm rewritten and new mode for
+  render tracks.
 
 Version 0.9.12 (2009/12/01)
 
