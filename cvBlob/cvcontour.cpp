@@ -21,6 +21,7 @@
 #include <deque>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 using namespace std;
 
 #ifdef WIN32
