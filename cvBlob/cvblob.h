@@ -410,6 +410,8 @@ extern "C" {
     
     CvPoint2D64f centroid; ///< Centroid.
 
+    unsigned int lifetime; ///< Indicates how much frames the object has been in scene.
+    unsigned int active; ///< Indicates number of frames that has been active from last inactive period.
     unsigned int inactive; ///< Indicates number of frames that has been missing.
   };
 
@@ -440,7 +442,7 @@ extern "C" {
     tracks.clear();
   }
 
-  /// \fn cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive)
+  /// \fn cvUpdateTracks(CvBlobs const &b, CvTracks &t, const double thDistance, const unsigned int thInactive)
   /// \brief Updates list of tracks based on current blobs.
   /// Tracking based on:
   /// A. Senior, A. Hampapur, Y-L Tian, L. Brown, S. Pankanti, R. Bolle. Appearance Models for
@@ -451,9 +453,10 @@ extern "C" {
   /// \param t List of tracks.
   /// \param thDistance Max distance to determine when a track and a blob match.
   /// \param thInactive Max number of frames a track can be inactive.
+  /// \param thActive If a track becomes inactive but it has been active less than thActive frames, the track will be deleted.
   /// \see CvBlobs
   /// \see Tracks
-  void cvUpdateTracks(CvBlobs &b, CvTracks &t, const double thDistance, const unsigned int thInactive);
+  void cvUpdateTracks(CvBlobs const &b, CvTracks &t, const double thDistance, const unsigned int thInactive, const unsigned int thActive=0);
 
 #define CV_TRACK_RENDER_ID            0x0001 ///< Print the ID of each track in the image. \see cvRenderTracks
 #define CV_TRACK_RENDER_BOUNDING_BOX  0x0002 ///< Draw bounding box of each track in the image. \see cvRenderTracks
