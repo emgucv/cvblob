@@ -33,44 +33,128 @@ using namespace std;
 namespace cvb
 {
 
-#define D(x1,y1,x2,y2) sqrt(((x1)-(x2))*((x1)-(x2))+((y1)-(y2))*((y1)-(y2)))
-#define MIN8(a,b,c,d,e,f,g,h) MIN((a),MIN((b),MIN((c),MIN((d),MIN((e),MIN((f),MIN((g),(h))))))))
-
 double distantBlobTrack(CvBlob const *b, CvTrack const *t)
 {
-  if (((b->centroid.x>=t->minx)&&(b->centroid.x<=(t->maxx))&&
-	(b->centroid.y>=t->miny)&&(b->centroid.y<=(t->maxy)))||
-      ((t->centroid.x>=b->minx)&&(t->centroid.x<=(b->maxx))&&
-       (t->centroid.y>=b->miny)&&(t->centroid.y<=(b->maxy))))
-    return 0.;
-  else
+  double d1;
+  if (b->centroid.x<t->minx)
   {
-    return MIN8(
-	D(b->centroid.x,b->centroid.y,t->minx,t->miny),
-	D(b->centroid.x,b->centroid.y,t->maxx,t->miny),
-	D(b->centroid.x,b->centroid.y,t->maxx,t->maxy),
-	D(b->centroid.x,b->centroid.y,t->minx,t->maxy),
-	D(t->centroid.x,t->centroid.y,b->minx,b->miny),
-	D(t->centroid.x,t->centroid.y,b->maxx,b->miny),
-	D(t->centroid.x,t->centroid.y,b->maxx,b->maxy),
-	D(t->centroid.x,t->centroid.y,b->minx,b->maxy));
+    if (b->centroid.y<t->miny)
+      d1 = MAX(t->minx - b->centroid.x, t->miny - b->centroid.y);
+    else if (b->centroid.y>t->maxy)
+      d1 = MAX(t->minx - b->centroid.x, b->centroid.y - t->maxy);
+    else // if (t->miny < b->centroid.y)&&(b->centroid.y < t->maxy)
+      d1 = t->minx - b->centroid.x;
+  }
+  else if (b->centroid.x>t->maxx)
+  {
+    if (b->centroid.y<t->miny)
+      d1 = MAX(b->centroid.x - t->maxx, t->miny - b->centroid.y);
+    else if (b->centroid.y>t->maxy)
+      d1 = MAX(b->centroid.x - t->maxx, b->centroid.y - t->maxy);
+    else
+      d1 = b->centroid.x - t->maxx;
+  }
+  else // if (t->minx =< b->centroid.x) && (b->centroid.x =< t->maxx)
+  {
+    if (b->centroid.y<t->miny)
+      d1 = t->miny - b->centroid.y;
+    else if (b->centroid.y>t->maxy)
+      d1 = b->centroid.y - t->maxy;
+    else 
+      return 0.;
+  }
+
+  double d2;
+  if (t->centroid.x<b->minx)
+  {
+    if (t->centroid.y<b->miny)
+      d2 = MAX(b->minx - t->centroid.x, b->miny - t->centroid.y);
+    else if (t->centroid.y>b->maxy)
+      d2 = MAX(b->minx - t->centroid.x, t->centroid.y - b->maxy);
+    else // if (b->miny < t->centroid.y)&&(t->centroid.y < b->maxy)
+      d2 = b->minx - t->centroid.x;
+  }
+  else if (t->centroid.x>b->maxx)
+  {
+    if (t->centroid.y<b->miny)
+      d2 = MAX(t->centroid.x - b->maxx, b->miny - t->centroid.y);
+    else if (t->centroid.y>b->maxy)
+      d2 = MAX(t->centroid.x - b->maxx, t->centroid.y - b->maxy);
+    else
+      d2 = t->centroid.x - b->maxx;
+  }
+  else // if (b->minx =< t->centroid.x) && (t->centroid.x =< b->maxx)
+  {
+    if (t->centroid.y<b->miny)
+      d2 = b->miny - t->centroid.y;
+    else if (t->centroid.y>b->maxy)
+      d2 = t->centroid.y - b->maxy;
+    else 
+      return 0.;
+  }
+
+  return MIN(d1, d2);
+}
+
+  // Access to matrix
+#define C(blob, track) close[((blob) + (track)*(nBlobs+2))]
+  // Access to accumulators
+#define AB(label) C((label), (nTracks))
+#define AT(id) C((nBlobs), (id))
+  // Access to identifications
+#define IB(label) C((label), (nTracks)+1)
+#define IT(id) C((nBlobs)+1, (id))
+  // Access to registers
+#define B(label) blobs.find(IB(label))->second
+#define T(id) tracks.find(IT(id))->second
+
+void getClusterForTrack(unsigned int trackPos, CvID *close, unsigned int nBlobs, unsigned int nTracks, CvBlobs const &blobs, CvTracks const &tracks, list<CvBlob*> &bb, list<CvTrack*> &tt);
+
+void getClusterForBlob(unsigned int blobPos, CvID *close, unsigned int nBlobs, unsigned int nTracks, CvBlobs const &blobs, CvTracks const &tracks, list<CvBlob*> &bb, list<CvTrack*> &tt)
+{
+  for (unsigned int j=0; j<nTracks; j++)
+  {
+    if (C(blobPos, j))
+    {
+      tt.push_back(T(j));
+
+      unsigned int c = AT(j);
+
+      C(blobPos, j) = 0;
+      AB(blobPos)--;
+      AT(j)--;
+
+      if (c>1)
+      {
+	getClusterForTrack(j, close, nBlobs, nTracks, blobs, tracks, bb, tt);
+      }
+    }
   }
 }
 
-/*void mergeBlobTrack(CvBlob const *b, CvTrack *t)
+void getClusterForTrack(unsigned int trackPos, CvID *close, unsigned int nBlobs, unsigned int nTracks, CvBlobs const &blobs, CvTracks const &tracks, list<CvBlob*> &bb, list<CvTrack*> &tt)
 {
-  t->labels.push_back(b->label);
+  for (unsigned int i=0; i<nBlobs; i++)
+  {
+    if (C(i, trackPos))
+    {
+      bb.push_back(B(i));
 
-  double alpha = 1./((double)t->labels.size());
-  t->centroid = cvPoint2D64f((1.-alpha)*t->centroid.x + alpha*b->centroid.x, (1.-alpha)*t->centroid.y + alpha*b->centroid.y);
+      unsigned int c = AB(i);
 
-  t->minx = MIN(t->minx, b->minx);
-  t->miny = MIN(t->miny, b->miny);
-  t->maxx = MAX(t->maxx, b->maxx);
-  t->maxy = MAX(t->maxy, b->maxy);
-}*/
+      C(i, trackPos) = 0;
+      AB(i)--;
+      AT(trackPos)--;
 
-void cvUpdateTracks(CvBlobs &blobs, CvTracks &tracks, const double thDistance, const unsigned int thInactive)
+      if (c>1)
+      {
+	getClusterForBlob(i, close, nBlobs, nTracks, blobs, tracks, bb, tt);
+      }
+    }
+  }
+}
+
+void cvUpdateTracks(CvBlobs const &blobs, CvTracks &tracks, const double thDistance, const unsigned int thInactive, const unsigned int thActive)
 {
   CV_FUNCNAME("cvUpdateTracks");
   __CV_BEGIN__;
@@ -82,18 +166,6 @@ void cvUpdateTracks(CvBlobs &blobs, CvTracks &tracks, const double thDistance, c
   // Last row/column is for ID/label.
   // Last-1 "/" is for accumulation.
   CvID *close = new unsigned int[(nBlobs+2)*(nTracks+2)]; // XXX Must be same type than CvLabel.
-
-  // Access to matrix
-#define C(blob, track) close[((blob) + (track)*(nBlobs+2))]
-  // Access to accumulators
-#define AB(label) C((label), (nTracks))
-#define AT(id) C((nBlobs), (id))
-  // Access to identifications
-#define IB(label) C((label), (nTracks)+1)
-#define IT(id) C((nBlobs)+1, (id))
-  // Access to registers
-#define B(label) blobs[IB(label)]
-#define T(id) tracks[IT(id)]
 
   try
   {
@@ -116,94 +188,41 @@ void cvUpdateTracks(CvBlobs &blobs, CvTracks &tracks, const double thDistance, c
 	maxTrackID = jt->second->id;
     }
 
-    // Proximity matrix calculation:
+    // Proximity matrix calculation and "used blob" list inicialization:
     for (i=0; i<nBlobs; i++)
       for (j=0; j<nTracks; j++)
-      {
 	if (C(i, j) = (distantBlobTrack(B(i), T(j)) < thDistance))
 	{
 	  AB(i)++;
 	  AT(j)++;
 	}
-      }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Detect inactive tracks
     for (j=0; j<nTracks; j++)
     {
       unsigned int c = AT(j);
 
       if (c==0)
       {
-	// Inactive track.
-	//clog << "Inactive track " << IT(j) << endl;
+	//cout << "Inactive track: " << j << endl;
 
+	// Inactive track.
 	CvTrack *track = T(j);
 	track->inactive++;
 	track->label = 0;
       }
-      else if (c==1)
-      {
-	// Track match?
-	//clog << "Track-blob match?";
-	
-	// XXX There is a little bug, when there is an updated track that now is near the blob.
-
-	for (i=0; (i<nBlobs); i++)
-	  if (C(i, j)) break;
-
-	if (AB(i)==1)
-	{
-	  // 1-1 matching.
-	  //clog << " Yes: " << IT(j) << " <-> " << IB(i) << endl;
-	  CvBlob *blob = B(i);
-	  CvTrack *track = T(j);
-	  track->label = blob->label;
-	  track->centroid = blob->centroid;
-	  track->minx = blob->minx;
-	  track->miny = blob->miny;
-	  track->maxx = blob->maxx;
-	  track->maxy = blob->maxy;
-	  track->inactive = 0;
-	}
-      }
-      else // if (c>1)
-      {
-	// Split track
-	//clog << "Split track " << IT(j) << endl;
-
-	unsigned int area = 0;
-	for (unsigned ii=0; ii<nBlobs; ii++)
-	{
-	  if (C(ii, j))
-	  {
-	    CvBlob *b = B(ii);
-
-	    if (b->area>area)
-	    {
-	      area = b->area;
-	      i = ii;
-	    }
-	  }
-	}
-
-	CvBlob *blob = B(i);
-	CvTrack *track = T(j);
-	track->label = blob->label;
-	track->centroid = blob->centroid;
-	track->minx = blob->minx;
-	track->miny = blob->miny;
-	track->maxx = blob->maxx;
-	track->maxy = blob->maxy;
-	track->inactive = 0;
-      }
     }
 
+    // Detect new tracks
     for (i=0; i<nBlobs; i++)
     {
       unsigned int c = AB(i);
 
       if (c==0)
       {
-	//clog << "Blob -> new track " << IB(i) <<endl;
+	//cout << "Blob (new track): " << maxTrackID+1 << endl;
+	//cout << *B(i) << endl;
 
 	// New track.
 	maxTrackID++;
@@ -216,68 +235,99 @@ void cvUpdateTracks(CvBlobs &blobs, CvTracks &tracks, const double thDistance, c
 	track->maxx = blob->maxx;
 	track->maxy = blob->maxy;
 	track->centroid = blob->centroid;
+	track->lifetime = 0;
+	track->active = 0;
 	track->inactive = 0;
 	tracks.insert(CvIDTrack(maxTrackID, track));
       }
-      else if (c==1)
-      {
-	// 1-1 matching.
-	// See previous loop.
-      }
-      else if (c>1)
-      {
-	// Merge tracks.
-	//clog << "Merge tracks in blob " << IB(i) << endl;
+    }
 
+    // Clustering
+    for (j=0; j<nTracks; j++)
+    {
+      unsigned int c = AT(j);
+
+      if (c)
+      {
+	list<CvTrack*> tt; tt.push_back(T(j));
+	list<CvBlob*> bb;
+
+	getClusterForTrack(j, close, nBlobs, nTracks, blobs, tracks, bb, tt);
+
+	// Select track
+	CvTrack *track;
 	unsigned int area = 0;
-	CvID used;
-	for (unsigned jj=0; jj<nTracks; jj++)
+	for (list<CvTrack*>::const_iterator it=tt.begin(); it!=tt.end(); ++it)
 	{
-	  if (C(i, jj))
-	  {
-	    CvTrack *t = T(jj);
+	  CvTrack *t = *it;
 
-	    unsigned int a = (t->maxx-t->minx)*(t->maxy-t->miny);
-	    if (a>area)
-	    {
-	      area = a;
-	      used = jj;
-	    }
+	  unsigned int a = (t->maxx-t->minx)*(t->maxy-t->miny);
+	  if (a>area)
+	  {
+	    area = a;
+	    track = t;
 	  }
 	}
 
-	// Others tracks inactives.
-	for (j=0; j<nTracks; j++)
+	// Select blob
+	CvBlob *blob;
+	area = 0;
+	//cout << "Matching blobs: ";
+	for (list<CvBlob*>::const_iterator it=bb.begin(); it!=bb.end(); ++it)
 	{
-	  if (j==used)
+	  CvBlob *b = *it;
+
+	  //cout << b->label << " ";
+	  
+	  if (b->area>area)
 	  {
-	    CvBlob *blob = B(i);
-	    CvTrack *track = T(j);
-	    track->label = blob->label;
-	    track->centroid = blob->centroid;
-	    track->minx = blob->minx;
-	    track->miny = blob->miny;
-	    track->maxx = blob->maxx;
-	    track->maxy = blob->maxy;
-	    track->inactive = 0;
+	    area = b->area;
+	    blob = b;
 	  }
-	  else if (C(i, j))
+	}
+	//cout << endl;
+
+	// Update track
+	//cout << "Matching: track=" << track->id << ", blob=" << blob->label << endl;
+	track->label = blob->label;
+	track->centroid = blob->centroid;
+	track->minx = blob->minx;
+	track->miny = blob->miny;
+	track->maxx = blob->maxx;
+	track->maxy = blob->maxy;
+	if (track->inactive)
+	  track->active = 0;
+	track->inactive = 0;
+
+	// Others to inactive
+	for (list<CvTrack*>::const_iterator it=tt.begin(); it!=tt.end(); ++it)
+	{
+	  CvTrack *t = *it;
+
+	  if (t!=track)
 	  {
-	    T(j)->inactive++;
-	    T(j)->label = 0;
+	    //cout << "Inactive: track=" << t->id << endl;
+	    t->inactive++;
+	    t->label = 0;
 	  }
 	}
       }
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     for (CvTracks::iterator jt=tracks.begin(); jt!=tracks.end();)
-      if (jt->second->inactive>=thInactive)
+      if ((jt->second->inactive>=thInactive)||((jt->second->inactive)&&(thActive)&&(jt->second->active<thActive)))
       {
 	delete jt->second;
 	tracks.erase(jt++);
       }
       else
+      {
+	jt->second->lifetime++;
+	if (!jt->second->inactive)
+	  jt->second->active++;
 	++jt;
+      }
   }
   catch (...)
   {
@@ -340,6 +390,8 @@ void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDes
 	  clog << " - Inactive for " << it->second->inactive << " frames" << endl;
 	else
 	  clog << " - Associated with blob " << it->second->label << endl;
+	clog << " - Lifetime " << it->second->lifetime << endl;
+	clog << " - Active " << it->second->active << endl;
 	clog << " - Bounding box: (" << it->second->minx << ", " << it->second->miny << ") - (" << it->second->maxx << ", " << it->second->maxy << ")" << endl;
 	clog << " - Centroid: (" << it->second->centroid.x << ", " << it->second->centroid.y << ")" << endl;
 	clog << endl;
@@ -352,6 +404,8 @@ void cvRenderTracks(CvTracks const tracks, IplImage *imgSource, IplImage *imgDes
 	  cout << " - Inactive for " << it->second->inactive << " frames" << endl;
 	else
 	  cout << " - Associated with blobs " << it->second->label << endl;
+	cout << " - Lifetime " << it->second->lifetime << endl;
+	cout << " - Active " << it->second->active << endl;
 	cout << " - Bounding box: (" << it->second->minx << ", " << it->second->miny << ") - (" << it->second->maxx << ", " << it->second->maxy << ")" << endl;
 	cout << " - Centroid: (" << it->second->centroid.x << ", " << it->second->centroid.y << ")" << endl;
 	cout << endl;
