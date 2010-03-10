@@ -366,4 +366,35 @@ namespace cvb
     __CV_END__;
   }
 
+
+  CvLabel cvGetLabel(IplImage *img, unsigned int x, unsigned int y)
+  {
+    CV_FUNCNAME("cvGetLabel");
+    __CV_BEGIN__;
+    {
+      CV_ASSERT(img&&(img->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
+
+      int step = img->widthStep / (img->depth / 8);
+      int img_width = 0;
+      int img_height= 0;
+      int img_offset = 0;
+      if(img->roi)
+      {
+	img_width = img->roi->width;
+	img_height = img->roi->height;
+	img_offset = img->roi->xOffset + (img->roi->yOffset * step);
+      }
+      else
+      {
+	img_width = img->width;
+	img_height= img->height;
+      }
+
+      CV_ASSERT((x>=0)&&(x<img_width)&&(y>=0)&&(y<img_height));
+
+      return ((CvLabel *)(img->imageData + img_offset))[x + y*step];
+    }
+    __CV_END__;
+  }
+
 }
