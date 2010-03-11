@@ -135,14 +135,14 @@ extern "C" {
   void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs);
 
 
-  /// \fn CvLabel cvGetLabel(IplImage *img, unsigned int x, unsigned int y)
+  /// \fn CvLabel cvGetLabel(IplImage const *img, unsigned int x, unsigned int y)
   /// \brief Get the label value from a labeled image.
   /// \param img Label image.
   /// \param x X coordenate.
   /// \param y Y coordenate.
   /// \return Label value.
   /// \see CvLabel
-  CvLabel cvGetLabel(IplImage *img, unsigned int x, unsigned int y);
+  CvLabel cvGetLabel(IplImage const *img, unsigned int x, unsigned int y);
 
   /// \fn inline void cvReleaseBlobs(CvBlobs &blobs)
   /// \brief Clear blobs structure.

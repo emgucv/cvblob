@@ -367,7 +367,7 @@ namespace cvb
   }
 
 
-  CvLabel cvGetLabel(IplImage *img, unsigned int x, unsigned int y)
+  CvLabel cvGetLabel(IplImage const *img, unsigned int x, unsigned int y)
   {
     CV_FUNCNAME("cvGetLabel");
     __CV_BEGIN__;
