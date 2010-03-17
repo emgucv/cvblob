@@ -332,7 +332,7 @@ extern "C" {
   /// \brief Polygon based contour.
   typedef std::vector<CvPoint> CvContourPolygon;
 
-  /// \var CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
+  /// \fn CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
   /// \brief Get the contour of a blob.
   /// Uses Theo Pavlidis' algorithm (see http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/theo.html).
   /// \param blob Blob.
@@ -342,7 +342,7 @@ extern "C" {
   /// \see CvBlob
   CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img);
 
-  /// \var void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255))
+  /// \fn void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255))
   /// \brief Draw a contour.
   /// \param contour Chain code contour.
   /// \param img Image to draw on.
@@ -350,7 +350,7 @@ extern "C" {
   /// \see CvContourChainCode
   void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255));
   
-  /// \var CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
+  /// \fn CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
   /// \brief Convert a chain code contour to a polygon.
   /// \param cc Chain code contour.
   /// \return A polygon.
@@ -358,7 +358,7 @@ extern "C" {
   /// \see CvContourPolygon
   CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc);
 
-  /// \var void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255))
+  /// \fn void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255))
   /// \brief Draw a polygon.
   /// \param contour Polygon contour.
   /// \param img Image to draw on.
@@ -366,19 +366,19 @@ extern "C" {
   /// \see CvContourPolygon
   void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255));
 
-  /// \var double cvContourPolygonArea(CvContourPolygon const *p)
+  /// \fn double cvContourPolygonArea(CvContourPolygon const *p)
   /// \brief Calculates area of a polygonal contour.
   /// \param p Contour (polygon type).
   /// \return Area of the contour.
   double cvContourPolygonArea(CvContourPolygon const *p);
 
-  /// \var double cvContourPolygonPerimeter(CvContourPolygon const *p)
+  /// \fn double cvContourPolygonPerimeter(CvContourPolygon const *p)
   /// \brief Calculates perimeter of a polygonal contour.
   /// \param p Contour (polygon type).
   /// \return Perimeter of the contour.
   double cvContourPolygonPerimeter(CvContourPolygon const *p);
 
-  /// \var CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
+  /// \fn CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
   /// \brief Simplify a polygon reducing the number of vertex according the distance "delta".
   /// Uses a version of the Ramer-Douglas-Peucker algorithm (http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm).
   /// \param p Contour (polygon type).
@@ -386,14 +386,14 @@ extern "C" {
   /// \return A simplify version of the original polygon.
   CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.);
 
-  /// \var CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
+  /// \fn CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
   /// \brief Calculates convex hull of a contour.
   /// Uses the Melkman Algorithm. Code based on the version in http://w3.impa.br/~rdcastan/Cgeometry/.
   /// \param p Contour (polygon type).
   /// \return Convex hull.
   CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p);
 
-  /// \var void cvWriteContourPolygonSVG(const CvContourPolygon& p, const string& filename, const CvScalar& stroke, const CvScalar& fill)
+  /// \fn void cvWriteContourPolygonSVG(const CvContourPolygon& p, const std::string& filename, const CvScalar& stroke=cvScalar(0,0,0), const CvScalar& fill=cvScalar(255,255,255))
   /// \brief Write a contour to a SVG file (http://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
   /// \param p Polygon contour.
   /// \param filename File name.
@@ -452,7 +452,7 @@ extern "C" {
     tracks.clear();
   }
 
-  /// \fn cvUpdateTracks(CvBlobs const &b, CvTracks &t, const double thDistance, const unsigned int thInactive)
+  /// \fn void cvUpdateTracks(CvBlobs const &b, CvTracks &t, const double thDistance, const unsigned int thInactive, const unsigned int thActive=0)
   /// \brief Updates list of tracks based on current blobs.
   /// Tracking based on:
   /// A. Senior, A. Hampapur, Y-L Tian, L. Brown, S. Pankanti, R. Bolle. Appearance Models for
