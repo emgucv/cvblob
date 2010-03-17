@@ -57,7 +57,7 @@ int main()
 
     cvMorphologyEx(segmentated, segmentated, NULL, morphKernel, CV_MOP_OPEN, 1);
 
-    cvShowImage("segmentated", segmentated);
+    //cvShowImage("segmentated", segmentated);
 
     IplImage *labelImg = cvCreateImage(cvGetSize(frame), IPL_DEPTH_LABEL, 1);
 
