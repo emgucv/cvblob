@@ -1,3 +1,9 @@
+Version 0.10.0 (2010/03/18)
+
+  * cvlabel.ccp: new algorithm.
+  * cvcontour.cpp: "cvGetContour" function deleted (this functionality is
+  doing now by "cvLabel".
+
 Version 0.9.14 (2010/03/10)
 
   * cvlabel.cpp, cvblob.h: function "cvGetLabel".

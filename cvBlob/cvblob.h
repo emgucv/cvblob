@@ -34,6 +34,7 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <limits>
 
 #ifdef WIN32
 #include <cv.h>
@@ -55,15 +56,142 @@ extern "C" {
   namespace cvb
   {
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Contours
+  
+  // Chain code:
+  //        7 0 1
+  //        6   2
+  //        5 4 3
+#define CV_CHAINCODE_UP		0 ///< Up.
+#define CV_CHAINCODE_UP_RIGHT	1 ///< Up and right.
+#define CV_CHAINCODE_RIGHT	2 ///< Right.
+#define CV_CHAINCODE_DOWN_RIGHT	3 ///< Down and right.
+#define CV_CHAINCODE_DOWN	4 ///< Down.
+#define CV_CHAINCODE_DOWN_LEFT	5 ///< Down and left.
+#define CV_CHAINCODE_LEFT	6 ///< Left.
+#define CV_CHAINCODE_UP_LEFT	7 ///< Up and left.
+
+  /// \brief Move vectors of chain codes.
+  /// \see CV_CHAINCODE_UP
+  /// \see CV_CHAINCODE_UP_LEFT
+  /// \see CV_CHAINCODE_LEFT
+  /// \see CV_CHAINCODE_DOWN_LEFT
+  /// \see CV_CHAINCODE_DOWN
+  /// \see CV_CHAINCODE_DOWN_RIGHT
+  /// \see CV_CHAINCODE_RIGHT
+  /// \see CV_CHAINCODE_UP_RIGHT
+  const char cvChainCodeMoves[8][2] = { { 0, -1},
+                                        { 1, -1},
+					{ 1,  0},
+					{ 1,  1},
+					{ 0,  1},
+					{-1,  1},
+					{-1,  0},
+					{-1, -1}
+                                      };
+
+  /// \brief Direction.
+  /// \see CV_CHAINCODE_UP
+  /// \see CV_CHAINCODE_UP_LEFT
+  /// \see CV_CHAINCODE_LEFT
+  /// \see CV_CHAINCODE_DOWN_LEFT
+  /// \see CV_CHAINCODE_DOWN
+  /// \see CV_CHAINCODE_DOWN_RIGHT
+  /// \see CV_CHAINCODE_RIGHT
+  /// \see CV_CHAINCODE_UP_RIGHT
+  typedef unsigned char CvChainCode;
+
+  /// \brief Chain code.
+  /// \see CvChainCode
+  typedef std::list<CvChainCode> CvChainCodes;
+
+  /// \brief Chain code contour.
+  /// \see CvChainCodes
+  struct CvContourChainCode
+  {
+    CvPoint startingPoint; ///< Point where contour begin.
+    CvChainCodes chainCode; ///< Polygon description based on chain codes.
+  };
+
+  /// \brief Polygon based contour.
+  typedef std::vector<CvPoint> CvContourPolygon;
+
+  /// \fn void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255))
+  /// \brief Draw a contour.
+  /// \param contour Chain code contour.
+  /// \param img Image to draw on.
+  /// \param color Color to draw (default, white).
+  /// \see CvContourChainCode
+  void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255));
+  
+  /// \fn CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
+  /// \brief Convert a chain code contour to a polygon.
+  /// \param cc Chain code contour.
+  /// \return A polygon.
+  /// \see CvContourChainCode
+  /// \see CvContourPolygon
+  CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc);
+
+  /// \fn void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255))
+  /// \brief Draw a polygon.
+  /// \param contour Polygon contour.
+  /// \param img Image to draw on.
+  /// \param color Color to draw (default, white).
+  /// \see CvContourPolygon
+  void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255));
+
+  /// \fn double cvContourPolygonArea(CvContourPolygon const *p)
+  /// \brief Calculates area of a polygonal contour.
+  /// \param p Contour (polygon type).
+  /// \return Area of the contour.
+  double cvContourPolygonArea(CvContourPolygon const *p);
+
+  /// \fn double cvContourPolygonPerimeter(CvContourPolygon const *p)
+  /// \brief Calculates perimeter of a polygonal contour.
+  /// \param p Contour (polygon type).
+  /// \return Perimeter of the contour.
+  double cvContourPolygonPerimeter(CvContourPolygon const *p);
+
+  /// \fn CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
+  /// \brief Simplify a polygon reducing the number of vertex according the distance "delta".
+  /// Uses a version of the Ramer-Douglas-Peucker algorithm (http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm).
+  /// \param p Contour (polygon type).
+  /// \param delta Minimun distance.
+  /// \return A simplify version of the original polygon.
+  CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.);
+
+  /// \fn CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
+  /// \brief Calculates convex hull of a contour.
+  /// Uses the Melkman Algorithm. Code based on the version in http://w3.impa.br/~rdcastan/Cgeometry/.
+  /// \param p Contour (polygon type).
+  /// \return Convex hull.
+  CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p);
+
+  /// \fn void cvWriteContourPolygonSVG(const CvContourPolygon& p, const std::string& filename, const CvScalar& stroke=cvScalar(0,0,0), const CvScalar& fill=cvScalar(255,255,255))
+  /// \brief Write a contour to a SVG file (http://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
+  /// \param p Polygon contour.
+  /// \param filename File name.
+  /// \param stroke Stroke color (black by default).
+  /// \param fill Fill color (white by default).
+  void cvWriteContourPolygonSVG(const CvContourPolygon& p, const std::string& filename, const CvScalar& stroke=cvScalar(0,0,0), const CvScalar& fill=cvScalar(255,255,255));
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Blobs
+
   /// \brief Type of label.
   /// \see IPL_DEPTH_LABEL
   typedef unsigned int CvLabel;
-  //typedef unsigned char CvLabel;
 
   /// \def IPL_DEPTH_LABEL
   /// \brief Size of a label in bits.
   /// \see CvLabel
 #define IPL_DEPTH_LABEL (sizeof(CvLabel)*8)
+
+  /// \def CV_BLOB_MAX_LABEL
+  /// \brief Max label number.
+  /// \see CvLabel.
+#define CV_BLOB_MAX_LABEL std::numeric_limits<CvLabel>::max()
   
   /// \brief Type of identification numbers.
   typedef unsigned int CvID;
@@ -96,11 +224,9 @@ extern "C" {
     double u11; ///< Central moment 11.
     double u20; ///< Central moment 20.
     double u02; ///< Central moment 02.
-    
-    /// Parent of the union-find data estructure.
-    CvBlob *_parent;
-    /// Rank of the union-find data estructure.
-    unsigned int _rank;
+
+    CvContourChainCode contour;                       ///< Contour.
+    std::list<CvContourChainCode *> internalContours; ///< Internal contours.
   };
   
   /// \var typedef std::map<CvLabel,CvBlob *> CvBlobs
@@ -116,13 +242,14 @@ extern "C" {
   /// \see CvBlob
   typedef std::pair<CvLabel,CvBlob *> CvLabelBlob;
   
-  /// \fn unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs);
+  /// \fn unsigned int cvLabel (IplImage const *img, IplImage *imgOut, CvBlobs &blobs);
   /// \brief Label the connected parts of a binary image.
+  /// Algorithm based on paper "A linear-time component-labeling algorithm using contour tracing technique" of Fu Chang, Chun-Jen Chen and Chi-Jen Lu.
   /// \param img Input binary image (depth=IPL_DEPTH_8U and num. channels=1).
   /// \param imgOut Output image (depth=IPL_DEPTH_LABEL and num. channels=1).
   /// \param blobs List of blobs.
   /// \return Number of pixels that has been labeled.
-  unsigned int cvLabel (IplImage *img, IplImage *imgOut, CvBlobs &blobs);
+  unsigned int cvLabel (IplImage const *img, IplImage *imgOut, CvBlobs &blobs);
 
   //IplImage *cvFilterLabel(IplImage *imgIn, CvLabel label);
 
@@ -133,7 +260,6 @@ extern "C" {
   /// \param blobs List of blobs to be drawn.
   /// \see cvLabel
   void cvFilterLabels(IplImage *imgIn, IplImage *imgOut, const CvBlobs &blobs);
-
 
   /// \fn CvLabel cvGetLabel(IplImage const *img, unsigned int x, unsigned int y)
   /// \brief Get the label value from a labeled image.
@@ -272,136 +398,6 @@ extern "C" {
   double cvDistanceLinePoint(CvPoint const &a, CvPoint const &b, CvPoint const &c, bool isSegment=true);
   
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Contours
-  
-  // Chain code:
-  //        7 0 1
-  //        6   2
-  //        5 4 3
-#define CV_CHAINCODE_UP		0 ///< Up.
-#define CV_CHAINCODE_UP_RIGHT	1 ///< Up and right.
-#define CV_CHAINCODE_RIGHT	2 ///< Right.
-#define CV_CHAINCODE_DOWN_RIGHT	3 ///< Down and right.
-#define CV_CHAINCODE_DOWN	4 ///< Down.
-#define CV_CHAINCODE_DOWN_LEFT	5 ///< Down and left.
-#define CV_CHAINCODE_LEFT	6 ///< Left.
-#define CV_CHAINCODE_UP_LEFT	7 ///< Up and left.
-
-  /// \brief Move vectors of chain codes.
-  /// \see CV_CHAINCODE_UP
-  /// \see CV_CHAINCODE_UP_LEFT
-  /// \see CV_CHAINCODE_LEFT
-  /// \see CV_CHAINCODE_DOWN_LEFT
-  /// \see CV_CHAINCODE_DOWN
-  /// \see CV_CHAINCODE_DOWN_RIGHT
-  /// \see CV_CHAINCODE_RIGHT
-  /// \see CV_CHAINCODE_UP_RIGHT
-  const char cvChainCodeMoves[8][2] = { { 0, -1},
-                                        { 1, -1},
-					{ 1,  0},
-					{ 1,  1},
-					{ 0,  1},
-					{-1,  1},
-					{-1,  0},
-					{-1, -1}
-                                      };
-
-  /// \brief Direction.
-  /// \see CV_CHAINCODE_UP
-  /// \see CV_CHAINCODE_UP_LEFT
-  /// \see CV_CHAINCODE_LEFT
-  /// \see CV_CHAINCODE_DOWN_LEFT
-  /// \see CV_CHAINCODE_DOWN
-  /// \see CV_CHAINCODE_DOWN_RIGHT
-  /// \see CV_CHAINCODE_RIGHT
-  /// \see CV_CHAINCODE_UP_RIGHT
-  typedef unsigned char CvChainCode;
-
-  /// \brief Chain code.
-  /// \see CvChainCode
-  typedef std::list<CvChainCode> CvChainCodes;
-
-  /// \brief Chain code contour.
-  /// \see CvChainCodes
-  struct CvContourChainCode
-  {
-    CvPoint startingPoint; ///< Point where contour begin.
-    CvChainCodes chainCode; ///< Polygon description based on chain codes.
-  };
-
-  /// \brief Polygon based contour.
-  typedef std::vector<CvPoint> CvContourPolygon;
-
-  /// \fn CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img)
-  /// \brief Get the contour of a blob.
-  /// Uses Theo Pavlidis' algorithm (see http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/theo.html).
-  /// \param blob Blob.
-  /// \param img Label image.
-  /// \return Chain code contour.
-  /// \see CvContourChainCode
-  /// \see CvBlob
-  CvContourChainCode *cvGetContour(CvBlob const *blob, IplImage const *img);
-
-  /// \fn void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255))
-  /// \brief Draw a contour.
-  /// \param contour Chain code contour.
-  /// \param img Image to draw on.
-  /// \param color Color to draw (default, white).
-  /// \see CvContourChainCode
-  void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255));
-  
-  /// \fn CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
-  /// \brief Convert a chain code contour to a polygon.
-  /// \param cc Chain code contour.
-  /// \return A polygon.
-  /// \see CvContourChainCode
-  /// \see CvContourPolygon
-  CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc);
-
-  /// \fn void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255))
-  /// \brief Draw a polygon.
-  /// \param contour Polygon contour.
-  /// \param img Image to draw on.
-  /// \param color Color to draw (default, white).
-  /// \see CvContourPolygon
-  void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255));
-
-  /// \fn double cvContourPolygonArea(CvContourPolygon const *p)
-  /// \brief Calculates area of a polygonal contour.
-  /// \param p Contour (polygon type).
-  /// \return Area of the contour.
-  double cvContourPolygonArea(CvContourPolygon const *p);
-
-  /// \fn double cvContourPolygonPerimeter(CvContourPolygon const *p)
-  /// \brief Calculates perimeter of a polygonal contour.
-  /// \param p Contour (polygon type).
-  /// \return Perimeter of the contour.
-  double cvContourPolygonPerimeter(CvContourPolygon const *p);
-
-  /// \fn CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
-  /// \brief Simplify a polygon reducing the number of vertex according the distance "delta".
-  /// Uses a version of the Ramer-Douglas-Peucker algorithm (http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm).
-  /// \param p Contour (polygon type).
-  /// \param delta Minimun distance.
-  /// \return A simplify version of the original polygon.
-  CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.);
-
-  /// \fn CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p)
-  /// \brief Calculates convex hull of a contour.
-  /// Uses the Melkman Algorithm. Code based on the version in http://w3.impa.br/~rdcastan/Cgeometry/.
-  /// \param p Contour (polygon type).
-  /// \return Convex hull.
-  CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p);
-
-  /// \fn void cvWriteContourPolygonSVG(const CvContourPolygon& p, const std::string& filename, const CvScalar& stroke=cvScalar(0,0,0), const CvScalar& fill=cvScalar(255,255,255))
-  /// \brief Write a contour to a SVG file (http://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
-  /// \param p Polygon contour.
-  /// \param filename File name.
-  /// \param stroke Stroke color (black by default).
-  /// \param fill Fill color (white by default).
-  void cvWriteContourPolygonSVG(const CvContourPolygon& p, const std::string& filename, const CvScalar& stroke=cvScalar(0,0,0), const CvScalar& fill=cvScalar(255,255,255));
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Tracking
 
   /// \brief Struct that contain information about one track.
@@ -452,7 +448,7 @@ extern "C" {
     tracks.clear();
   }
 
-  /// \fn void cvUpdateTracks(CvBlobs const &b, CvTracks &t, const double thDistance, const unsigned int thInactive, const unsigned int thActive=0)
+  /// \fn cvUpdateTracks(CvBlobs const &b, CvTracks &t, const double thDistance, const unsigned int thInactive, const unsigned int thActive=0)
   /// \brief Updates list of tracks based on current blobs.
   /// Tracking based on:
   /// A. Senior, A. Hampapur, Y-L Tian, L. Brown, S. Pankanti, R. Bolle. Appearance Models for

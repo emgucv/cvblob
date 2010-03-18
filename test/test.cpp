@@ -50,7 +50,7 @@ int main()
 
   cvRenderBlobs(labelImg, blobs, img, img);
 
-  for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
+  /*for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
   {
     CvContourChainCode *contour = cvGetContour(it->second, labelImg);
     cvRenderContourChainCode(contour, img);
@@ -67,7 +67,7 @@ int main()
     delete sPolygon;
     delete polygon;
     delete contour;
-  }
+  }*/
 
   cvNamedWindow("test", 1);
   cvShowImage("test", img);
