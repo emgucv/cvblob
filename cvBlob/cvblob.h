@@ -162,7 +162,7 @@ extern "C" {
   /// \fn CvLabel cvGreaterBlob(const CvBlobs &blobs)
   /// \brief Find greater blob.
   /// \param blobs List of blobs.
-  /// \return Label of greater blob.
+  /// \return Label of the greater blob or 0 if there are no blobs.
   /// \see cvLabel
   CvLabel cvGreaterBlob(const CvBlobs &blobs);
 
