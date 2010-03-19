@@ -183,7 +183,8 @@ extern "C" {
 
   /// \brief Type of label.
   /// \see IPL_DEPTH_LABEL
-  typedef unsigned int CvLabel;
+  //typedef unsigned int CvLabel;
+  typedef unsigned char CvLabel;
 
   /// \def IPL_DEPTH_LABEL
   /// \brief Size of a label in bits.
