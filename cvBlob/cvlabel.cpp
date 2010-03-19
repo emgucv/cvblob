@@ -86,11 +86,9 @@ namespace cvb
 #define imageIn(X, Y) imgDataIn[(X) + (Y)*stepIn]
 #define imageOut(X, Y) imgDataOut[(X) + (Y)*stepOut]
 
-      unsigned int x;
-      unsigned int y = 0;
-      for (y=0; y<imgIn_height; y++)
+      for (unsigned int y=0; y<imgIn_height; y++)
       {
-	for (x=0; x<imgIn_width; x++)
+	for (unsigned int x=0; x<imgIn_width; x++)
 	{
 	  if (imageIn(x, y))
 	  {
