@@ -114,6 +114,8 @@ extern "C" {
     CvChainCodes chainCode; ///< Polygon description based on chain codes.
   };
 
+  typedef std::list<CvContourChainCode *> CvContoursChainCode; ///< List of contours (chain codes type).
+
   /// \brief Polygon based contour.
   typedef std::vector<CvPoint> CvContourPolygon;
 
@@ -225,8 +227,8 @@ extern "C" {
     double u20; ///< Central moment 20.
     double u02; ///< Central moment 02.
 
-    CvContourChainCode contour;                       ///< Contour.
-    std::list<CvContourChainCode *> internalContours; ///< Internal contours.
+    CvContourChainCode contour;           ///< Contour.
+    CvContoursChainCode internalContours; ///< Internal contours.
   };
   
   /// \var typedef std::map<CvLabel,CvBlob *> CvBlobs

@@ -50,6 +50,7 @@ int main()
 
   cvRenderBlobs(labelImg, blobs, img, img);
 
+  // Render contours:
   for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
   {
     cvRenderContourChainCode(&(*it).second->contour, img);
@@ -65,6 +66,10 @@ int main()
     delete cPolygon;
     delete sPolygon;
     delete polygon;
+
+    // Render internal contours:
+    for (CvContoursChainCode::const_iterator jt=(*it).second->internalContours.begin(); jt!=(*it).second->internalContours.end(); ++jt)
+      cvRenderContourChainCode((*jt), img);
   }
 
   cvNamedWindow("test", 1);
