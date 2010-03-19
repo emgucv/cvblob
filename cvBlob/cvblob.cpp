@@ -218,7 +218,7 @@ namespace cvb
       for (unsigned int r=0; r<(unsigned int)imgLabel_height; r++, labels+=stepLbl, source+=stepSrc, imgData+=stepDst)
 	for (unsigned int c=0; c<(unsigned int)imgLabel_width; c++)
 	{
-	  if (labels[c])
+	  if ((labels[c]>0)&&(labels[c]<CV_BLOB_MAX_LABEL))
 	  {
 	    Color color = pal[labels[c]];
 
