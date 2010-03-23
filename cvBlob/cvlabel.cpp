@@ -86,6 +86,9 @@ namespace cvb
 #define imageIn(X, Y) imgDataIn[(X) + (Y)*stepIn]
 #define imageOut(X, Y) imgDataOut[(X) + (Y)*stepOut]
 
+      CvLabel lastLabel =0;
+      CvBlob *lastBlob = NULL;
+
       for (unsigned int y=0; y<imgIn_height; y++)
       {
 	for (unsigned int x=0; x<imgIn_width; x++)
@@ -99,7 +102,7 @@ namespace cvb
 	      labeled = true;
 
 	      // Label contour.
-	      label++;
+	      lastLabel = ++label;
 	      CV_ASSERT(label!=CV_BLOB_MAX_LABEL);
 
 	      imageOut(x, y) = label;
@@ -109,7 +112,7 @@ namespace cvb
 	      if (y>0)
 		imageOut(x, y-1) = CV_BLOB_MAX_LABEL;
 
-	      CvBlob *blob = new CvBlob;
+	      CvBlob *blob = lastBlob = new CvBlob;
 	      blob->label = label;
 	      blob->area = 1;
 	      blob->minx = x; blob->maxx = x;
@@ -126,6 +129,9 @@ namespace cvb
 	      unsigned char direction=1;
 	      unsigned int xx = x;
 	      unsigned int yy = y;
+
+
+	      bool contourEnd = false;
 
 	      do
 	      {
@@ -177,9 +183,12 @@ namespace cvb
 
 		    break;
 		  }
+		  
+		  if (contourEnd = ((xx==x) && (yy==y) && (direction==1)))
+		    break;
 		}
 	      }
-	      while (!(xx==x && yy==y));
+	      while (!contourEnd);
 
 	    }
 
@@ -193,6 +202,12 @@ namespace cvb
 
 	      if (!imageOut(x, y))
 	      {
+		if (!imageOut(x-1, y))
+		{
+		  cerr << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+		  continue;
+		}
+
 		l = imageOut(x-1, y);
 
 		imageOut(x, y) = l;
