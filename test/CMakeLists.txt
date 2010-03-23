@@ -41,6 +41,25 @@ install(TARGETS test
         ARCHIVE DESTINATION lib/static
 )
 
+# TEST_RANDOM
+set(TEST_RANDOM_SRC test_random.cpp)
+
+set_source_files_properties(${TEST_RANDOM_SRC}
+                            PROPERTIES
+                            COMPILE_FLAGS "-O3"
+)
+
+add_executable(test_random ${TEST_RANDOM_SRC})
+
+target_link_libraries(test_random cvblob)
+target_link_libraries(test_random ${OpenCV_LIBRARIES})
+
+install(TARGETS test_random
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static
+)
+
 # TEST TRACKING
 set(TEST_TRACKING_SRC test_tracking.cpp)
 
