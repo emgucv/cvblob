@@ -183,8 +183,8 @@ extern "C" {
 
   /// \brief Type of label.
   /// \see IPL_DEPTH_LABEL
-  //typedef unsigned int CvLabel;
-  typedef unsigned char CvLabel;
+  typedef unsigned int CvLabel;
+  //typedef unsigned char CvLabel;
 
   /// \def IPL_DEPTH_LABEL
   /// \brief Size of a label in bits.
@@ -365,6 +365,17 @@ extern "C" {
     cvSetImageROI(img, cvRect(blob->minx, blob->miny, blob->maxx-blob->minx, blob->maxy-blob->miny));
   };
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Color
+
+  /// \fn CvScalar cvBlobMeanColor(CvBlob const *blob, IplImage const *imgLabel, IplImage const *img)
+  /// \brief Calculates mean color of a blob in an image.
+  /// \param blob Blob.
+  /// \param imgLabel Image of labels.
+  /// \param img Original image.
+  /// \return Average color.
+  CvScalar cvBlobMeanColor(CvBlob const *blob, IplImage const *imgLabel, IplImage const *img);
+  
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Aux
   

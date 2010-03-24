@@ -26,6 +26,7 @@ set(cvBlob_CVBLOB cvblob.cpp
 		   cvaux.cpp
 		   cvcontour.cpp
 		   cvtrack.cpp
+		   cvblobcolor.cpp
 )
 
 set_source_files_properties(${cvBlob_SRC}
