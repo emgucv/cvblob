@@ -339,6 +339,22 @@ extern "C" {
 #define CV_BLOB_RENDER_TO_LOG           0x0010 ///< Print blob data to log out. \see cvRenderBlobs
 #define CV_BLOB_RENDER_TO_STD           0x0020 ///< Print blob data to std out. \see cvRenderBlobs
 
+  /// \fn void cvRenderBlob(const IplImage *imgLabel, CvBlob *blob, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, CvScalar const &color=CV_RGB(255, 255, 255), double alpha=1.)
+  /// \brief Draws or prints information about a blob.
+  /// \param imgLabel Label image (depth=IPL_DEPTH_LABEL and num. channels=1).
+  /// \param blob Blob.
+  /// \param imgSource Input image (depth=IPL_DEPTH_8U and num. channels=3).
+  /// \param imgDest Output image (depth=IPL_DEPTH_8U and num. channels=3).
+  /// \param mode Render mode. By default is CV_BLOB_RENDER_COLOR|CV_BLOB_RENDER_CENTROID|CV_BLOB_RENDER_BOUNDING_BOX|CV_BLOB_RENDER_ANGLE.
+  /// \param alpha If mode CV_BLOB_RENDER_COLOR is used. 1.0 indicates opaque and 0.0 translucent (1.0 by default).
+  /// \see CV_BLOB_RENDER_COLOR
+  /// \see CV_BLOB_RENDER_CENTROID
+  /// \see CV_BLOB_RENDER_BOUNDING_BOX
+  /// \see CV_BLOB_RENDER_ANGLE
+  /// \see CV_BLOB_RENDER_TO_LOG
+  /// \see CV_BLOB_RENDER_TO_STD
+  void cvRenderBlob(const IplImage *imgLabel, CvBlob *blob, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, CvScalar const &color=CV_RGB(255, 255, 255), double alpha=1.);
+
   /// \fn void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.)
   /// \brief Draws or prints information about blobs.
   /// \param imgLabel Label image (depth=IPL_DEPTH_LABEL and num. channels=1).
@@ -353,7 +369,7 @@ extern "C" {
   /// \see CV_BLOB_RENDER_ANGLE
   /// \see CV_BLOB_RENDER_TO_LOG
   /// \see CV_BLOB_RENDER_TO_STD
-  void cvRenderBlobs(const IplImage *imgLabel, const CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.);
+  void cvRenderBlobs(const IplImage *imgLabel, CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.);
 
   /// \fn void cvSetImageROItoBlob(IplImage *img, CvBlob const *blob)
   /// \brief Set the ROI of an image to the bounding box of a blob.
