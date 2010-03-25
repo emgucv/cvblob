@@ -1,9 +1,14 @@
 Version 0.10.0 (2010/03/18)
 
   * cvlabel.ccp: new algorithm.
+
   * cvcontour.cpp: "cvGetContour" function deleted (this functionality is
   doing now by "cvLabel".
+
   * cvblobcolor.cpp: new file. Function: "cvBlobMeanColor".
+
+  * cvblob.cpp: new function "cvRenderBlob". Fixed bug in "cvRenderBlobs" (now
+  uses "cvRenderBlob").
 
 Version 0.9.14 (2010/03/10)
 
