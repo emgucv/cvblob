@@ -1,6 +1,6 @@
 Version 0.10.0 (2010/03/18)
 
-  * cvlabel.ccp: new algorithm.
+  * cvlabel.cpp: new algorithm.
 
   * cvcontour.cpp: "cvGetContour" function deleted (this functionality is
   doing now by "cvLabel".
@@ -10,9 +10,12 @@ Version 0.10.0 (2010/03/18)
   * cvblob.cpp: new function "cvRenderBlob". Fixed bug in "cvRenderBlobs" (now
   uses "cvRenderBlob").
 
+  * cvaux.cpp: bug fixed (change "abs" for "fabs"). Thanks, sircoko.
+
 Version 0.9.14 (2010/03/10)
 
   * cvlabel.cpp, cvblob.h: function "cvGetLabel".
+
   * Makefile, red_object_tracking.cpp: sample program.
 
 Version 0.9.13 (2010/01/01)
