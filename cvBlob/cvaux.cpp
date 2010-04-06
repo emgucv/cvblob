@@ -72,7 +72,7 @@ namespace cvb
       if(dot2>0) return cvDistancePointPoint(a, c);
     }
 
-    return abs(cvCrossProductPoints(a,b,c)/cvDistancePointPoint(a,b));
+    return fabs(cvCrossProductPoints(a,b,c)/cvDistancePointPoint(a,b));
   }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
