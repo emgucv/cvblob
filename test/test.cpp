@@ -35,33 +35,36 @@ int main()
 {
   IplImage *img = cvLoadImage("test.png", 1);
 
-  cvThreshold(img, img, 100, 200, CV_THRESH_BINARY);
-
   cvSetImageROI(img, cvRect(100, 100, 800, 500));
 
-  IplImage *chB=cvCreateImage(cvGetSize(img),8,1);
+  IplImage *grey = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 1);
+  cvCvtColor(img, grey, CV_BGR2GRAY);
+  cvThreshold(grey, grey, 100, 255, CV_THRESH_BINARY);
 
-  cvSplit(img,chB,NULL,NULL,NULL);
-
-  IplImage *labelImg = cvCreateImage(cvGetSize(chB),IPL_DEPTH_LABEL,1);
+  IplImage *labelImg = cvCreateImage(cvGetSize(grey),IPL_DEPTH_LABEL,1);
 
   CvBlobs blobs;
-  unsigned int result = cvLabel(chB, labelImg, blobs);
+  unsigned int result = cvLabel(grey, labelImg, blobs);
 
-  cvRenderBlobs(labelImg, blobs, img, img);
+  IplImage *imgOut = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 3);
+  cvRenderBlobs(labelImg, blobs, img, imgOut);
 
   // Render contours:
   for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
   {
-    cvRenderContourChainCode(&(*it).second->contour, img);
+    //cvRenderBlob(labelImg, (*it).second, img, imgOut);
+
+    CvScalar meanColor = cvBlobMeanColor((*it).second, labelImg, img);
+    cout << "Mean color: r=" << (unsigned int)meanColor.val[0] << ", g=" << (unsigned int)meanColor.val[1] << ", b=" << (unsigned int)meanColor.val[2] << endl;
 
     CvContourPolygon *polygon = cvConvertChainCodesToPolygon(&(*it).second->contour);
 
     CvContourPolygon *sPolygon = cvSimplifyPolygon(polygon, 10.);
     CvContourPolygon *cPolygon = cvPolygonContourConvexHull(sPolygon);
 
-    cvRenderContourPolygon(sPolygon, img, CV_RGB(0, 0, 255));
-    cvRenderContourPolygon(cPolygon, img, CV_RGB(0, 255, 0));
+    cvRenderContourChainCode(&(*it).second->contour, imgOut);
+    cvRenderContourPolygon(sPolygon, imgOut, CV_RGB(0, 0, 255));
+    cvRenderContourPolygon(cPolygon, imgOut, CV_RGB(0, 255, 0));
 
     delete cPolygon;
     delete sPolygon;
@@ -69,15 +72,17 @@ int main()
 
     // Render internal contours:
     for (CvContoursChainCode::const_iterator jt=(*it).second->internalContours.begin(); jt!=(*it).second->internalContours.end(); ++jt)
-      cvRenderContourChainCode((*jt), img);
+      cvRenderContourChainCode((*jt), imgOut);
   }
 
   cvNamedWindow("test", 1);
-  cvShowImage("test", img);
+  cvShowImage("test", imgOut);
+  //cvShowImage("grey", grey);
   cvWaitKey(0);
   cvDestroyWindow("test");
 
-  cvReleaseImage(&chB);
+  cvReleaseImage(&imgOut);
+  cvReleaseImage(&grey);
   cvReleaseImage(&labelImg);
   cvReleaseImage(&img);
 
