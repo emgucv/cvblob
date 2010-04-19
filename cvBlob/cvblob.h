@@ -170,6 +170,12 @@ extern "C" {
   /// \return Convex hull.
   CvContourPolygon *cvPolygonContourConvexHull(CvContourPolygon const *p);
 
+  /// \fn void cvWriteContourPolygonCSV(const CvContourPolygon& p, const std::string& filename)
+  /// \brief Write a contour to a CSV (Comma-separated values) file.
+  /// \param p Polygon contour.
+  /// \param filename File name.
+  void cvWriteContourPolygonCSV(const CvContourPolygon& p, const std::string& filename);
+
   /// \fn void cvWriteContourPolygonSVG(const CvContourPolygon& p, const std::string& filename, const CvScalar& stroke=cvScalar(0,0,0), const CvScalar& fill=cvScalar(255,255,255))
   /// \brief Write a contour to a SVG file (http://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
   /// \param p Polygon contour.

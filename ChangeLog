@@ -1,3 +1,7 @@
+Version 0.10.1 (2010/04/19)
+
+  * cvcontour.cpp: "cvWriteContourPolygonCSV" function.
+
 Version 0.10.0 (2010/03/18)
 
   * cvlabel.cpp: new labeling algorithm.

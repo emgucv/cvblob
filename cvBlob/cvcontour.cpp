@@ -328,6 +328,19 @@ namespace cvb
     return output;
   }
 
+  void cvWriteContourPolygonCSV(const CvContourPolygon& p, const string& filename)
+  {
+    ofstream f;
+    f.open(filename.c_str());
+
+    for (CvContourPolygon::const_iterator it=p.begin(); it!=p.end(); ++it)
+    {
+      f << it->x << "," << it->y << endl;
+    }
+
+    f.close();
+  }
+
   void cvWriteContourPolygonSVG(const CvContourPolygon& p, const string& filename, const CvScalar& stroke, const CvScalar& fill)
   {
     int minx=INT_MAX;
