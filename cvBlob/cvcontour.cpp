@@ -320,23 +320,12 @@ namespace cvb
     __CV_END__;
   }
 
-  ostream& operator<< (ostream& output, const CvContourPolygon& p)
-  {
-    for (CvContourPolygon::const_iterator it=p.begin(); it!=p.end(); ++it)
-      output << it->x << ", " << it->y << endl;
-
-    return output;
-  }
-
   void cvWriteContourPolygonCSV(const CvContourPolygon& p, const string& filename)
   {
     ofstream f;
     f.open(filename.c_str());
 
-    for (CvContourPolygon::const_iterator it=p.begin(); it!=p.end(); ++it)
-    {
-      f << it->x << "," << it->y << endl;
-    }
+    f << p << endl;
 
     f.close();
   }
@@ -379,4 +368,12 @@ namespace cvb
     f.close();
   }
 
+}
+
+ostream& operator<< (ostream& output, const cvb::CvContourPolygon& p)
+{
+  for (cvb::CvContourPolygon::const_iterator it=p.begin(); it!=p.end(); ++it)
+    output << it->x << ", " << it->y << endl;
+
+  return output;
 }
