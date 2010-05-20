@@ -285,12 +285,22 @@ extern "C" {
   /// \see CvBlobs
   inline void cvReleaseBlobs(CvBlobs &blobs)
   {
-    for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); it++)
+    for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); ++it)
     {
       CvBlob *blob = (*it).second;
-      if (blob) delete blob;
-    }
+      if (blob)
+      {
+	for (CvContoursChainCode::iterator jt=blob->internalContours.begin(); jt!=blob->internalContours.end(); ++jt)
+	{
+	  CvContourChainCode *contour = *jt;
+	  if (contour)
+	    delete contour;
+	}
+	blob->internalContours.clear();
 
+	delete blob;
+      }
+    }
     blobs.clear();
   }
 

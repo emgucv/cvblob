@@ -229,8 +229,6 @@ namespace cvb
 	      imageOut(x, y+1) = CV_BLOB_MAX_LABEL;
 
 	      CvContourChainCode *contour = new CvContourChainCode;
-	      blob->internalContours.push_back(contour);
-
 	      contour->startingPoint = cvPoint(x, y);
 
 	      unsigned char direction=3;
@@ -285,6 +283,8 @@ namespace cvb
 		}
 	      }
 	      while (!(xx==x && yy==y));
+
+	      blob->internalContours.push_back(contour);
 	    }
 
 	    //else if (!imageOut(x, y))
