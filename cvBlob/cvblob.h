@@ -279,6 +279,26 @@ extern "C" {
   /// \see CvLabel
   CvLabel cvGetLabel(IplImage const *img, unsigned int x, unsigned int y);
 
+  /// \fn inline void cvReleaseBlob(CvBlob *blob)
+  /// \brief Clear a blob structure.
+  /// \param blob Blob.
+  /// \see CvBlob
+  inline void cvReleaseBlob(CvBlob *blob)
+  {
+    if (blob)
+    {
+      for (CvContoursChainCode::iterator jt=blob->internalContours.begin(); jt!=blob->internalContours.end(); ++jt)
+      {
+	CvContourChainCode *contour = *jt;
+	if (contour)
+	  delete contour;
+      }
+      blob->internalContours.clear();
+
+      delete blob;
+    }
+  }
+
   /// \fn inline void cvReleaseBlobs(CvBlobs &blobs)
   /// \brief Clear blobs structure.
   /// \param blobs List of blobs.
@@ -287,19 +307,7 @@ extern "C" {
   {
     for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); ++it)
     {
-      CvBlob *blob = (*it).second;
-      if (blob)
-      {
-	for (CvContoursChainCode::iterator jt=blob->internalContours.begin(); jt!=blob->internalContours.end(); ++jt)
-	{
-	  CvContourChainCode *contour = *jt;
-	  if (contour)
-	    delete contour;
-	}
-	blob->internalContours.clear();
-
-	delete blob;
-      }
+      cvReleaseBlob((*it).second);
     }
     blobs.clear();
   }

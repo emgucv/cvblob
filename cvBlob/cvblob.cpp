@@ -59,7 +59,8 @@ namespace cvb
       CvBlob *blob=(*it).second;
       if ((blob->area<minArea)||(blob->area>maxArea))
       {
-	delete blob;
+	cvReleaseBlob(blob);
+
 	CvBlobs::iterator tmp=it;
 	++it;
 	blobs.erase(tmp);
