@@ -85,9 +85,10 @@ int main()
 
     cvReleaseBlobs(blobs);
 
-    if ((cvWaitKey(10)&0xff)==27)
+    if (((cvWaitKey(10)&0xff)==27)||(iter>100))
       break;
-  } while(true);
+  }
+  while(true);
 
   cvDestroyWindow("test");
 
