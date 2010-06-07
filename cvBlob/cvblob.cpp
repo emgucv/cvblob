@@ -70,6 +70,24 @@ namespace cvb
     }
   }
 
+  void cvFilterByLabel(CvBlobs &blobs, CvLabel label)
+  {
+    CvBlobs::iterator it=blobs.begin();
+    while(it!=blobs.end())
+    {
+      CvBlob *blob=(*it).second;
+      if (blob->label!=label)
+      {
+	delete blob;
+	CvBlobs::iterator tmp=it;
+	++it;
+	blobs.erase(tmp);
+      }
+      else
+	++it;
+    }
+  }
+
   void cvCentralMoments(CvBlob *blob, const IplImage *img)
   {
     CV_FUNCNAME("cvCentralMoments");

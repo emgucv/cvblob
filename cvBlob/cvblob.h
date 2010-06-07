@@ -327,6 +327,13 @@ extern "C" {
   /// \param maxArea Maximun area.
   void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea);
 
+  /// \fn void cvFilterByLabel(CvBlobs &blobs, CvLabel l)
+  /// \brief Filter blobs by label.
+  /// Delete all blobs except those with label l.
+  /// \param blobs List of blobs.
+  /// \param l Label to leave.
+  void cvFilterByLabel(CvBlobs &blobs, CvLabel label);
+
   /// \fn inline CvPoint2D64f cvCentroid(CvBlob *blob)
   /// \brief Calculates centroid.
   /// Centroid will be returned and stored in the blob structure.
