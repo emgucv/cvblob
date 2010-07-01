@@ -52,21 +52,21 @@ namespace cvb
       CV_ASSERT(img&&(img->depth==IPL_DEPTH_8U)&&(img->nChannels==1));
       CV_ASSERT(imgOut&&(imgOut->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
 
-      int numPixels=0;
+      unsigned int numPixels=0;
 
       cvSetZero(imgOut);
 
       CvLabel label=0;
       cvReleaseBlobs(blobs);
 
-      int stepIn = img->widthStep / (img->depth / 8);
-      int stepOut = imgOut->widthStep / (imgOut->depth / 8);
-      int imgIn_width = img->width;
-      int imgIn_height = img->height;
-      int imgIn_offset = 0;
-      int imgOut_width = imgOut->width;
-      int imgOut_height = imgOut->height;
-      int imgOut_offset = 0;
+      unsigned int stepIn = img->widthStep / (img->depth / 8);
+      unsigned int stepOut = imgOut->widthStep / (imgOut->depth / 8);
+      unsigned int imgIn_width = img->width;
+      unsigned int imgIn_height = img->height;
+      unsigned int imgIn_offset = 0;
+      unsigned int imgOut_width = imgOut->width;
+      unsigned int imgOut_height = imgOut->height;
+      unsigned int imgOut_offset = 0;
       if(img->roi)
       {
 	imgIn_width = img->roi->width;

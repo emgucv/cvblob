@@ -172,7 +172,7 @@ namespace cvb
 
       double perimeter = cvDistancePointPoint((*p)[p->size()-1], (*p)[0]);
 
-      for (int i=0; i<p->size()-1; i++)
+      for (unsigned int i=0; i<p->size()-1; i++)
 	perimeter+=cvDistancePointPoint((*p)[i], (*p)[i+1]);
 
       return perimeter;
@@ -250,7 +250,7 @@ namespace cvb
       }
 
       bool *pnUseFlag = new bool[p->size()];
-      for (int i=1; i<p->size(); i++) pnUseFlag[i] = false;
+      for (unsigned int i=1; i<p->size(); i++) pnUseFlag[i] = false;
 
       pnUseFlag[0] = pnUseFlag[furtherIndex] = true;
 
@@ -259,7 +259,7 @@ namespace cvb
 
       CvContourPolygon *result = new CvContourPolygon;
 
-      for (int i=0; i<p->size(); i++)
+      for (unsigned int i=0; i<p->size(); i++)
 	if (pnUseFlag[i])
 	  result->push_back((*p)[i]);
 
@@ -294,7 +294,7 @@ namespace cvb
       dq.push_back((*p)[2]);
       dq.push_front((*p)[2]);
 
-      for (int i=3; i<p->size(); i++)
+      for (unsigned int i=3; i<p->size(); i++)
       {
 	int s = dq.size();
 
