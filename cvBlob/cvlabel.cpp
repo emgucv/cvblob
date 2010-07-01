@@ -360,6 +360,8 @@ namespace cvb
 	    if (blobs.find(imgDataIn[c])==blobs.end()) imgDataOut[c]=0x00;
 	    else imgDataOut[c]=(char)0xff;
 	  }
+	  else
+	    imgDataOut[c]=0x00;
 	}
       }
     }
