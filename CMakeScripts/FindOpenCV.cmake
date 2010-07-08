@@ -23,17 +23,23 @@ if (WIN32)
 find_path(OpenCV_cv_INCLUDE_DIR opencv/cv.h
 	c:/Archivos de programa/OpenCV/cv/include
 	c:/Program Files/OpenCV/cv/include
+	c:/Archivos de programa/OpenCV/include/opencv
+	c:/Program Files/OpenCV/include/opencv
 )
 
 find_path(OpenCV_cxcore_INCLUDE_DIR opencv/cxcore.h
 	c:/Archivos de programa/OpenCV/cxcore/include
 	c:/Program Files/OpenCV/cxcore/include
+	c:/Archivos de programa/OpenCV/include/opencv
+	c:/Program Files/OpenCV/include/opencv
 )
 
 
 find_path(OpenCV_highgui_INCLUDE_DIR opencv/highgui.h
 	c:/Archivos de programa/OpenCV/otherlibs/highgui
 	c:/Program Files/OpenCV/otherlibs/highgui
+	c:/Archivos de programa/OpenCV/include/opencv
+	c:/Program Files/OpenCV/include/opencv
 )
 
 set(OpenCV_INCLUDE_DIR $(OpenCV_cv_INCLUDE_DIR) $(OpenCV_cxcore_INCLUDE_DIR) $(OpenCV_highgui_INCLUDE_DIR)) 
