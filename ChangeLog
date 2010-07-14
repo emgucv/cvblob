@@ -1,3 +1,12 @@
+Version 0.10.2 (2010/06/07)
+
+  * cvblob.cpp, cvblob.h: new function "cvFilterByLabel".
+
+  * cvlabel.cpp: Fixed wrong background in use cvFilterLabels. Thanks to
+  mathias.ferraton.
+
+  * cvblob.cpp, ...: Fixed some compilation warnings.
+
 Version 0.10.1 (2010/04/19)
 
   * cvcontour.cpp: "cvWriteContourPolygonCSV" function.
