@@ -2,10 +2,12 @@ Version 0.10.2 (2010/06/07)
 
   * cvblob.cpp, cvblob.h: new function "cvFilterByLabel".
 
-  * cvlabel.cpp: Fixed wrong background in use cvFilterLabels. Thanks to
+  * cvlabel.cpp: fixed wrong background in cvFilterLabels. Thanks to
   mathias.ferraton.
 
-  * cvblob.cpp, ...: Fixed some compilation warnings.
+  * cvblob.cpp, ...: fixed some compilation warnings.
+
+  * cvcontour.cpp, cvblob.h: new function: cvContourChainCodePerimeter.
 
 Version 0.10.1 (2010/04/19)
 
