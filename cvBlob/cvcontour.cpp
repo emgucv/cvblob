@@ -18,6 +18,7 @@
 //
 
 #include <climits>
+#include <cmath>
 #include <deque>
 #include <iostream>
 #include <fstream>
@@ -158,6 +159,28 @@ namespace cvb
       }
 
       return a*0.5;
+    }
+    __CV_END__;
+  }
+
+  double cvContourChainCodePerimeter(CvContourChainCode const *c)
+  {
+    CV_FUNCNAME("cvContourChainCodePerimeter");
+    __CV_BEGIN__;
+    {
+      CV_ASSERT(c!=NULL);
+
+      double perimeter = 0.;
+
+      for(CvChainCodes::const_iterator it=c->chainCode.begin(); it!=c->chainCode.end(); ++it)
+      {
+	if ((*it)%2)
+	  perimeter+=sqrt(1.+1.);
+	else
+	  perimeter+=1.;
+      }
+
+      return perimeter;
     }
     __CV_END__;
   }

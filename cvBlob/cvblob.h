@@ -149,6 +149,12 @@ extern "C" {
   /// \return Area of the contour.
   double cvContourPolygonArea(CvContourPolygon const *p);
 
+  /// \fn double cvContourChainCodePerimeter(CvContourChainCode const *c)
+  /// \brief Calculates perimeter of a chain code contour.
+  /// \param c Contour (chain code type).
+  /// \return Perimeter of the contour.
+  double cvContourChainCodePerimeter(CvContourChainCode const *c);
+
   /// \fn double cvContourPolygonPerimeter(CvContourPolygon const *p)
   /// \brief Calculates perimeter of a polygonal contour.
   /// \param p Contour (polygon type).
