@@ -7,7 +7,8 @@ Version 0.10.2 (2010/06/07)
 
   * cvblob.cpp, ...: fixed some compilation warnings.
 
-  * cvcontour.cpp, cvblob.h: new function: cvContourChainCodePerimeter.
+  * cvcontour.cpp, cvblob.h: new function: cvContourChainCodePerimeter. Thanks
+  to meonimarco.
 
 Version 0.10.1 (2010/04/19)
 
