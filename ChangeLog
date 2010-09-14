@@ -2,13 +2,15 @@ Version 0.10.2 (2010/06/07)
 
   * cvblob.cpp, cvblob.h: new function "cvFilterByLabel".
 
+  * cvcontour.cpp, cvblob.h: new function: cvContourChainCodePerimeter. Thanks
+  to meonimarco.
+
   * cvlabel.cpp: fixed wrong background in cvFilterLabels. Thanks to
   mathias.ferraton.
 
   * cvblob.cpp, ...: fixed some compilation warnings.
 
-  * cvcontour.cpp, cvblob.h: new function: cvContourChainCodePerimeter. Thanks
-  to meonimarco.
+  * cvcontour.cpp: some asserts deleted and/or fixed.
 
 Version 0.10.1 (2010/04/19)
 
