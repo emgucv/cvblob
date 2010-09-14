@@ -78,7 +78,7 @@ namespace cvb
     CV_FUNCNAME("cvConvertChainCodesToPolygon");
     __CV_BEGIN__;
     {
-      CV_ASSERT(cc);
+      CV_ASSERT(cc!=NULL);
 
       CvContourPolygon *contour = new CvContourPolygon;
 
@@ -145,7 +145,9 @@ namespace cvb
     __CV_BEGIN__;
     {
       CV_ASSERT(p!=NULL);
-      CV_ASSERT(p->size()>2);
+
+      if (p->size()<=2)
+	return 1.;
 
       CvContourPolygon::const_iterator it=p->begin();
       CvPoint lastPoint = p->back();
@@ -191,7 +193,6 @@ namespace cvb
     __CV_BEGIN__;
     {
       CV_ASSERT(p!=NULL);
-      CV_ASSERT(p->size()>2);
 
       double perimeter = cvDistancePointPoint((*p)[p->size()-1], (*p)[0]);
 
@@ -247,7 +248,6 @@ namespace cvb
     __CV_BEGIN__;
     {
       CV_ASSERT(p!=NULL);
-      CV_ASSERT(p->size()>2);
 
       double furtherDistance=0.;
       unsigned int furtherIndex=0;
@@ -299,7 +299,11 @@ namespace cvb
     __CV_BEGIN__;
     {
       CV_ASSERT(p!=NULL);
-      CV_ASSERT(p->size()>=2);
+      
+      if (p->size()<=3)
+      {
+	return new CvContourPolygon(p->begin(), p->end());
+      }
 
       deque<CvPoint> dq;
 
