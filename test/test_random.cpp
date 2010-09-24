@@ -39,10 +39,11 @@ using namespace cvb;
 
 int main()
 {
-  const unsigned int size = 1000;
-  const unsigned int numPixels = 300000;
+  const unsigned int size = 500;
+  const unsigned int numPixels = 100000;
+  const unsigned int max_iter = 1000000;
 
-  //srand(time(NULL));
+  srand(time(NULL));
 
   IplImage *randomImg = cvCreateImage(cvSize(size, size), 8, 3);
   IplImage *randomBinImg = cvCreateImage(cvSize(size, size), 8, 1);
@@ -61,7 +62,7 @@ int main()
     for (unsigned int i=1; i<numPixels; i++)
       cvSet2D(randomBinImg, rand() % size, rand() % size, cvScalar(255));
 
-    //cvSaveImage("test_random.png", randomBinImg);
+    cvSaveImage("test_random.png", randomBinImg);
 
     CvBlobs blobs;
 
@@ -85,7 +86,7 @@ int main()
 
     cvReleaseBlobs(blobs);
 
-    if (((cvWaitKey(10)&0xff)==27)||(iter>100))
+    if (((cvWaitKey(10)&0xff)==27)||(iter>=max_iter))
       break;
   }
   while(true);
@@ -98,7 +99,7 @@ int main()
 
   cout << endl;
   cout << iter << " iterations." << endl;
-  cout << "Average cvBlob time: " << averTime << " miliseconds." << endl;
+  cout << "Average cvLabel time: " << averTime << " miliseconds." << endl;
 
   return 0;
 }
