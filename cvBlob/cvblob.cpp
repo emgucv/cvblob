@@ -23,8 +23,10 @@ using namespace std;
 
 #ifdef WIN32
 #include <cv.h>
+#include <highgui.h>
 #else
 #include <opencv/cv.h>
+#include <opencv/highgui.h>
 #endif
 
 #include "cvblob.h"
@@ -211,7 +213,7 @@ namespace cvb
       }
 
       if (mode&CV_BLOB_RENDER_BOUNDING_BOX)
-	cvRectangle(imgDest,cvPoint(blob->minx,blob->miny),cvPoint(blob->maxx,blob->maxy),CV_RGB(255.,0.,0.));
+	cvRectangle(imgDest, cvPoint(blob->minx, blob->miny), cvPoint(blob->maxx-1, blob->maxy-1), CV_RGB(255., 0., 0.));
 
       if (mode&CV_BLOB_RENDER_ANGLE)
       {
@@ -325,6 +327,14 @@ namespace cvb
     return .5*atan2(2.*blob->u11,(blob->u20-blob->u02));
 
     __CV_END__;
+  }
+
+  void cvSaveImageBlob(const char *filename, IplImage *img, CvBlob const *blob)
+  {
+    CvRect roi = cvGetImageROI(img);
+    cvSetImageROItoBlob(img, blob);
+    cvSaveImage(filename, img);
+    cvSetImageROI(img, roi);
   }
 
 }

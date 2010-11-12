@@ -368,6 +368,17 @@ extern "C" {
   /// \see cvCentralMoments
   /// \see CvBlob
   double cvAngle(CvBlob *blob);
+
+  /// \fn cvSaveImageBlob(const char *filename, IplImage *img, CvBlob const *blob)
+  /// \brief Save the image of a blob to a file.
+  /// The function uses an image (that can be the original pre-processed image or a processed one, or even the result of cvRenderBlobs, for example) and a blob structure.
+  /// Then the function saves a copy of the part of the image where the blob is.
+  /// \param filename Name of the file.
+  /// \param img Image.
+  /// \param blob Blob.
+  /// \see CvBlob
+  /// \see cvRenderBlob
+  void cvSaveImageBlob(const char *filename, IplImage *img, CvBlob const *blob);
   
 #define CV_BLOB_RENDER_COLOR            0x0001 ///< Render each blog with a different color. \see cvRenderBlobs
 #define CV_BLOB_RENDER_CENTROID         0x0002 ///< Render centroid. \see cvRenderBlobs
