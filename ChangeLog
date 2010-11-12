@@ -4,6 +4,8 @@ Version 0.10.3 (2010/11/12)
 
   * cvblob.cpp: fixes in "cvRenderBlobs" function.
 
+  * FindOpenCV.cmake: it checks "CV_BASE" variable.
+
 Version 0.10.2 (2010/06/07)
 
   * cvblob.cpp, cvblob.h: new function "cvFilterByLabel".
