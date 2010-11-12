@@ -1,3 +1,9 @@
+Version 0.10.3 (2010/11/12)
+
+  * cvblob.cpp, cvblob.h: new function "cvSaveImageBlob".
+
+  * cvblob.cpp: fixes in "cvRenderBlobs" function.
+
 Version 0.10.2 (2010/06/07)
 
   * cvblob.cpp, cvblob.h: new function "cvFilterByLabel".
@@ -11,6 +17,8 @@ Version 0.10.2 (2010/06/07)
   * cvblob.cpp, ...: fixed some compilation warnings.
 
   * cvcontour.cpp: some asserts deleted and/or fixed.
+
+  * test_random.cpp: test improved.
 
 Version 0.10.1 (2010/04/19)
 
