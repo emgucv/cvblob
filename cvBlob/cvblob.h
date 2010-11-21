@@ -201,7 +201,7 @@ extern "C" {
   /// \def IPL_DEPTH_LABEL
   /// \brief Size of a label in bits.
   /// \see CvLabel
-#define IPL_DEPTH_LABEL (sizeof(CvLabel)*8)
+#define IPL_DEPTH_LABEL (sizeof(cvb::CvLabel)*8)
 
   /// \def CV_BLOB_MAX_LABEL
   /// \brief Max label number.
