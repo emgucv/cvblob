@@ -86,24 +86,27 @@ namespace cvb
       unsigned int y = cc->startingPoint.y;
       contour->push_back(cvPoint(x, y));
 
-      CvChainCodes::const_iterator it=cc->chainCode.begin();
-      CvChainCode lastCode = *it;
-
-      x += cvChainCodeMoves[*it][0];
-      y += cvChainCodeMoves[*it][1];
-
-      ++it;
-
-      for (; it!=cc->chainCode.end(); ++it)
+      if (cc->chainCode.size())
       {
-	if (lastCode!=*it)
-	{
-	  contour->push_back(cvPoint(x, y));
-	  lastCode=*it;
-	}
+        CvChainCodes::const_iterator it=cc->chainCode.begin();
+        CvChainCode lastCode = *it;
 
-	x += cvChainCodeMoves[*it][0];
-	y += cvChainCodeMoves[*it][1];
+        x += cvChainCodeMoves[*it][0];
+        y += cvChainCodeMoves[*it][1];
+
+        ++it;
+
+        for (; it!=cc->chainCode.end(); ++it)
+        {
+          if (lastCode!=*it)
+          {
+            contour->push_back(cvPoint(x, y));
+            lastCode=*it;
+          }
+
+          x += cvChainCodeMoves[*it][0];
+          y += cvChainCodeMoves[*it][1];
+        }
       }
 
       return contour;
