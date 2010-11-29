@@ -47,7 +47,7 @@ int main()
   CvBlobs blobs;
   unsigned int result = cvLabel(grey, labelImg, blobs);
 
-  IplImage *imgOut = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 3);
+  IplImage *imgOut = cvCreateImage(cvGetSize(img), IPL_DEPTH_8U, 3); cvZero(imgOut);
   cvRenderBlobs(labelImg, blobs, img, imgOut);
 
   //unsigned int i = 0;

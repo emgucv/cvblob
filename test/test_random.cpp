@@ -79,7 +79,7 @@ int main()
     iter++;
     averTime = (1. - 1/((double)iter))*averTime + (1/((double)iter))*elapseTime;
 
-    cvSet(randomImg, cvScalar(0, 0, 0));
+    cvZero(randomImg);
 
     cvRenderBlobs(labelImg, blobs, randomImg, randomImg, CV_BLOB_RENDER_COLOR);
     cvShowImage("test", randomImg);
