@@ -6,6 +6,14 @@ Version 0.10.3 (2010/11/12)
 
   * FindOpenCV.cmake: it checks "CV_BASE" variable.
 
+  * cvblob.h: fix problem when using "IPL_DEPTH_LABEL" outside "cvb" namespace.
+  Thanks to recastrodiaz.
+
+  * cvcountour.cpp: check size in "cvConvertChainCodesToPolygon". Thanks to
+  tengyaogao.
+
+  * test.cpp: clear image before render. Thanks to tengyaogao.
+
 Version 0.10.2 (2010/06/07)
 
   * cvblob.cpp, cvblob.h: new function "cvFilterByLabel".
