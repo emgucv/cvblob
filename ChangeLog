@@ -9,8 +9,8 @@ Version 0.10.3 (2010/11/12)
   * cvblob.h: fix problem when using "IPL_DEPTH_LABEL" outside "cvb" namespace.
   Thanks to recastrodiaz.
 
-  * cvcountour.cpp: check size in "cvConvertChainCodesToPolygon". Thanks to
-  tengyaogao.
+  * cvcountour.cpp: check size in "cvConvertChainCodesToPolygon" (thanks to
+  tengyaogao). New function: cvContourPolygonCircularity.
 
   * test.cpp: clear image before render. Thanks to tengyaogao.
 
