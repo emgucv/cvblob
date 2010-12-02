@@ -18,7 +18,10 @@
 //
 
 #include <climits>
+
+#define _USE_MATH_DEFINES
 #include <cmath>
+
 #include <deque>
 #include <iostream>
 #include <fstream>
@@ -32,6 +35,12 @@ using namespace std;
 #endif
 
 #include "cvblob.h"
+
+#ifdef M_PI
+const double pi = M_PI;
+#else
+const double pi = std::atan(1.)*4.;
+#endif // M_PI
 
 namespace cvb
 {
@@ -203,6 +212,19 @@ namespace cvb
 	perimeter+=cvDistancePointPoint((*p)[i], (*p)[i+1]);
 
       return perimeter;
+    }
+    __CV_END__;
+  }
+
+  double cvContourPolygonCircularity(const CvContourPolygon *p)
+  {
+    CV_FUNCNAME("cvContourPolygonCircularity");
+    __CV_BEGIN__;
+    {
+      CV_ASSERT(p!=NULL);
+
+      double l = cvContourPolygonArea(p);
+      return (l*l/cvContourPolygonArea(p)) - 4.*pi;
     }
     __CV_END__;
   }

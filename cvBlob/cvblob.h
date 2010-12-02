@@ -161,6 +161,12 @@ extern "C" {
   /// \return Perimeter of the contour.
   double cvContourPolygonPerimeter(CvContourPolygon const *p);
 
+  /// \fn double cvContourPolygonCircularity(const CvContourPolygon *p)
+  /// \brief Calculates the circularity of a polygon (compactness measure).
+  /// \param p Contour (polygon type).
+  /// \return Circularity: a non-negative value, where 0 correspond with a circumference.
+  double cvContourPolygonCircularity(const CvContourPolygon *p);
+
   /// \fn CvContourPolygon *cvSimplifyPolygon(CvContourPolygon const *p, double const delta=1.)
   /// \brief Simplify a polygon reducing the number of vertex according the distance "delta".
   /// Uses a version of the Ramer-Douglas-Peucker algorithm (http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm).
