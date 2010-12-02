@@ -235,7 +235,7 @@ extern "C" {
     double m20; ///< Moment 20.
     double m02; ///< Moment 02.
     
-    bool centralMoments; ///< True if central moments are being calculated.
+    bool centralMoments; ///< True if central moments are been calculated.
     double u11; ///< Central moment 11.
     double u20; ///< Central moment 20.
     double u02; ///< Central moment 02.
