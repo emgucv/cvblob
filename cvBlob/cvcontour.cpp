@@ -223,8 +223,13 @@ namespace cvb
     {
       CV_ASSERT(p!=NULL);
 
-      double l = cvContourPolygonArea(p);
-      return (l*l/cvContourPolygonArea(p)) - 4.*pi;
+      double l = cvContourPolygonPerimeter(p);
+      double c = (l*l/cvContourPolygonArea(p)) - 4.*pi;
+
+      if (c>=0.)
+        return c;
+      else // This could happen if the blob it's only a pixel: the perimeter will be 0. Another solution would be to force "cvContourPolygonPerimeter" to be 1 or greater.
+        return 0.;
     }
     __CV_END__;
   }
