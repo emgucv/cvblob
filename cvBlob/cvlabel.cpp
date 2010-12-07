@@ -122,7 +122,6 @@ namespace cvb
 	      blob->m10=x; blob->m01=y;
 	      blob->m11=x*y;
 	      blob->m20=x*x; blob->m02=y*y;
-	      blob->centralMoments=false;
 	      blob->internalContours.clear();
 	      blobs.insert(CvLabelBlob(label,blob));
 
@@ -308,9 +307,14 @@ namespace cvb
 	}
       }
 
-      // XXX Here?
       for (CvBlobs::iterator it=blobs.begin(); it!=blobs.end(); ++it)
+      {
 	cvCentroid((*it).second);
+
+        (*it).second->u11=(*it).second->m11 - ((*it).second->m10*(*it).second->m01)/(*it).second->m00;
+        (*it).second->u20=(*it).second->m20 - ((*it).second->m10*(*it).second->m10)/(*it).second->m00;
+        (*it).second->u02=(*it).second->m02 - ((*it).second->m01*(*it).second->m01)/(*it).second->m00;
+      }
 
       return numPixels;
 

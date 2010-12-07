@@ -241,7 +241,6 @@ extern "C" {
     double m20; ///< Moment 20.
     double m02; ///< Moment 02.
     
-    bool centralMoments; ///< True if central moments are been calculated.
     double u11; ///< Central moment 11.
     double u20; ///< Central moment 20.
     double u02; ///< Central moment 02.
@@ -356,15 +355,6 @@ extern "C" {
   {
     return blob->centroid=cvPoint2D64f(blob->m10/blob->area, blob->m01/blob->area);
   }
-
-  /// \fn void cvCentralMoments(CvBlob *blob, const IplImage *img)
-  /// \brief Calculates central moment for a blob.
-  /// Central moments will be stored in blob structure.
-  /// \param blob Blob.
-  /// \param img Label image (depth=IPL_DEPTH_LABEL and num. channels=1).
-  /// \see CvBlob
-  /// \see cvLabel
-  void cvCentralMoments(CvBlob *blob, const IplImage *img);
 
   /// \fn double cvAngle(CvBlob *blob)
   /// \brief Calculates angle orientation of a blob.

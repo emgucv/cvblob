@@ -90,7 +90,7 @@ namespace cvb
     }
   }
 
-  void cvCentralMoments(CvBlob *blob, const IplImage *img)
+  /*void cvCentralMoments(CvBlob *blob, const IplImage *img)
   {
     CV_FUNCNAME("cvCentralMoments");
     __CV_BEGIN__;
@@ -131,7 +131,7 @@ namespace cvb
       blob->centralMoments = true;
     }
     __CV_END__;
-  }
+  }*/
 
   void cvRenderBlob(const IplImage *imgLabel, CvBlob *blob, IplImage *imgSource, IplImage *imgDest, unsigned short mode, CvScalar const &color, double alpha)
   {
@@ -217,7 +217,6 @@ namespace cvb
 
       if (mode&CV_BLOB_RENDER_ANGLE)
       {
-	cvCentralMoments(blob, imgLabel);
 	double angle = cvAngle(blob);
 
 	double x1,y1,x2,y2;
@@ -321,8 +320,6 @@ namespace cvb
   {
     CV_FUNCNAME("cvAngle");
     __CV_BEGIN__;
-
-    CV_ASSERT(blob->centralMoments);
 
     return .5*atan2(2.*blob->u11,(blob->u20-blob->u02));
 
