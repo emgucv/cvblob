@@ -28,7 +28,27 @@ using namespace std;
 #include <opencv/highgui.h>
 #endif
 
+#ifndef _WIN32
 #include <sys/time.h>
+#else
+#include <ctime.h>
+#include <windows.h>
+
+int gettimeofday (struct timeval *tv, void* tz)
+{
+  union
+  {
+    long long ns100;
+    FILETIME ft;
+  } now;
+
+  GetSystemTimeAsFileTime (&now.ft);
+  tv->tv_usec = (long) ((now.ns100 / 10LL) % 1000000LL);
+  tv->tv_sec = (long) ((now.ns100 - 116444736000000000LL) / 10000000LL);
+  return (0);
+}
+#endif
+
 int diff_ms(timeval t1, timeval t2)
 {
   return (((t1.tv_sec - t2.tv_sec) * 1000000) + (t1.tv_usec - t2.tv_usec) + 500)/1000;
@@ -41,7 +61,7 @@ int main()
 {
   const unsigned int size = 500;
   const unsigned int numPixels = 100000;
-  const unsigned int max_iter = 1000000;
+  const unsigned int max_iter = 100;
 
   srand(time(NULL));
 
@@ -74,7 +94,7 @@ int main()
 
     unsigned int elapseTime = diff_ms(tim2, tim1);
 
-    cout << elapseTime << " miliseconds elapsed." << endl;
+    cout << " - " << blobs.size() << " blobs and " << result << " pixels: " << elapseTime << " miliseconds elapsed." << endl;
 
     iter++;
     averTime = (1. - 1/((double)iter))*averTime + (1/((double)iter))*elapseTime;
