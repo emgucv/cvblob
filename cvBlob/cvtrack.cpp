@@ -379,9 +379,9 @@ namespace cvb
 
 	if (mode&CV_TRACK_RENDER_BOUNDING_BOX)
 	  if (it->second->inactive)
-	    cvRectangle(imgDest, cvPoint(it->second->minx, it->second->miny), cvPoint(it->second->maxx, it->second->maxy), CV_RGB(0., 0., 50.));
+	    cvRectangle(imgDest, cvPoint(it->second->minx, it->second->miny), cvPoint(it->second->maxx-1, it->second->maxy-1), CV_RGB(0., 0., 50.));
 	  else
-	    cvRectangle(imgDest, cvPoint(it->second->minx, it->second->miny), cvPoint(it->second->maxx, it->second->maxy), CV_RGB(0., 0., 255.));
+	    cvRectangle(imgDest, cvPoint(it->second->minx, it->second->miny), cvPoint(it->second->maxx-1, it->second->maxy-1), CV_RGB(0., 0., 255.));
 
 	if (mode&CV_TRACK_RENDER_TO_LOG)
 	{
