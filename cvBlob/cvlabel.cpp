@@ -86,8 +86,8 @@ namespace cvb
 #define imageIn(X, Y) imgDataIn[(X) + (Y)*stepIn]
 #define imageOut(X, Y) imgDataOut[(X) + (Y)*stepOut]
 
-      //CvLabel lastLabel =0;
-      //CvBlob *lastBlob = NULL;
+      CvLabel lastLabel = 0;
+      CvBlob *lastBlob = NULL;
 
       for (unsigned int y=0; y<imgIn_height; y++)
       {
@@ -102,7 +102,6 @@ namespace cvb
 	      labeled = true;
 
 	      // Label contour.
-	      //lastLabel = label;
 	      label++;
 	      CV_ASSERT(label!=CV_BLOB_MAX_LABEL);
 
@@ -114,7 +113,6 @@ namespace cvb
 		imageOut(x, y-1) = CV_BLOB_MAX_LABEL;
 
 	      CvBlob *blob = new CvBlob;
-	      //lastBlob = blob;
 	      blob->label = label;
 	      blob->area = 1;
 	      blob->minx = x; blob->maxx = x;
@@ -124,6 +122,9 @@ namespace cvb
 	      blob->m20=x*x; blob->m02=y*y;
 	      blob->internalContours.clear();
 	      blobs.insert(CvLabelBlob(label,blob));
+
+              lastLabel = label;
+	      lastBlob = blob;
 
 	      blob->contour.startingPoint = cvPoint(x, y);
 
@@ -203,18 +204,25 @@ namespace cvb
 
 	      if (!imageOut(x, y))
 	      {
-		if (!imageOut(x-1, y))
+		/*if (!imageOut(x-1, y))
 		{
 		  cerr << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 		  continue;
-		}
+		}*/
 
 		l = imageOut(x-1, y);
 
 		imageOut(x, y) = l;
 		numPixels++;
 
-		blob = blobs.find(l)->second;
+                if (l==lastLabel)
+                  blob = lastBlob;
+                else
+                {
+                  blob = blobs.find(l)->second;
+                  lastLabel = l;
+                  lastBlob = blob;
+                }
 		blob->area++;
 		blob->m10+=x; blob->m01+=y;
 		blob->m11+=x*y;
@@ -223,7 +231,15 @@ namespace cvb
 	      else
 	      {
 		l = imageOut(x, y);
-		blob = blobs.find(l)->second;
+
+                if (l==lastLabel)
+                  blob = lastBlob;
+                else
+                {
+                  blob = blobs.find(l)->second;
+                  lastLabel = l;
+                  lastBlob = blob;
+                }
 	      }
 
 	      // XXX This is not necessary (I believe). I only do this for consistency.
@@ -232,7 +248,7 @@ namespace cvb
 	      CvContourChainCode *contour = new CvContourChainCode;
 	      contour->startingPoint = cvPoint(x, y);
 
-	      unsigned char direction=3;
+	      unsigned char direction = 3;
 	      unsigned int xx = x;
 	      unsigned int yy = y;
 
@@ -297,7 +313,15 @@ namespace cvb
 	      imageOut(x, y) = l;
 	      numPixels++;
 
-	      CvBlob *blob = blobs.find(l)->second;
+	      CvBlob *blob = NULL;
+              if (l==lastLabel)
+                blob = lastBlob;
+              else
+              {
+                blob = blobs.find(l)->second;
+                lastLabel = l;
+                lastBlob = blob;
+              }
 	      blob->area++;
 	      blob->m10+=x; blob->m01+=y;
 	      blob->m11+=x*y;
