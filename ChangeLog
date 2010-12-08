@@ -1,5 +1,9 @@
 Version 0.10.3 (2010/11/12)
 
+  * cvblob.cpp, cvlabel, cvblob.h: optimization of central moments
+  calculation. Deleted: "cvCentralMoments" function and
+  "centralMoments" member of CvBlob type.
+
   * cvblob.cpp, cvblob.h: new function "cvSaveImageBlob".
 
   * cvblob.cpp: fixes in "cvRenderBlobs" function.
