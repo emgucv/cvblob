@@ -42,6 +42,14 @@ In Windows it must be as easy as in Linux (changing "make" for the equivalent in
 If problems, please read:
 	http://www.cmake.org/HTML/RunningCMake.html
 
+3.1 OpenCV path
+
+You can tell CMake where OpenCV is installed, in case it can't find it, using the "CV_BASE" variable:
+
+	cmake . -D CV_BASE=<path_to_OpenCV>
+
+3.2 Problems
+
 Latest information about compiling:
 	http://code.google.com/p/cvblob/wiki/HowToCompile
 
