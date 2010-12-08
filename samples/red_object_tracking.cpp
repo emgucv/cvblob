@@ -1,7 +1,7 @@
 // Cristóbal Carnero Liñán <grendel.ccl@gmail.com>
 
 #include <iostream>
-//#include <iomanip>
+#include <iomanip>
 
 #ifdef WIN32
 #include <cv.h>
@@ -30,9 +30,11 @@ int main()
 
   IplConvKernel* morphKernel = cvCreateStructuringElementEx(5, 5, 1, 1, CV_SHAPE_RECT, NULL);
 
-  unsigned int frameNumber = 0;
+  //unsigned int frameNumber = 0;
+  unsigned int blobNumber = 0;
 
-  while (cvGrabFrame(capture))
+  bool quit = false;
+  while (!quit&&cvGrabFrame(capture))
   {
     IplImage *img = cvRetrieveFrame(capture);
 
@@ -64,6 +66,7 @@ int main()
     CvBlobs blobs;
     unsigned int result = cvLabel(segmentated, labelImg, blobs);
     cvFilterByArea(blobs, 500, 1000000);
+    cvRenderBlobs(labelImg, blobs, frame, frame, CV_BLOB_RENDER_BOUNDING_BOX);
     cvUpdateTracks(blobs, tracks, 200., 5);
     cvRenderTracks(tracks, frame, frame, CV_TRACK_RENDER_ID|CV_TRACK_RENDER_BOUNDING_BOX);
 
@@ -73,14 +76,34 @@ int main()
     filename << "redobject_" << std::setw(5) << std::setfill('0') << frameNumber << ".png";
     cvSaveImage(filename.str().c_str(), frame);*/
 
-    cvReleaseBlobs(blobs);
     cvReleaseImage(&labelImg);
     cvReleaseImage(&segmentated);
 
-    if ((cvWaitKey(10)&0xff)==27)
-      break;
+    char k = cvWaitKey(10)&0xff;
+    switch (k)
+    {
+      case 27:
+      case 'q':
+      case 'Q':
+        quit = true;
+        break;
+      case 's':
+      case 'S':
+        for (CvBlobs::const_iterator it=blobs.begin(); it!=blobs.end(); ++it)
+        {
+          std::stringstream filename;
+          filename << "redobject_blob_" << std::setw(5) << std::setfill('0') << blobNumber << ".png";
+          cvSaveImageBlob(filename.str().c_str(), img, it->second);
+          blobNumber++;
 
-    frameNumber++;
+          std::cout << filename.str() << " saved!" << std::endl;
+        }
+        break;
+    }
+
+    cvReleaseBlobs(blobs);
+
+    //frameNumber++;
   }
 
   cvReleaseStructuringElement(&morphKernel);
