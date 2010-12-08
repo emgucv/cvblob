@@ -10,6 +10,8 @@ Version 0.10.3 (2010/11/12)
 
   * cvblob.cpp: fixes in "cvRenderBlobs" function.
 
+  * cvtrack.cpp: fixes in "cvRenderTracks" function.
+
   * cvblob.h: fix problem when using "IPL_DEPTH_LABEL" outside "cvb" namespace.
   Thanks to recastrodiaz.
 
