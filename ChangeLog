@@ -1,5 +1,7 @@
 Version 0.10.3 (2010/11/12)
 
+  * cvlabel.cpp: a little optimization in "cvLabel".
+
   * cvblob.cpp, cvlabel, cvblob.h: optimization of central moments
   calculation. Deleted: "cvCentralMoments" function and
   "centralMoments" member of CvBlob type.
@@ -8,8 +10,6 @@ Version 0.10.3 (2010/11/12)
 
   * cvblob.cpp: fixes in "cvRenderBlobs" function.
 
-  * FindOpenCV.cmake: it checks "CV_BASE" variable.
-
   * cvblob.h: fix problem when using "IPL_DEPTH_LABEL" outside "cvb" namespace.
   Thanks to recastrodiaz.
 
@@ -17,6 +17,10 @@ Version 0.10.3 (2010/11/12)
   tengyaogao). New function: cvContourPolygonCircularity.
 
   * test.cpp: clear image before render. Thanks to tengyaogao.
+
+  * test_random.cpp: fixed portability issues and other minor changes.
+
+  * FindOpenCV.cmake: it checks "CV_BASE" variable.
 
 Version 0.10.2 (2010/06/07)
 
