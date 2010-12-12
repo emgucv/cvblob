@@ -245,6 +245,13 @@ extern "C" {
     double u20; ///< Central moment 20.
     double u02; ///< Central moment 02.
 
+    double n11; ///< Normalized central moment 11.
+    double n20; ///< Normalized central moment 20.
+    double n02; ///< Normalized central moment 02.
+
+    double p1; ///< Hu moment 1.
+    double p2; ///< Hu moment 2.
+
     CvContourChainCode contour;           ///< Contour.
     CvContoursChainCode internalContours; ///< Internal contours.
   };

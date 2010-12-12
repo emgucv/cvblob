@@ -335,9 +335,20 @@ namespace cvb
       {
 	cvCentroid((*it).second);
 
-        (*it).second->u11=(*it).second->m11 - ((*it).second->m10*(*it).second->m01)/(*it).second->m00;
-        (*it).second->u20=(*it).second->m20 - ((*it).second->m10*(*it).second->m10)/(*it).second->m00;
-        (*it).second->u02=(*it).second->m02 - ((*it).second->m01*(*it).second->m01)/(*it).second->m00;
+        (*it).second->u11 = (*it).second->m11 - ((*it).second->m10*(*it).second->m01)/(*it).second->m00;
+        (*it).second->u20 = (*it).second->m20 - ((*it).second->m10*(*it).second->m10)/(*it).second->m00;
+        (*it).second->u02 = (*it).second->m02 - ((*it).second->m01*(*it).second->m01)/(*it).second->m00;
+
+        double m00_2 = (*it).second->m00 * (*it).second->m00;
+
+        (*it).second->n11 = (*it).second->u11 / m00_2;
+        (*it).second->n20 = (*it).second->u20 / m00_2;
+        (*it).second->n02 = (*it).second->u02 / m00_2;
+
+        (*it).second->p1 = (*it).second->n20 + (*it).second->n02;
+
+        double nn = (*it).second->n20 - (*it).second->n02;
+        (*it).second->p2 = nn*nn + 4.*((*it).second->n11*(*it).second->n11);
       }
 
       return numPixels;
