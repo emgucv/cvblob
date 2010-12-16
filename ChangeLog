@@ -8,6 +8,8 @@ Version 0.10.3 (2010/11/12)
 
   * cvblob.cpp, cvblob.h: new function "cvSaveImageBlob".
 
+  * red_object_tracking.cpp: "cvSaveImageBlob" demo.
+
   * cvblob.cpp: fixes in "cvRenderBlobs" function.
 
   * cvtrack.cpp: fixes in "cvRenderTracks" function.
