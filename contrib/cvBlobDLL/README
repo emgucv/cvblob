@@ -1,0 +1,19 @@
+README for cvBlobDLL.
+
+
+1. INTRODUCTION
+
+This is a DLL C wrapper for cvBlob. You can use it to call "cvLabel" function 
+of cvBlob from languages like Delphi and others. It translates the custom blob 
+C++ object format of cvBlob to OpenCV types. This is also useful to call other 
+OpenCV functions on blobs.
+
+
+2. COMPILING
+
+This is a Visual C++ 2008 express project. Make sure cvBlob is compiled, and 
+libraries and includes paths are set right.
+
+3. AUTHOR
+
+        Giandomenico De Sanctis		Web page: http://gidesa.altervista.org/
