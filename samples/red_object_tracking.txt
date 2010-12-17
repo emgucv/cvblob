@@ -1,0 +1,8 @@
+This program captures video from default cam and detects and tracks red objects.
+
+To compile: compile cvBlob, then execute "make" in this directory.
+
+Keys:
+
+  - Esc or "q": exit.
+  - "s": save images of blobs to files named "redobject_blob_#####.png".
