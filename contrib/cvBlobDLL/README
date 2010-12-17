@@ -14,6 +14,7 @@ OpenCV functions on blobs.
 This is a Visual C++ 2008 express project. Make sure cvBlob is compiled, and 
 libraries and includes paths are set right.
 
+
 3. AUTHOR
 
         Giandomenico De Sanctis		Web page: http://gidesa.altervista.org/
