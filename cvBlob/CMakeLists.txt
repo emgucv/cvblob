@@ -32,10 +32,10 @@ set_source_files_properties(${cvBlob_SRC}
                             COMPILE_FLAGS "-O3"
 )
 
-add_library(cvblob ${cvBlob_CVBLOB})
+add_library(cvblob SHARED ${cvBlob_CVBLOB})
 
 install(TARGETS cvblob
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib/static
+        ARCHIVE DESTINATION lib
 )
