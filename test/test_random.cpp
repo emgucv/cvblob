@@ -31,7 +31,7 @@ using namespace std;
 #ifndef _WIN32
 #include <sys/time.h>
 #else
-#include <ctime.h>
+#include <ctime>
 #include <windows.h>
 
 int gettimeofday (struct timeval *tv, void* tz)
