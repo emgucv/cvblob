@@ -19,8 +19,6 @@
 
 find_package(OpenCV REQUIRED)
 
-include_directories(${OpenCV_INCLUDE_DIR})
-
 set(cvBlob_CVBLOB cvblob.cpp
                    cvlabel.cpp
 		   cvaux.cpp

@@ -19,7 +19,6 @@
 
 find_package(OpenCV REQUIRED)
 
-include_directories(${OpenCV_INCLUDE_DIR})
 include_directories(${cvBlob_SOURCE_DIR}/cvBlob)
 
 # TEST
@@ -33,7 +32,7 @@ set_source_files_properties(${TEST_SRC}
 add_executable(test ${TEST_SRC})
 
 target_link_libraries(test cvblob)
-target_link_libraries(test ${OpenCV_LIBRARIES})
+target_link_libraries(test ${OpenCV_LIBS})
 
 install(TARGETS test
         RUNTIME DESTINATION bin
@@ -52,7 +51,7 @@ set_source_files_properties(${TEST_RANDOM_SRC}
 add_executable(test_random ${TEST_RANDOM_SRC})
 
 target_link_libraries(test_random cvblob)
-target_link_libraries(test_random ${OpenCV_LIBRARIES})
+target_link_libraries(test_random ${OpenCV_LIBS})
 
 install(TARGETS test_random
         RUNTIME DESTINATION bin
@@ -71,7 +70,7 @@ set_source_files_properties(${TEST_TRACKING_SRC}
 add_executable(test_tracking ${TEST_TRACKING_SRC})
 
 target_link_libraries(test_tracking cvblob)
-target_link_libraries(test_tracking ${OpenCV_LIBRARIES})
+target_link_libraries(test_tracking ${OpenCV_LIBS})
 
 install(TARGETS test_tracking
         RUNTIME DESTINATION bin
