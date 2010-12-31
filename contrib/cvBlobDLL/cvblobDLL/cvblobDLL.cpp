@@ -4,6 +4,7 @@
 // gidesay@yahoo.it
 // Use CvBlob C++ library: Copyright (C) 2007 by Cristóbal Carnero Liñán grendel.ccl@gmail.com
 
+#include <vector>
 
 #include "stdafx.h"
 #include "cvblobDLL.h"
@@ -11,21 +12,20 @@
 
 using namespace cvb;
 
-#define MAX_ALLOC_MEM	1000
 #define MIN_HOLE_POINTS 10
 
-void* pAllocatedMem[MAX_ALLOC_MEM];
+typedef std::vector<void*> memVect;
+memVect pAllocatedMem;
 int   nAllocatedMem=0;
 
 void* cvBlobDAlloc(int bytes) 
 {
-	if (nAllocatedMem < MAX_ALLOC_MEM)
-	{
-		void* p = malloc(bytes);
-		pAllocatedMem[nAllocatedMem++] = p;
-		return p;
-	} else
-		return NULL;
+	void* p = malloc(bytes);
+	if (p) {
+		pAllocatedMem.push_back(p);
+		nAllocatedMem++;
+	};
+	return p;
 };
 
 CVBLOBDLL_API CDECL void cvBlobDRelease() 
@@ -35,13 +35,15 @@ CVBLOBDLL_API CDECL void cvBlobDRelease()
     __BEGIN__;
 
 
-   int i;
-	
-	for ( i = 0; i<nAllocatedMem; i++)
+	memVect::const_iterator costIter = pAllocatedMem.begin();
+	for(; costIter != pAllocatedMem.end(); costIter++)
 	{
-		free(pAllocatedMem[i]);
-		pAllocatedMem[i] = NULL;
+		void* P = (void*)(*costIter);
+		free(P);
 	};
+	
+	pAllocatedMem.clear();
+
 	nAllocatedMem = 0;
 
  
@@ -67,7 +69,7 @@ BOOLEAN cvBlobDContour(CvSeq** seqCont, const CvContourChainCode blobListElem, C
 	{ // init block	with iterators
 	CvContourPolygon* pPolyg = cvConvertChainCodesToPolygon(&blobListElem);
 
-	if (pPolyg->size() == 0) { return res; };
+	if (pPolyg->size() == 0) { delete pPolyg; return res; };
 
 	// simplify a bit the contour
 	CvContourPolygon* pContour = cvSimplifyPolygon(pPolyg, 5.0);
