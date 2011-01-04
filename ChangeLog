@@ -24,7 +24,8 @@ Version 0.10.3 (2010/11/12)
 
   * test_random.cpp: fixed portability issues and other minor changes.
 
-  * FindOpenCV.cmake: it checks "CV_BASE" variable.
+  * CMakeLists.cmake, cvBlob/CMakeLists: compile dynamic library. Deleted
+  "FindOpenCV.cmake".
 
 Version 0.10.2 (2010/06/07)
 

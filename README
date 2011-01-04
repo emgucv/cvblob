@@ -44,9 +44,9 @@ If problems, please read:
 
 3.1 OpenCV path
 
-You can tell CMake where OpenCV is installed, in case it can't find it, using the "CV_BASE" variable:
+You can tell CMake where OpenCV is installed, in case it can't find it, using the "OpenCV_DIR" variable:
 
-	cmake . -D CV_BASE=<path_to_OpenCV>
+	cmake . -D OpenCV_DIR=<path_to_OpenCV>
 
 3.2 Problems
 
@@ -63,7 +63,7 @@ Downloads:
 	http://code.google.com/p/cvblob/downloads/list 
 
 Documentation:
-	http://code.google.com/p/cvblob/w/list
+	http://code.google.com/p/cvblob/wiki/WikiIndex?tm=6
 
 Bug reports:
 	http://code.google.com/p/cvblob/issues/list
