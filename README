@@ -28,7 +28,7 @@ like this:
 
 Type this:
 
-        su -c "yast -i libopencv1 opencv opencv-debuginfo opencv-debugsource opencv-devel opencv-python cmake cmake-gui"
+	su -c "yast -i libopencv1 opencv opencv-debuginfo opencv-debugsource opencv-devel opencv-python cmake cmake-gui"
 
 
 3. COMPILING AND INSTALLING
@@ -38,7 +38,7 @@ In Linux, if you have unpacked the source in $CVBLOB, enter in a console:
 	cd $CVBLOB
 	cmake .
 	make
-        sudo make install
+	sudo make install
 
 In Windows it must be as easy as in Linux (changing "make" for the equivalent in your compiler).
 If problems, please read:

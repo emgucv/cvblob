@@ -1,6 +1,6 @@
-This program captures video from default cam and detects and tracks red objects.
+This program captures video from default camera and detects and tracks red objects.
 
-To compile: compile cvBlob, then execute "make" in this directory.
+To compile: compile and install cvBlob, then execute "make" in this directory.
 
 Keys:
 
