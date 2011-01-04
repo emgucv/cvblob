@@ -17,8 +17,6 @@
 # along with cvBlob.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# XXX It's possible that this can work with a previous version of CMake.
-# TODO Check it.
 cmake_minimum_required(VERSION 2.0)
 
 if(COMMAND cmake_policy)
@@ -27,6 +25,11 @@ endif(COMMAND cmake_policy)
 
 project(cvBlob)
 
+set(CVBLOB_VERSION_MAJOR 0)
+set(CVBLOB_VERSION_MINOR 10)
+set(CVBLOB_VERSION_PATCH 3)
+set(CVBLOB_VERSION "${CVBLOB_VERSION_MAJOR}.${CVBLOB_VERSION_MINOR}.${CVBLOB_VERSION_PATCH}")
+
 set(PACKAGE cvBlob)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeScripts)
@@ -34,15 +37,18 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeScripts)
 set(CMAKE_BUILD_TYPE Release)
 #set(CMAKE_BUILD_TYPE Debug)
 
-#if(!WIN32)
-#  set(CMAKE_EXE_LINKER_FLAGS -Bstatic)
-#endif(!WIN32)
-
 add_subdirectory(cvBlob lib)
 #add_subdirectory(pyCvBlob pyCvBlob)
 add_subdirectory(test test)
 
-#install(DIRECTORY dll DESTINATION dll)
+set(prefix  ${CMAKE_INSTALL_PREFIX})
+set(version ${CVBLOB_VERSION})
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cvblob.pc.cmake.in" "${CMAKE_BINARY_DIR}/cvblob.pc" @ONLY IMMEDIATE)
+
+if(UNIX)
+  install(FILES "${CMAKE_BINARY_DIR}/cvblob.pc" DESTINATION lib/pkgconfig)
+endif(UNIX)
 
 if(WIN32)
   set(CPACK_GENERATOR "ZIP")
@@ -52,22 +58,16 @@ else(WIN32)
   set(CPACK_SOURCE_GENERATOR "TGZ")
 endif(WIN32)
 
-# Avoid "file cannot create directory: /opt/sbin. Maybe need administrative privileges."
-#set(CPACK_SET_DESTDIR "ON")
-
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenCV blob library")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Blob library for OpenCV")
 set(CPACK_PACKAGE_CONTACT grendel.ccl@gmail.com)
 set(CPACK_PACKAGE_VENDOR "Cristóbal Carnero Liñán <grendel.ccl@gmail.com>")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${cvBlob_SOURCE_DIR}/README)
-set(CPACK_PACKAGE_VERSION_MAJOR 0)
-set(CPACK_PACKAGE_VERSION_MINOR 10)
-set(CPACK_PACKAGE_VERSION_PATCH 3)
-set(CPACK_PACKAGE_VERSION "0.10.3")
+set(CPACK_PACKAGE_VERSION_MAJOR ${CVBLOB_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${CVBLOB_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${CVBLOB_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION ${CVBLOB_VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE ${cvBlob_SOURCE_DIR}/COPYING.LESSER)
 set(CPACK_RESOURCE_FILE_README ${cvBlob_SOURCE_DIR}/README)
-
-#set(CPACK_RESOURCE_FILE_WELCOME "/usr/share/CMake/Templates/CPack.GenericWelcome.txt")
-#set(CPACK_PACKAGE_EXECUTABLES "${CMAKE_CURRENT_BINARY_DIR}/bin/cvBlob" "cvBlob")
 
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "cvBlob-src-${CPACK_PACKAGE_VERSION}")
 set(CPACK_SOURCE_GENERATOR "TGZ")

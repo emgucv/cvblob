@@ -1,0 +1,13 @@
+# Package Information for pkg-config
+    
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: cvBlob
+Description: Blob library for OpenCV
+Version: @version@
+Libs: -L${libdir} -lcvblob
+Cflags: -I${includedir}
+

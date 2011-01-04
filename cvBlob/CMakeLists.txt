@@ -34,6 +34,8 @@ set_source_files_properties(${cvBlob_SRC}
 
 add_library(cvblob SHARED ${cvBlob_CVBLOB})
 
+install(FILES cvblob.h DESTINATION include)
+
 install(TARGETS cvblob
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
