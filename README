@@ -22,7 +22,7 @@ In order to compile cvBlob you need the following:
 If you are in a Debian style distribution (Ubuntu, for example) you can do something
 like this:
 
-	sudo apt-get install cmake libcv1 libcv-dev libcvaux-dev libcvaux1
+	sudo aptitude install cmake libcv4 libcv-dev libcvaux4
 
 2.2 Instalation of dependencies in SuSE using Yast
 
@@ -30,13 +30,15 @@ Type this:
 
         su -c "yast -i libopencv1 opencv opencv-debuginfo opencv-debugsource opencv-devel opencv-python cmake cmake-gui"
 
-3. COMPILING
+
+3. COMPILING AND INSTALLING
 
 In Linux, if you have unpacked the source in $CVBLOB, enter in a console:
 
 	cd $CVBLOB
 	cmake .
 	make
+        sudo make install
 
 In Windows it must be as easy as in Linux (changing "make" for the equivalent in your compiler).
 If problems, please read:
@@ -46,9 +48,15 @@ If problems, please read:
 
 You can tell CMake where OpenCV is installed, in case it can't find it, using the "OpenCV_DIR" variable:
 
-	cmake . -D OpenCV_DIR=<path_to_OpenCV>
+	cmake . -DOpenCV_DIR=<path_to_OpenCV>
 
-3.2 Problems
+3.2 Installation path
+
+To change the destination path for the installation, set "CMAKE_INSTALL_PREFIX" variable:
+
+	cmake . -DCMAKE_INSTALL_PREFIX=<installation_path>
+
+3.3 Problems
 
 Latest information about compiling:
 	http://code.google.com/p/cvblob/wiki/HowToCompile
