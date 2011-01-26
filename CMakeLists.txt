@@ -84,25 +84,25 @@ exec_program(mkdir ARGS "-p \"${CMAKE_BINARY_DIR}/unix-install/\"")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cvBlobConfig.cmake.in" "${CMAKE_BINARY_DIR}/unix-install/cvBlobConfig.cmake" IMMEDIATE @ONLY)
 
 if(UNIX)
-    # For a command "FIND_PACKAGE(FOO)", CMake will look at the directory /usr/share|lib/FOO/FOOConfig.cmake, so:
-    install(FILES ${CMAKE_BINARY_DIR}/unix-install/cvBlobConfig.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/share/cvblob/)
+  # For a command "FIND_PACKAGE(FOO)", CMake will look at the directory /usr/share|lib/FOO/FOOConfig.cmake, so:
+  install(FILES ${CMAKE_BINARY_DIR}/unix-install/cvBlobConfig.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/share/cvblob/)
 endif()
 
 # --------------------------------------------------------------------------------------------
 #  Part 3/3: ${BIN_DIR}/win-install/cvBlobConfig.cmake  -> For use within binary installers/packages
 # -------------------------------------------------------------------------------------------
 if(WIN32)
-    # Set CMAKE_INCLUDE_DIRS_CONFIGCMAKE to the list of include directories:
+  # Set CMAKE_INCLUDE_DIRS_CONFIGCMAKE to the list of include directories:
 
-    # This will expand to, for example, <program files>/cvBlob 1.1.0/include
-	set(CMAKE_INCLUDE_DIRS_CONFIGCMAKE "${THIS_CVBLOB_CONFIG_PATH}/include/")
+  # This will expand to, for example, <program files>/cvBlob 1.1.0/include
+  set(CMAKE_INCLUDE_DIRS_CONFIGCMAKE "${THIS_CVBLOB_CONFIG_PATH}/include/")
 
-    # This will expand to, for example, <program files>/cvBlob 1.1.0/lib
-    set(CMAKE_LIB_DIRS_CONFIGCMAKE "\"\${THIS_CVBLOB_CONFIG_PATH}/lib\"")
+  # This will expand to, for example, <program files>/cvBlob 1.1.0/lib
+  set(CMAKE_LIB_DIRS_CONFIGCMAKE "\"\${THIS_CVBLOB_CONFIG_PATH}/lib\"")
 
-    #exec_program(${CMAKE_COMMAND} ARGS "-E make_directory \"${CMAKE_BINARY_DIR}/win-install/\"")
-    exec_program(mkdir ARGS "-p \"${CMAKE_BINARY_DIR}/win-install/\"")
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cvBlobConfig.cmake.in" "${CMAKE_BINARY_DIR}/win-install/cvBlobConfig.cmake" IMMEDIATE @ONLY)
+  #exec_program(${CMAKE_COMMAND} ARGS "-E make_directory \"${CMAKE_BINARY_DIR}/win-install/\"")
+  exec_program(mkdir ARGS "-p \"${CMAKE_BINARY_DIR}/win-install/\"")
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cvBlobConfig.cmake.in" "${CMAKE_BINARY_DIR}/win-install/cvBlobConfig.cmake" IMMEDIATE @ONLY)
 endif()
 # --------------------------------------------------------------------------------------------
 
@@ -132,9 +132,9 @@ set(CPACK_RESOURCE_FILE_README ${cvBlob_SOURCE_DIR}/README)
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "cvBlob-src-${CPACK_PACKAGE_VERSION}")
 set(CPACK_SOURCE_GENERATOR "TGZ")
 set(CPACK_SOURCE_IGNORE_FILES
-    "~$"
-    "/\\\\.svn/"
-#     "^${PROJECT_SOURCE_DIR}/old/"
+  "~$"
+  "/\\\\.svn/"
+  #     "^${PROJECT_SOURCE_DIR}/old/"
 )
 
 include(CPack)
