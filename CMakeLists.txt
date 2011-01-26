@@ -27,7 +27,7 @@ project(cvBlob)
 
 set(CVBLOB_VERSION_MAJOR 0)
 set(CVBLOB_VERSION_MINOR 10)
-set(CVBLOB_VERSION_PATCH 3)
+set(CVBLOB_VERSION_PATCH 4)
 set(CVBLOB_VERSION "${CVBLOB_VERSION_MAJOR}.${CVBLOB_VERSION_MINOR}.${CVBLOB_VERSION_PATCH}")
 
 set(PACKAGE cvBlob)
@@ -45,6 +45,66 @@ set(prefix  ${CMAKE_INSTALL_PREFIX})
 set(version ${CVBLOB_VERSION})
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cvblob.pc.cmake.in" "${CMAKE_BINARY_DIR}/cvblob.pc" @ONLY IMMEDIATE)
+
+# Save libs and executables in the same place
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib CACHE PATH "Output directory for libraries" )
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin CACHE PATH "Output directory for applications" )
+
+# --------------------------------------------------------------------------------------------
+#   Installation for CMake Module:  cvBlobConfig.cmake
+#  Part 1/3: ${BIN_DIR}/cvBlobConfig.cmake              -> For use *without* "make install"
+#  Part 2/3: ${BIN_DIR}/unix-install/cvBlobConfig.cmake -> For use with "make install"
+#  Part 3/3: ${BIN_DIR}/win-install/cvBlobConfig.cmake  -> For use within binary installers/packages
+# -------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------
+#  Part 1/3: ${BIN_DIR}/cvBlobConfig.cmake              -> For use *without* "make install"
+# -------------------------------------------------------------------------------------------
+
+# Name of libraries is: libcv.so.1.1.0, etc...
+#  CVBLOB_DLLVERSION must be set to "110", etc..
+# Already done above.
+
+# Set CMAKE_INCLUDE_DIRS_CONFIGCMAKE to the list of include directories:
+set(CMAKE_INCLUDE_DIRS_CONFIGCMAKE "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+set(CMAKE_LIB_DIRS_CONFIGCMAKE "${LIBRARY_OUTPUT_PATH}")
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cvBlobConfig.cmake.in" "${CMAKE_BINARY_DIR}/cvBlobConfig.cmake" IMMEDIATE @ONLY)
+
+# --------------------------------------------------------------------------------------------
+#  Part 2/3: ${BIN_DIR}/unix-install/cvBlobConfig.cmake -> For use *with* "make install"
+# -------------------------------------------------------------------------------------------
+# Set CMAKE_INCLUDE_DIRS_CONFIGCMAKE to the list of include directories:
+
+set(CMAKE_INCLUDE_DIRS_CONFIGCMAKE "${CMAKE_INSTALL_PREFIX}/include/")
+set(CMAKE_LIB_DIRS_CONFIGCMAKE "${CMAKE_INSTALL_PREFIX}/lib")
+
+#exec_program(${CMAKE_COMMAND} ARGS "-E make_directory \"${CMAKE_BINARY_DIR}/unix-install/\"")
+exec_program(mkdir ARGS "-p \"${CMAKE_BINARY_DIR}/unix-install/\"")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cvBlobConfig.cmake.in" "${CMAKE_BINARY_DIR}/unix-install/cvBlobConfig.cmake" IMMEDIATE @ONLY)
+
+if(UNIX)
+    # For a command "FIND_PACKAGE(FOO)", CMake will look at the directory /usr/share|lib/FOO/FOOConfig.cmake, so:
+    install(FILES ${CMAKE_BINARY_DIR}/unix-install/cvBlobConfig.cmake DESTINATION ${CMAKE_INSTALL_PREFIX}/share/cvblob/)
+endif()
+
+# --------------------------------------------------------------------------------------------
+#  Part 3/3: ${BIN_DIR}/win-install/cvBlobConfig.cmake  -> For use within binary installers/packages
+# -------------------------------------------------------------------------------------------
+if(WIN32)
+    # Set CMAKE_INCLUDE_DIRS_CONFIGCMAKE to the list of include directories:
+
+    # This will expand to, for example, <program files>/cvBlob 1.1.0/include
+	set(CMAKE_INCLUDE_DIRS_CONFIGCMAKE "${THIS_CVBLOB_CONFIG_PATH}/include/")
+
+    # This will expand to, for example, <program files>/cvBlob 1.1.0/lib
+    set(CMAKE_LIB_DIRS_CONFIGCMAKE "\"\${THIS_CVBLOB_CONFIG_PATH}/lib\"")
+
+    #exec_program(${CMAKE_COMMAND} ARGS "-E make_directory \"${CMAKE_BINARY_DIR}/win-install/\"")
+    exec_program(mkdir ARGS "-p \"${CMAKE_BINARY_DIR}/win-install/\"")
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cvBlobConfig.cmake.in" "${CMAKE_BINARY_DIR}/win-install/cvBlobConfig.cmake" IMMEDIATE @ONLY)
+endif()
+# --------------------------------------------------------------------------------------------
 
 if(UNIX)
   install(FILES "${CMAKE_BINARY_DIR}/cvblob.pc" DESTINATION lib/pkgconfig)
