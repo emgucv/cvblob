@@ -170,18 +170,21 @@ namespace cvb
 		    direction=(direction+1)%4;
 		  else
 		  {
-		    imageOut(xx, yy) = label;
-		    numPixels++;
+		    if (imageOut(xx, yy) != label)
+		    {
+		      imageOut(xx, yy) = label;
+		      numPixels++;
 
-		    if (xx<blob->minx) blob->minx = xx;
-		    else if (xx>blob->maxx) blob->maxx = xx;
-		    if (yy<blob->miny) blob->miny = yy;
-		    else if (yy>blob->maxy) blob->maxy = yy;
+		      if (xx<blob->minx) blob->minx = xx;
+		      else if (xx>blob->maxx) blob->maxx = xx;
+		      if (yy<blob->miny) blob->miny = yy;
+		      else if (yy>blob->maxy) blob->maxy = yy;
 
-		    blob->area++;
-		    blob->m10+=xx; blob->m01+=yy;
-		    blob->m11+=xx*yy;
-		    blob->m20+=xx*xx; blob->m02+=yy*yy;
+		      blob->area++;
+		      blob->m10+=xx; blob->m01+=yy;
+		      blob->m11+=xx*yy;
+		      blob->m20+=xx*xx; blob->m02+=yy*yy;
+		    }
 
 		    break;
 		  }

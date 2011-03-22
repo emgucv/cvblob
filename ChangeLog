@@ -3,6 +3,9 @@ Version 0.10.4 (2011/01/26)
   * CMakeLists.txt, cvBlobConfig.cmake.in: create "cvBlobConfig.cmake" for
   easy integration with CMAKE projects. Thanks to zorzalzilba.
 
+  * cvlabel.cpp: fix bug in the function cvLabel by which it calculates area
+  off by one.
+
 Version 0.10.3 (2010/11/12)
 
   * cvlabel.cpp: a little optimization in "cvLabel".
