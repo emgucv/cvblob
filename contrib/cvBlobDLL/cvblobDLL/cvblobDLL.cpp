@@ -147,7 +147,7 @@ CVBLOBDLL_API CDECL unsigned int cvBlobDLabel
    for (CvBlobs::const_iterator it=lblobs.begin(); it!=lblobs.end(); ++it)
    {
 	   CvBlob curBlob = (CvBlob) *((*it).second);
-	   cvCentralMoments(&curBlob, imgOut);
+	   // cvCentralMoments(&curBlob, imgOut);
 			
 	   memcpy(pNewBlobObj, &curBlob, sizeof(CvBlobObj));
 		pNewBlobObj->angle = cvAngle(&curBlob);

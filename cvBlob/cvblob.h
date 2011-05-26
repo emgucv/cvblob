@@ -365,10 +365,8 @@ extern "C" {
 
   /// \fn double cvAngle(CvBlob *blob)
   /// \brief Calculates angle orientation of a blob.
-  /// This function uses central moments so cvCentralMoments should have been called before for this blob.
   /// \param blob Blob.
   /// \return Angle orientation in radians.
-  /// \see cvCentralMoments
   /// \see CvBlob
   double cvAngle(CvBlob *blob);
 
