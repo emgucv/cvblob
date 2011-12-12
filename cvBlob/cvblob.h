@@ -330,12 +330,14 @@ extern "C" {
     blobs.clear();
   }
 
-  /// \fn CvLabel cvGreaterBlob(const CvBlobs &blobs)
-  /// \brief Find greater blob.
+  /// \fn CvLabel cvLargestBlob(const CvBlobs &blobs)
+  /// \brief Find largest blob (biggest area).
   /// \param blobs List of blobs.
-  /// \return Label of the greater blob or 0 if there are no blobs.
+  /// \return Label of the largest blob or 0 if there are no blobs.
   /// \see cvLabel
-  CvLabel cvGreaterBlob(const CvBlobs &blobs);
+  CvLabel cvLargestBlob(const CvBlobs &blobs);
+
+  cvLabel ((*cvGreaterBlob)(const CvBlobs &blobs)) = cvLargestBlob;
 
   /// \fn void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea)
   /// \brief Filter blobs by area.

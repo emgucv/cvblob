@@ -34,7 +34,7 @@ using namespace std;
 namespace cvb
 {
 
-  CvLabel cvGreaterBlob(const CvBlobs &blobs)
+  CvLabel cvLargestBlob(const CvBlobs &blobs)
   {
     CvLabel label=0;
     unsigned int maxArea=0;
@@ -42,11 +42,11 @@ namespace cvb
     for (CvBlobs::const_iterator it=blobs.begin();it!=blobs.end();++it)
     {
       CvBlob *blob=(*it).second;
-      //if ((!blob->_parent)&&(blob->area>maxArea))
-      if (blob->area>maxArea)
+
+      if (blob->area > maxArea)
       {
-	label=blob->label;
-	maxArea=blob->area;
+		label=blob->label;
+		maxArea=blob->area;
       }
     }
 
