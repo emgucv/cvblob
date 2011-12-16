@@ -50,7 +50,7 @@ namespace cvb
     __CV_BEGIN__;
     {
       CV_ASSERT(img&&(img->depth==IPL_DEPTH_8U)&&(img->nChannels==1));
-      CV_ASSERT(imgOut&&(imgOut->depth==IPL_DEPTH_LABEL)&&(img->nChannels==1));
+      CV_ASSERT(imgOut&&(imgOut->depth==IPL_DEPTH_LABEL)&&(imgOut->nChannels==1));
 
       unsigned int numPixels=0;
 
