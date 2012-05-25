@@ -337,7 +337,10 @@ extern "C" {
   /// \see cvLabel
   CvLabel cvLargestBlob(const CvBlobs &blobs);
 
-  cvLabel ((*cvGreaterBlob)(const CvBlobs &blobs)) = cvLargestBlob;
+  inline CvLabel cvGreaterBlob(const CvBlobs &blobs)
+  {
+  	  return cvLargestBlob(blobs);
+  }
 
   /// \fn void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea)
   /// \brief Filter blobs by area.
