@@ -6,7 +6,8 @@ Version 0.10.4 (2011/01/26)
   * cvlabel.cpp: fixed bug in the function cvLabel by which it calculates area
   off by one.
 
-  * cvblob.h: removed references to cvCentralMoments.
+  * cvblob.h: removed references to cvCentralMoments. Fixed bug with
+  "cvGreaterBlob".
 
 Version 0.10.3 (2010/11/12)
 

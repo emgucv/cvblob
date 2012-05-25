@@ -58,7 +58,7 @@ extern "C" {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Contours
-  
+
   // Chain code:
   //        7 0 1
   //        6   2
@@ -339,7 +339,7 @@ extern "C" {
 
   inline CvLabel cvGreaterBlob(const CvBlobs &blobs)
   {
-  	  return cvLargestBlob(blobs);
+    return cvLargestBlob(blobs);
   }
 
   /// \fn void cvFilterByArea(CvBlobs &blobs, unsigned int minArea, unsigned int maxArea)
