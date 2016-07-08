@@ -255,7 +255,7 @@ namespace cvb
 	  getClusterForTrack(j, close, nBlobs, nTracks, blobs, tracks, bb, tt);
 
 	  // Select track
-	  CvTrack *track;
+     CvTrack *track = 0;
 	  unsigned int area = 0;
 	  for (list<CvTrack*>::const_iterator it=tt.begin(); it!=tt.end(); ++it)
 	  {
@@ -270,7 +270,7 @@ namespace cvb
 	  }
 
 	  // Select blob
-	  CvBlob *blob;
+	  CvBlob *blob = 0;
 	  area = 0;
 	  //cout << "Matching blobs: ";
 	  for (list<CvBlob*>::const_iterator it=bb.begin(); it!=bb.end(); ++it)
