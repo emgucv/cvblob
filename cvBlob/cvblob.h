@@ -41,6 +41,7 @@
 #else
 #include <opencv/cv.h>
 #endif
+#include <opencv2/imgproc.hpp>
 
 #ifndef __CV_BEGIN__
 #define __CV_BEGIN__ __BEGIN__
