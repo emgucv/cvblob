@@ -22,6 +22,7 @@
 using namespace std;
 
 #include "cvblob.h"
+#include "opencv2/imgcodecs/imgcodecs.hpp"
 
 namespace cvb
 {
@@ -322,7 +323,9 @@ namespace cvb
   {
     CvRect roi = cvGetImageROI(img);
     cvSetImageROItoBlob(img, blob);
-    cvSaveImage(filename, img);
+	cv::Mat m = cv::cvarrToMat(img);
+	cv::imwrite(filename, m);
+    //cvSaveImage(filename, img);
     cvSetImageROI(img, roi);
   }
 
