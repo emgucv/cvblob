@@ -368,14 +368,14 @@ namespace cvb
 	  {
 	    stringstream buffer;
 	    buffer << it->first;
-	    cvPutText(imgDest, buffer.str().c_str(), cvPoint((int)it->second->centroid.x, (int)it->second->centroid.y), font, CV_RGB(0.,255.,0.));
+	    cvPutText(imgDest, buffer.str().c_str(), cvPoint((int)it->second->centroid.x, (int)it->second->centroid.y), font, cvScalar(0.,255.,0.));
 	  }
 
 	if (mode&CV_TRACK_RENDER_BOUNDING_BOX)
 	  if (it->second->inactive)
-	    cvRectangle(imgDest, cvPoint(it->second->minx, it->second->miny), cvPoint(it->second->maxx-1, it->second->maxy-1), CV_RGB(0., 0., 50.));
+	    cvRectangle(imgDest, cvPoint(it->second->minx, it->second->miny), cvPoint(it->second->maxx-1, it->second->maxy-1), cvScalar(0., 0., 50.));
 	  else
-	    cvRectangle(imgDest, cvPoint(it->second->minx, it->second->miny), cvPoint(it->second->maxx-1, it->second->maxy-1), CV_RGB(0., 0., 255.));
+	    cvRectangle(imgDest, cvPoint(it->second->minx, it->second->miny), cvPoint(it->second->maxx-1, it->second->maxy-1), cvScalar(0., 0., 255.));
 
 	if (mode&CV_TRACK_RENDER_TO_LOG)
 	{

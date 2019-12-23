@@ -123,7 +123,7 @@ extern "C" {
   /// \param img Image to draw on.
   /// \param color Color to draw (default, white).
   /// \see CvContourChainCode
-  void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=CV_RGB(255, 255, 255));
+  void cvRenderContourChainCode(CvContourChainCode const *contour, IplImage const *img, CvScalar const &color=cvScalar(255.0, 255.0, 255.0));
   
   /// \fn CvContourPolygon *cvConvertChainCodesToPolygon(CvContourChainCode const *cc)
   /// \brief Convert a chain code contour to a polygon.
@@ -139,7 +139,7 @@ extern "C" {
   /// \param img Image to draw on.
   /// \param color Color to draw (default, white).
   /// \see CvContourPolygon
-  void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=CV_RGB(255, 255, 255));
+  void cvRenderContourPolygon(CvContourPolygon const *contour, IplImage *img, CvScalar const &color=cvScalar(255, 255, 255));
 
   /// \fn double cvContourPolygonArea(CvContourPolygon const *p)
   /// \brief Calculates area of a polygonal contour.
@@ -406,7 +406,7 @@ extern "C" {
   /// \see CV_BLOB_RENDER_ANGLE
   /// \see CV_BLOB_RENDER_TO_LOG
   /// \see CV_BLOB_RENDER_TO_STD
-  void cvRenderBlob(const IplImage *imgLabel, CvBlob *blob, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, CvScalar const &color=CV_RGB(255, 255, 255), double alpha=1.);
+  void cvRenderBlob(const IplImage *imgLabel, CvBlob *blob, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, CvScalar const &color=cvScalar(255, 255, 255), double alpha=1.);
 
   /// \fn void cvRenderBlobs(const IplImage *imgLabel, CvBlobs &blobs, IplImage *imgSource, IplImage *imgDest, unsigned short mode=0x000f, double alpha=1.)
   /// \brief Draws or prints information about blobs.
